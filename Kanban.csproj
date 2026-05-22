@@ -6,14 +6,369 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>False</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="src\View\fonts\**" />
+    <Compile Remove="src\View\images\**" />
+    <Compile Remove="src\View\xaml\images\**" />
+    <EmbeddedResource Remove="src\View\fonts\**" />
+    <EmbeddedResource Remove="src\View\images\**" />
+    <EmbeddedResource Remove="src\View\xaml\images\**" />
+    <None Remove="src\View\fonts\**" />
+    <None Remove="src\View\images\**" />
+    <None Remove="src\View\xaml\images\**" />
+    <Page Remove="src\View\fonts\**" />
+    <Page Remove="src\View\images\**" />
+    <Page Remove="src\View\xaml\images\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="src\View\Properties\Resources.ja-JP.Designer.cs" />
+    <Compile Remove="src\View\Properties\Resources.zh-CN.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="fonts\BRADHITC.ttf" />
+    <None Remove="images\about.png" />
+    <None Remove="images\add.png" />
+    <None Remove="images\admin-inactive.png" />
+    <None Remove="images\admin.png" />
+    <None Remove="images\archive.png" />
+    <None Remove="images\archive_box.png" />
+    <None Remove="images\archive_undo.png" />
+    <None Remove="images\arrow-down.png" />
+    <None Remove="images\arrow-left.png" />
+    <None Remove="images\arrow-right.png" />
+    <None Remove="images\arrow-up.png" />
+    <None Remove="images\backup_database.png" />
+    <None Remove="images\backup_database2.png" />
+    <None Remove="images\backward.png" />
+    <None Remove="images\back_board.png" />
+    <None Remove="images\bug.png" />
+    <None Remove="images\cancel.png" />
+    <None Remove="images\circle-green.png" />
+    <None Remove="images\circle-grey.png" />
+    <None Remove="images\circle-orange.png" />
+    <None Remove="images\circle-yellow.png" />
+    <None Remove="images\clean_up.png" />
+    <None Remove="images\database_green.png" />
+    <None Remove="images\database_orange.png" />
+    <None Remove="images\defect_investigation.png" />
+    <None Remove="images\edit-icon.png" />
+    <None Remove="images\edit.png" />
+    <None Remove="images\evaluation.png" />
+    <None Remove="images\feature.png" />
+    <None Remove="images\folder.png" />
+    <None Remove="images\forward.png" />
+    <None Remove="images\front_board.png" />
+    <None Remove="images\go-left.png" />
+    <None Remove="images\go-right.png" />
+    <None Remove="images\help.png" />
+    <None Remove="images\improvement.png" />
+    <None Remove="images\kanban_splash_window1.jpg" />
+    <None Remove="images\kanban_splash_window2.jpg" />
+    <None Remove="images\kanban_splash_window3.jpg" />
+    <None Remove="images\kanban_splash_window4.jpg" />
+    <None Remove="images\kanban_splash_window5.jpg" />
+    <None Remove="images\kanban_splash_window6.jpg" />
+    <None Remove="images\large.png" />
+    <None Remove="images\large1.png" />
+    <None Remove="images\large_extra.png" />
+    <None Remove="images\medium-orange.png" />
+    <None Remove="images\medium.png" />
+    <None Remove="images\merge_completed.png" />
+    <None Remove="images\overwrite_database.png" />
+    <None Remove="images\Planning_poker.png" />
+    <None Remove="images\Planning_poker1.png" />
+    <None Remove="images\refresh.png" />
+    <None Remove="images\remove.png" />
+    <None Remove="images\restore_database.png" />
+    <None Remove="images\restore_database1.png" />
+    <None Remove="images\save.png" />
+    <None Remove="images\small.png" />
+    <None Remove="images\stop-inactive.png" />
+    <None Remove="images\stop.png" />
+    <None Remove="images\task.png" />
+    <None Remove="images\TDD.png" />
+    <None Remove="images\test_design.png" />
+    <None Remove="images\unknown.png" />
+    <None Remove="images\work-item-large.png" />
+    <None Remove="images\work-item-medium.png" />
+    <None Remove="images\work-item-small .png" />
+    <None Remove="images\zoom-in.ico" />
+    <None Remove="images\zoom-in.png" />
+    <None Remove="images\zoom-out.ico" />
+    <None Remove="images\zoom-out.png" />
+    <None Remove="src\View\ReleaseNote\ReleaseNote.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="src\View\ReleaseNote\ReleaseNote.html" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MongoDB.Driver" Version="3.8.1" />
+    <PackageReference Include="SharpCompress" Version="0.48.0" />
+    <PackageReference Include="Unity" Version="5.11.10" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="src\Model\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="fonts\BRADHITC.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\about.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\add.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\admin-inactive.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\admin.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\archive.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\archive_box.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\archive_undo.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\arrow-down.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\arrow-left.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\arrow-right.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\arrow-up.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\backup_database.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\backup_database2.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\backward.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\back_board.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\bug.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\cancel.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\circle-green.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\circle-grey.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\circle-orange.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\circle-yellow.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\clean_up.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\database_green.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\database_orange.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\defect_investigation.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\edit-icon.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\edit.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\evaluation.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\feature.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\folder.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\forward.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\front_board.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\go-left.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\go-right.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\help.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\improvement.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\kanban_splash_window1.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\kanban_splash_window2.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\kanban_splash_window3.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\kanban_splash_window4.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\kanban_splash_window5.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\kanban_splash_window6.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\large.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\large1.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\large_extra.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\medium-orange.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\medium.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\merge_completed.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\overwrite_database.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\Planning_poker.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\Planning_poker1.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\refresh.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\remove.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\restore_database.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\restore_database1.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\save.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\small.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\stop-inactive.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\stop.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\task.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\TDD.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\test_design.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\unknown.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\work-item-large.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\work-item-medium.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\work-item-small .png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\zoom-in.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\zoom-in.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\zoom-out.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\zoom-out.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="src\View\Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="src\View\Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="src\View\Properties\Resources.ja-JP.resx">
+      <Generator></Generator>
+      <CustomToolNamespace>Kanban.Properties</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Update="src\View\Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Kanban.Properties</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Update="src\View\Properties\Resources.zh-CN.resx">
+      <Generator></Generator>
+      <CustomToolNamespace>Kanban.Properties</CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="src\View\Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>

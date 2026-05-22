@@ -1,0 +1,36 @@
+﻿<Window x:Class="Kanban.DropDBDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Kanban"
+        xmlns:p = "clr-namespace:Kanban.Properties"
+        xmlns:vm="clr-namespace:Kanban.ViewModel"
+        d:DataContext="{d:DesignInstance vm:DropDBDialogViewModel}"
+        xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
+        mc:Ignorable="d"
+        Title="{x:Static p:Resources.DropDB_Title}" Height="300" MinWidth="300" SizeToContent="Width">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <ListBox Grid.Row="0" ItemsSource="{Binding DBList}" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <CheckBox IsChecked="{Binding IsChecked}">
+                        <TextBlock Text="{Binding Path=Item.Name}"/>
+                    </CheckBox>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Margin="10, 0, 10, 0" Content="{x:Static p:Resources.Setting_DropDB}" Command="{Binding Path=DropDBCommand, Mode=OneTime}"/>
+            <Button Grid.Column="1"  Margin="10, 0, 10, 0" Content="{x:Static p:Resources.View_Close}" Click="OnCloseButtonClicked"/>
+        </Grid>
+    </Grid>
+</Window>

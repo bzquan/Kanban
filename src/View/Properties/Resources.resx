@@ -1,0 +1,550 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="BoardPage_BoardLabel" xml:space="preserve">
+    <value>Board</value>
+  </data>
+  <data name="BoardPage_Filter" xml:space="preserve">
+    <value>Filter:</value>
+  </data>
+  <data name="Board_DetailFormat" xml:space="preserve">
+    <value>Detail：{0}</value>
+  </data>
+  <data name="Board_NameFormat" xml:space="preserve">
+    <value>Name：{0} </value>
+  </data>
+  <data name="CardEdit_Blocked" xml:space="preserve">
+    <value>Blocked</value>
+  </data>
+  <data name="CardEdit_CardType" xml:space="preserve">
+    <value>Work type：</value>
+  </data>
+  <data name="CardEdit_CreateDate" xml:space="preserve">
+    <value>Created：</value>
+  </data>
+  <data name="CardEdit_Description" xml:space="preserve">
+    <value>Description：</value>
+  </data>
+  <data name="CardEdit_Estimation" xml:space="preserve">
+    <value>Estimation：</value>
+  </data>
+  <data name="CardEdit_ReleaseDate" xml:space="preserve">
+    <value>Release：</value>
+  </data>
+  <data name="CardEdit_ResponsiblePerson" xml:space="preserve">
+    <value>Responsible：</value>
+  </data>
+  <data name="CardEdit_StateChanged" xml:space="preserve">
+    <value>State Changed：</value>
+  </data>
+  <data name="CardEdit_StateChangedOfHistory" xml:space="preserve">
+    <value>Date of state changed</value>
+  </data>
+  <data name="CardEdit_StateChangeHistory" xml:space="preserve">
+    <value>Work state change history：</value>
+  </data>
+  <data name="CardEdit_StateOfHistory" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="CardEdit_Title" xml:space="preserve">
+    <value>Edit work item</value>
+  </data>
+  <data name="CardEdit_WorkItem" xml:space="preserve">
+    <value>Work Item：</value>
+  </data>
+  <data name="CardEdit_WorkState" xml:space="preserve">
+    <value>Work state：</value>
+  </data>
+  <data name="Card_CreateDateFormat" xml:space="preserve">
+    <value>Created：{0:dd/MMM/yyyy}</value>
+  </data>
+  <data name="Card_ReleaseDateFormat" xml:space="preserve">
+    <value>Release：{0:dd/MMM/yyyy}</value>
+  </data>
+  <data name="Card_ResponsiblePerson" xml:space="preserve">
+    <value>Responsible：</value>
+  </data>
+  <data name="Card_StateChangedDateFormat" xml:space="preserve">
+    <value>State Changed：{0:dd/MMM/yyyy}</value>
+  </data>
+  <data name="Card_WorkItemFormat" xml:space="preserve">
+    <value>Work Item：{0}</value>
+  </data>
+  <data name="CheckBoxSwitch_Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="CheckBoxSwitch_On" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="Kanban_Practice1" xml:space="preserve">
+    <value>1.Visualization</value>
+  </data>
+  <data name="Kanban_Practice2" xml:space="preserve">
+    <value>2.Limit WIP</value>
+  </data>
+  <data name="Kanban_Practice3" xml:space="preserve">
+    <value>3.Enhance Flow</value>
+  </data>
+  <data name="Kanban_Practice4" xml:space="preserve">
+    <value>4.Feedback chain</value>
+  </data>
+  <data name="Kanban_Practice5" xml:space="preserve">
+    <value>5.Evolving and improving</value>
+  </data>
+  <data name="Kanban_PracticeCycleTimeNote" xml:space="preserve">
+    <value>Note: Cycle Time = Items of WIP / throughput</value>
+  </data>
+  <data name="Kanban_PracticeTitle" xml:space="preserve">
+    <value>Practices</value>
+  </data>
+  <data name="Main_KanbanDetail" xml:space="preserve">
+    <value>Note of Kanban:</value>
+  </data>
+  <data name="Main_KanbanName" xml:space="preserve">
+    <value>Name of Kanban:</value>
+  </data>
+  <data name="Main_Process" xml:space="preserve">
+    <value>Process of this project</value>
+  </data>
+  <data name="Main_Title" xml:space="preserve">
+    <value>Kanban</value>
+  </data>
+  <data name="Metrics_AveCycleTime" xml:space="preserve">
+    <value>Average cycle time: </value>
+  </data>
+  <data name="Metrics_AveThroughput" xml:space="preserve">
+    <value>Average throughput:</value>
+  </data>
+  <data name="Metrics_AveWIP" xml:space="preserve">
+    <value>Ave WIP:</value>
+  </data>
+  <data name="Metrics_CycleTimeLabel" xml:space="preserve">
+    <value>Cycle time: </value>
+  </data>
+  <data name="Metrics_DateLabel" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Metrics_DaysPerItem" xml:space="preserve">
+    <value> Days/Item</value>
+  </data>
+  <data name="Metrics_DistributionLabel" xml:space="preserve">
+    <value>Distribution(%)</value>
+  </data>
+  <data name="Metrics_DistributionLabel1" xml:space="preserve">
+    <value>Distribution</value>
+  </data>
+  <data name="Metrics_DoneCumulative" xml:space="preserve">
+    <value>(Done cumulativ)</value>
+  </data>
+  <data name="Metrics_DoneItems" xml:space="preserve">
+    <value>Completed Items: </value>
+  </data>
+  <data name="Metrics_DurationOfMetrics" xml:space="preserve">
+    <value>Duration of metrics:{0} days</value>
+  </data>
+  <data name="Metrics_EstimatedCycleTime" xml:space="preserve">
+    <value>Estimated cycle time: </value>
+  </data>
+  <data name="Metrics_EstimationMuch" xml:space="preserve">
+    <value>△Estimation too much: </value>
+  </data>
+  <data name="Metrics_EstimationProper" xml:space="preserve">
+    <value>○Estimation proper: </value>
+  </data>
+  <data name="Metrics_EstimationSmall" xml:space="preserve">
+    <value>▽Estimation too small: </value>
+  </data>
+  <data name="Metrics_FormatLabelDate" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Metrics_FormatLabelDay" xml:space="preserve">
+    <value> Days</value>
+  </data>
+  <data name="Metrics_ItemsLabel" xml:space="preserve">
+    <value>Items</value>
+  </data>
+  <data name="Metrics_MaxWIP" xml:space="preserve">
+    <value>Max WIP:</value>
+  </data>
+  <data name="Metrics_OccuredDate" xml:space="preserve">
+    <value>Occured date:</value>
+  </data>
+  <data name="Metrics_PerWeek" xml:space="preserve">
+    <value>/Week</value>
+  </data>
+  <data name="Metrics_TotalDate" xml:space="preserve">
+    <value>Days:</value>
+  </data>
+  <data name="Metrics_UnknownWeeks" xml:space="preserve">
+    <value>∞ weeks</value>
+  </data>
+  <data name="Metrics_Weeks" xml:space="preserve">
+    <value> weeks</value>
+  </data>
+  <data name="Process_MetricsBegin" xml:space="preserve">
+    <value>Begin of metrics</value>
+  </data>
+  <data name="Process_MetricsEnd" xml:space="preserve">
+    <value>End of metrics</value>
+  </data>
+  <data name="Setting_DBBackup" xml:space="preserve">
+    <value>Backup</value>
+  </data>
+  <data name="Setting_DBCancel_ToolTip" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Setting_DBFolder" xml:space="preserve">
+    <value>Folder:</value>
+  </data>
+  <data name="Setting_DBInformation" xml:space="preserve">
+    <value>Information:</value>
+  </data>
+  <data name="Setting_DBPriority" xml:space="preserve">
+    <value>DB Priority when restoring Kanban database</value>
+  </data>
+  <data name="Setting_DBRestore" xml:space="preserve">
+    <value>Restore</value>
+  </data>
+  <data name="Setting_Language" xml:space="preserve">
+    <value>Language:</value>
+  </data>
+  <data name="Setting_Title" xml:space="preserve">
+    <value>Language setting, DB backup</value>
+  </data>
+  <data name="ToolTip_AddBoard" xml:space="preserve">
+    <value>Add board</value>
+  </data>
+  <data name="ToolTip_AddCard" xml:space="preserve">
+    <value>Add card</value>
+  </data>
+  <data name="ToolTip_AddProcessStep" xml:space="preserve">
+    <value>Add process step</value>
+  </data>
+  <data name="ToolTip_BoardBack" xml:space="preserve">
+    <value>Back board</value>
+  </data>
+  <data name="ToolTip_BoardFront" xml:space="preserve">
+    <value>Front board</value>
+  </data>
+  <data name="ToolTip_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="ToolTip_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="ToolTip_Filtering" xml:space="preserve">
+    <value>Enter to confirm(seperate keywords by white space or comma)
+Release date format is year month and day(e.g. 20191101、191101、1101)</value>
+  </data>
+  <data name="ToolTip_GotoSetting" xml:space="preserve">
+    <value>Setting</value>
+  </data>
+  <data name="ToolTip_MoveToBack" xml:space="preserve">
+    <value>Move to back</value>
+  </data>
+  <data name="ToolTip_MoveToFront" xml:space="preserve">
+    <value>Move to front</value>
+  </data>
+  <data name="ToolTip_OpenBoard" xml:space="preserve">
+    <value>Open board</value>
+  </data>
+  <data name="ToolTip_Priority" xml:space="preserve">
+    <value>Priority</value>
+  </data>
+  <data name="ToolTip_Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="ToolTip_SwitchBoardFrontAndBack" xml:space="preserve">
+    <value>Switch front and back</value>
+  </data>
+  <data name="ToolTip_WorkedDays" xml:space="preserve">
+    <value>Worked Days</value>
+  </data>
+  <data name="ToolTip_Zoom" xml:space="preserve">
+    <value>Zoom In/Zoom Out</value>
+  </data>
+  <data name="Agile_Manifesto1" xml:space="preserve">
+    <value>△ Individuals and interactions</value>
+  </data>
+  <data name="Agile_Manifesto2" xml:space="preserve">
+    <value>△ Working software</value>
+  </data>
+  <data name="Agile_Manifesto3" xml:space="preserve">
+    <value>△ Customer collaboration</value>
+  </data>
+  <data name="Agile_Manifesto4" xml:space="preserve">
+    <value>△ Responding to change</value>
+  </data>
+  <data name="DateTime_LongFormatter" xml:space="preserve">
+    <value>dd/MMM/yyyy HH:mm</value>
+  </data>
+  <data name="DateTime_MonthDayFormatter" xml:space="preserve">
+    <value>dd/MMM</value>
+  </data>
+  <data name="Message_DeleteComfirmQuesion" xml:space="preserve">
+    <value>Do you really delete &lt;{0}&gt;?</value>
+  </data>
+  <data name="Message_DeleteComfirmTitle" xml:space="preserve">
+    <value>Comfirm to delete</value>
+  </data>
+  <data name="Message_DeleteErrorTitle" xml:space="preserve">
+    <value>Not allowed error</value>
+  </data>
+  <data name="Message_DeleteProcessStepComfirm" xml:space="preserve">
+    <value>History of the process work activities will also be deleted.\n Do you really delete presss step &lt;{0}&gt;?</value>
+  </data>
+  <data name="Message_DeleteProcessStepError" xml:space="preserve">
+    <value>The presss step &lt;{0}&gt; could not be deleted. It has active work items or the board has less than 3 process steps.</value>
+  </data>
+  <data name="CardEdit_StateOfHistoryBlockedOrMerged" xml:space="preserve">
+    <value>Blocked or merged status</value>
+  </data>
+  <data name="Metrics_ItemsOfBlocked" xml:space="preserve">
+    <value>Blocked items</value>
+  </data>
+  <data name="Metrics_ItemsOfBugfix" xml:space="preserve">
+    <value>Bug fix items</value>
+  </data>
+  <data name="CardEdit_Tag" xml:space="preserve">
+    <value>Tag：</value>
+  </data>
+  <data name="Card_TagFormat" xml:space="preserve">
+    <value>Tag：{0}</value>
+  </data>
+  <data name="Setting_Database" xml:space="preserve">
+    <value>Database:</value>
+  </data>
+  <data name="Setting_DropDB" xml:space="preserve">
+    <value>Drop database</value>
+  </data>
+  <data name="DropDB_Title" xml:space="preserve">
+    <value>Drop Database</value>
+  </data>
+  <data name="View_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Board_DefaultDescription" xml:space="preserve">
+    <value>Project description</value>
+  </data>
+  <data name="Board_DefaultTitle" xml:space="preserve">
+    <value>New project</value>
+  </data>
+  <data name="Card_DefaultTitle" xml:space="preserve">
+    <value>New work item</value>
+  </data>
+  <data name="Help_KanbanDescription" xml:space="preserve">
+    <value>A Kanban board is a work and workflow visualization tool that enables you to optimize the flow of your work.</value>
+  </data>
+  <data name="Process_BackLogTitle" xml:space="preserve">
+    <value>Backlog(Limit:∞)</value>
+  </data>
+  <data name="Process_DevelopmentTitle" xml:space="preserve">
+    <value>Development(Limit:5)</value>
+  </data>
+  <data name="Process_DoneTitle" xml:space="preserve">
+    <value>Done</value>
+  </data>
+  <data name="Process_NewProcessStepTitle" xml:space="preserve">
+    <value>NewWork(Limit:1)</value>
+  </data>
+  <data name="Process_PreparingTitle" xml:space="preserve">
+    <value>Preparing</value>
+  </data>
+  <data name="Process_ReleaseTitle" xml:space="preserve">
+    <value>Release(Limit:∞)</value>
+  </data>
+  <data name="Process_RequirementTitle" xml:space="preserve">
+    <value>Requirement(Limit:3)</value>
+  </data>
+  <data name="Process_TestTitle" xml:space="preserve">
+    <value>Test(Limit:3)</value>
+  </data>
+  <data name="Process_WIPTitle" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="AboutControl_ReleaseNote" xml:space="preserve">
+    <value>Release Note:</value>
+  </data>
+  <data name="ToolTip_ReleaseNote" xml:space="preserve">
+    <value>Release note</value>
+  </data>
+  <data name="CardEdit_StoryPoints" xml:space="preserve">
+    <value>Story points：</value>
+  </data>
+  <data name="ToolTip_StoryPoints_Small" xml:space="preserve">
+    <value>Small(within 2 or 3 days)</value>
+  </data>
+  <data name="Metrics_StoryPointsLabel" xml:space="preserve">
+    <value>Story points</value>
+  </data>
+  <data name="Metrics_Last6WeeksAveVelocity" xml:space="preserve">
+    <value>Average velocity for last 6 weeks: {0} / Two weeks</value>
+  </data>
+  <data name="CardEdit_TestCases" xml:space="preserve">
+    <value>Test cases：</value>
+  </data>
+  <data name="ToolTip_StoryPoints_Extra_Large" xml:space="preserve">
+    <value>Extra Large(more than 2 weeks)</value>
+  </data>
+  <data name="ToolTip_StoryPoints_Large" xml:space="preserve">
+    <value>Large(within 2 weeks)</value>
+  </data>
+  <data name="ToolTip_StoryPoints_Medium" xml:space="preserve">
+    <value>Medium(within 1 week)</value>
+  </data>
+  <data name="ToolTip_StoryPoints_Unknown" xml:space="preserve">
+    <value>Unknown story points</value>
+  </data>
+  <data name="Message_HasUnknownStoryPointsInReleasedItem" xml:space="preserve">
+    <value>Unknown story points exist in released item.</value>
+  </data>
+  <data name="CheckBoxSwitch_ShowDetail" xml:space="preserve">
+    <value>Detail</value>
+  </data>
+  <data name="CheckBoxSwitch_ShowOutline" xml:space="preserve">
+    <value>Outline</value>
+  </data>
+  <data name="ToolTip_ShowCardDetailOrOutline" xml:space="preserve">
+    <value>Show detailed/outline of cards</value>
+  </data>
+  <data name="ToolTip_CardsCountImage" xml:space="preserve">
+    <value>Total cards</value>
+  </data>
+  <data name="ToolTip_CardTotalPointsImage" xml:space="preserve">
+    <value>Total story points</value>
+  </data>
+  <data name="CardEdit_DesignOverview" xml:space="preserve">
+    <value>Design overview :</value>
+  </data>
+  <data name="CardEdit_MergedIntoMaster" xml:space="preserve">
+    <value>Merged into master</value>
+  </data>
+  <data name="CardEdit_IsScheduledToRelease" xml:space="preserve">
+    <value>Scheduled to release</value>
+  </data>
+  <data name="CardEdit_MergedIntoMajorBranch" xml:space="preserve">
+    <value>Merged into major branch</value>
+  </data>
+  <data name="CardEdit_MergedIntoMasterAndMajorBranch" xml:space="preserve">
+    <value>Merged into master and major branch</value>
+  </data>
+  <data name="ToolTip_StoryPoints" xml:space="preserve">
+    <value>Story point</value>
+  </data>
+</root>

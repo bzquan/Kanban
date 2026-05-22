@@ -1,0 +1,550 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="BoardPage_BoardLabel" xml:space="preserve">
+    <value>看板</value>
+  </data>
+  <data name="BoardPage_Filter" xml:space="preserve">
+    <value>过滤:</value>
+  </data>
+  <data name="Board_DetailFormat" xml:space="preserve">
+    <value>说明：{0}</value>
+  </data>
+  <data name="Board_NameFormat" xml:space="preserve">
+    <value>名称：{0}</value>
+  </data>
+  <data name="CardEdit_Blocked" xml:space="preserve">
+    <value>堵塞</value>
+  </data>
+  <data name="CardEdit_CardType" xml:space="preserve">
+    <value>工作类别：</value>
+  </data>
+  <data name="CardEdit_CreateDate" xml:space="preserve">
+    <value>创建日：</value>
+  </data>
+  <data name="CardEdit_Description" xml:space="preserve">
+    <value>说明：</value>
+  </data>
+  <data name="CardEdit_Estimation" xml:space="preserve">
+    <value>工作量：</value>
+  </data>
+  <data name="CardEdit_ReleaseDate" xml:space="preserve">
+    <value>发布日：</value>
+  </data>
+  <data name="CardEdit_ResponsiblePerson" xml:space="preserve">
+    <value>负责人：</value>
+  </data>
+  <data name="CardEdit_StateChanged" xml:space="preserve">
+    <value>状态变更日：</value>
+  </data>
+  <data name="CardEdit_StateChangedOfHistory" xml:space="preserve">
+    <value>状态变更日期</value>
+  </data>
+  <data name="CardEdit_StateChangeHistory" xml:space="preserve">
+    <value>工作状态变更履历：</value>
+  </data>
+  <data name="CardEdit_StateOfHistory" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="CardEdit_Title" xml:space="preserve">
+    <value>工作条目的编辑</value>
+  </data>
+  <data name="CardEdit_WorkItem" xml:space="preserve">
+    <value>工作条目：</value>
+  </data>
+  <data name="CardEdit_WorkState" xml:space="preserve">
+    <value>工作进行状况：</value>
+  </data>
+  <data name="Card_CreateDateFormat" xml:space="preserve">
+    <value>创建日：{0:yyyy/MM/dd}</value>
+  </data>
+  <data name="Card_ReleaseDateFormat" xml:space="preserve">
+    <value>发布日：{0:yyyy/MM/dd}</value>
+  </data>
+  <data name="Card_ResponsiblePerson" xml:space="preserve">
+    <value>负责人：</value>
+  </data>
+  <data name="Card_StateChangedDateFormat" xml:space="preserve">
+    <value>状态变更日：{0:yyyy/MM/dd}</value>
+  </data>
+  <data name="Card_WorkItemFormat" xml:space="preserve">
+    <value>条目：{0}</value>
+  </data>
+  <data name="CheckBoxSwitch_Off" xml:space="preserve">
+    <value>反面</value>
+  </data>
+  <data name="CheckBoxSwitch_On" xml:space="preserve">
+    <value>正面</value>
+  </data>
+  <data name="Kanban_Practice1" xml:space="preserve">
+    <value>1.可视化</value>
+  </data>
+  <data name="Kanban_Practice2" xml:space="preserve">
+    <value>2.限定在制品</value>
+  </data>
+  <data name="Kanban_Practice3" xml:space="preserve">
+    <value>3.提高流速</value>
+  </data>
+  <data name="Kanban_Practice4" xml:space="preserve">
+    <value>4.反馈链</value>
+  </data>
+  <data name="Kanban_Practice5" xml:space="preserve">
+    <value>5.逐步改进</value>
+  </data>
+  <data name="Kanban_PracticeCycleTimeNote" xml:space="preserve">
+    <value>说明: 周转时间 = 处理中的条目数 / 吞吐量</value>
+  </data>
+  <data name="Kanban_PracticeTitle" xml:space="preserve">
+    <value>实践</value>
+  </data>
+  <data name="Main_KanbanDetail" xml:space="preserve">
+    <value>看板的说明:</value>
+  </data>
+  <data name="Main_KanbanName" xml:space="preserve">
+    <value>看板名:</value>
+  </data>
+  <data name="Main_Process" xml:space="preserve">
+    <value>软件过程的定义</value>
+  </data>
+  <data name="Main_Title" xml:space="preserve">
+    <value>看板</value>
+  </data>
+  <data name="Metrics_AveCycleTime" xml:space="preserve">
+    <value>平均周转期间: </value>
+  </data>
+  <data name="Metrics_AveThroughput" xml:space="preserve">
+    <value>平均吞吐量:</value>
+  </data>
+  <data name="Metrics_AveWIP" xml:space="preserve">
+    <value>平均WIP:</value>
+  </data>
+  <data name="Metrics_CycleTimeLabel" xml:space="preserve">
+    <value>周转期间: </value>
+  </data>
+  <data name="Metrics_DateLabel" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="Metrics_DaysPerItem" xml:space="preserve">
+    <value>日/条目</value>
+  </data>
+  <data name="Metrics_DistributionLabel" xml:space="preserve">
+    <value>分布(%)</value>
+  </data>
+  <data name="Metrics_DistributionLabel1" xml:space="preserve">
+    <value>分布</value>
+  </data>
+  <data name="Metrics_DoneCumulative" xml:space="preserve">
+    <value>(累计完成)</value>
+  </data>
+  <data name="Metrics_DoneItems" xml:space="preserve">
+    <value>完成条目数: </value>
+  </data>
+  <data name="Metrics_DurationOfMetrics" xml:space="preserve">
+    <value>度量日数:{0}日</value>
+  </data>
+  <data name="Metrics_EstimatedCycleTime" xml:space="preserve">
+    <value>预计周转期间: </value>
+  </data>
+  <data name="Metrics_EstimationMuch" xml:space="preserve">
+    <value>△估算过高: </value>
+  </data>
+  <data name="Metrics_EstimationProper" xml:space="preserve">
+    <value>○估算合理: </value>
+  </data>
+  <data name="Metrics_EstimationSmall" xml:space="preserve">
+    <value>▽估算过低: </value>
+  </data>
+  <data name="Metrics_FormatLabelDate" xml:space="preserve">
+    <value>日</value>
+  </data>
+  <data name="Metrics_FormatLabelDay" xml:space="preserve">
+    <value>日</value>
+  </data>
+  <data name="Metrics_ItemsLabel" xml:space="preserve">
+    <value>条目数</value>
+  </data>
+  <data name="Metrics_MaxWIP" xml:space="preserve">
+    <value>最多WIP:</value>
+  </data>
+  <data name="Metrics_OccuredDate" xml:space="preserve">
+    <value>出现日:</value>
+  </data>
+  <data name="Metrics_PerWeek" xml:space="preserve">
+    <value>/周</value>
+  </data>
+  <data name="Metrics_TotalDate" xml:space="preserve">
+    <value>日数:</value>
+  </data>
+  <data name="Metrics_UnknownWeeks" xml:space="preserve">
+    <value>∞周</value>
+  </data>
+  <data name="Metrics_Weeks" xml:space="preserve">
+    <value>周</value>
+  </data>
+  <data name="Process_MetricsBegin" xml:space="preserve">
+    <value>度量开头</value>
+  </data>
+  <data name="Process_MetricsEnd" xml:space="preserve">
+    <value>度量结尾</value>
+  </data>
+  <data name="Setting_DBBackup" xml:space="preserve">
+    <value>备份</value>
+  </data>
+  <data name="Setting_DBCancel_ToolTip" xml:space="preserve">
+    <value>停止处理</value>
+  </data>
+  <data name="Setting_DBFolder" xml:space="preserve">
+    <value>文件夹:</value>
+  </data>
+  <data name="Setting_DBInformation" xml:space="preserve">
+    <value>信息:</value>
+  </data>
+  <data name="Setting_DBPriority" xml:space="preserve">
+    <value>恢复数据库时的数据库优先顺序</value>
+  </data>
+  <data name="Setting_DBRestore" xml:space="preserve">
+    <value>恢复</value>
+  </data>
+  <data name="Setting_Language" xml:space="preserve">
+    <value>语言:</value>
+  </data>
+  <data name="Setting_Title" xml:space="preserve">
+    <value>语言设定，数据库</value>
+  </data>
+  <data name="ToolTip_AddBoard" xml:space="preserve">
+    <value>新增看板</value>
+  </data>
+  <data name="ToolTip_AddCard" xml:space="preserve">
+    <value>新增卡片</value>
+  </data>
+  <data name="ToolTip_AddProcessStep" xml:space="preserve">
+    <value>新增开发步骤</value>
+  </data>
+  <data name="ToolTip_BoardBack" xml:space="preserve">
+    <value>反面看板</value>
+  </data>
+  <data name="ToolTip_BoardFront" xml:space="preserve">
+    <value>正面看板</value>
+  </data>
+  <data name="ToolTip_Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="ToolTip_Edit" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="ToolTip_Filtering" xml:space="preserve">
+    <value>用回车键确认(用空格或逗号分割关键字)
+发布日期是表示年月日连续数字(例, 20191101、191101、1101)</value>
+  </data>
+  <data name="ToolTip_GotoSetting" xml:space="preserve">
+    <value>设定</value>
+  </data>
+  <data name="ToolTip_MoveToBack" xml:space="preserve">
+    <value>移到反面</value>
+  </data>
+  <data name="ToolTip_MoveToFront" xml:space="preserve">
+    <value>移到正面</value>
+  </data>
+  <data name="ToolTip_OpenBoard" xml:space="preserve">
+    <value>打开看板</value>
+  </data>
+  <data name="ToolTip_Priority" xml:space="preserve">
+    <value>优先顺序</value>
+  </data>
+  <data name="ToolTip_Refresh" xml:space="preserve">
+    <value>界面更新</value>
+  </data>
+  <data name="ToolTip_SwitchBoardFrontAndBack" xml:space="preserve">
+    <value>切换正反面看板</value>
+  </data>
+  <data name="ToolTip_WorkedDays" xml:space="preserve">
+    <value>实际工作天数</value>
+  </data>
+  <data name="ToolTip_Zoom" xml:space="preserve">
+    <value>放大/缩小</value>
+  </data>
+  <data name="Agile_Manifesto1" xml:space="preserve">
+    <value>△ 个体和互动</value>
+  </data>
+  <data name="Agile_Manifesto2" xml:space="preserve">
+    <value>△ 工作的软件</value>
+  </data>
+  <data name="Agile_Manifesto3" xml:space="preserve">
+    <value>△ 客户合作</value>
+  </data>
+  <data name="Agile_Manifesto4" xml:space="preserve">
+    <value>△ 响应变化</value>
+  </data>
+  <data name="DateTime_LongFormatter" xml:space="preserve">
+    <value>yyyy/MM/dd HH:mm</value>
+  </data>
+  <data name="DateTime_MonthDayFormatter" xml:space="preserve">
+    <value>MM/dd</value>
+  </data>
+  <data name="Message_DeleteComfirmQuesion" xml:space="preserve">
+    <value>确实要删除&lt;{0}&gt;吗?</value>
+  </data>
+  <data name="Message_DeleteComfirmTitle" xml:space="preserve">
+    <value>确认删除</value>
+  </data>
+  <data name="Message_DeleteErrorTitle" xml:space="preserve">
+    <value>删除错误</value>
+  </data>
+  <data name="Message_DeleteProcessStepComfirm" xml:space="preserve">
+    <value>删除开发步骤也将删除相关开发活动履历。确实删除&lt;{0}&gt;吗?</value>
+  </data>
+  <data name="Message_DeleteProcessStepError" xml:space="preserve">
+    <value>不允许删除&lt;{0}&gt;。该开发步骤有进行中的工作条目，或当前看板少于三个开发步骤。</value>
+  </data>
+  <data name="CardEdit_StateOfHistoryBlockedOrMerged" xml:space="preserve">
+    <value>堵塞或合并状况</value>
+  </data>
+  <data name="Metrics_ItemsOfBlocked" xml:space="preserve">
+    <value>被堵塞条目数</value>
+  </data>
+  <data name="Metrics_ItemsOfBugfix" xml:space="preserve">
+    <value>故障修改条目数</value>
+  </data>
+  <data name="CardEdit_Tag" xml:space="preserve">
+    <value>分类:</value>
+  </data>
+  <data name="Card_TagFormat" xml:space="preserve">
+    <value>分类：{0}</value>
+  </data>
+  <data name="Setting_Database" xml:space="preserve">
+    <value>数据库:</value>
+  </data>
+  <data name="Setting_DropDB" xml:space="preserve">
+    <value>删除数据库</value>
+  </data>
+  <data name="DropDB_Title" xml:space="preserve">
+    <value>删除数据库</value>
+  </data>
+  <data name="View_Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Board_DefaultDescription" xml:space="preserve">
+    <value>项目的说明</value>
+  </data>
+  <data name="Board_DefaultTitle" xml:space="preserve">
+    <value>新项目</value>
+  </data>
+  <data name="Card_DefaultTitle" xml:space="preserve">
+    <value>新工作条目</value>
+  </data>
+  <data name="Help_KanbanDescription" xml:space="preserve">
+    <value>为了不断改进工作流程，可视化当前工作状况的工具。</value>
+  </data>
+  <data name="Process_BackLogTitle" xml:space="preserve">
+    <value>Backlog(Limit:∞)</value>
+  </data>
+  <data name="Process_DevelopmentTitle" xml:space="preserve">
+    <value>开发(Limit:5)</value>
+  </data>
+  <data name="Process_DoneTitle" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="Process_NewProcessStepTitle" xml:space="preserve">
+    <value>新工作(Limit:1)</value>
+  </data>
+  <data name="Process_PreparingTitle" xml:space="preserve">
+    <value>正在准备</value>
+  </data>
+  <data name="Process_ReleaseTitle" xml:space="preserve">
+    <value>发布(Limit:∞)</value>
+  </data>
+  <data name="Process_RequirementTitle" xml:space="preserve">
+    <value>需求(Limit:3)</value>
+  </data>
+  <data name="Process_TestTitle" xml:space="preserve">
+    <value>测试(Limit:3)</value>
+  </data>
+  <data name="Process_WIPTitle" xml:space="preserve">
+    <value>正在进行</value>
+  </data>
+  <data name="AboutControl_ReleaseNote" xml:space="preserve">
+    <value>修改履历:</value>
+  </data>
+  <data name="ToolTip_ReleaseNote" xml:space="preserve">
+    <value>修改履历</value>
+  </data>
+  <data name="CardEdit_StoryPoints" xml:space="preserve">
+    <value>故事点：</value>
+  </data>
+  <data name="ToolTip_StoryPoints" xml:space="preserve">
+    <value>故事点</value>
+  </data>
+  <data name="Metrics_StoryPointsLabel" xml:space="preserve">
+    <value>用户故事点</value>
+  </data>
+  <data name="Metrics_Last6WeeksAveVelocity" xml:space="preserve">
+    <value>最近六周的平均速度: {0} / 两周</value>
+  </data>
+  <data name="CardEdit_TestCases" xml:space="preserve">
+    <value>确认内容：</value>
+  </data>
+  <data name="ToolTip_StoryPoints_Extra_Large" xml:space="preserve">
+    <value>超大(两周以上)</value>
+  </data>
+  <data name="ToolTip_StoryPoints_Large" xml:space="preserve">
+    <value>大(两周内完成)</value>
+  </data>
+  <data name="ToolTip_StoryPoints_Medium" xml:space="preserve">
+    <value>中(一周内完成)</value>
+  </data>
+  <data name="ToolTip_StoryPoints_Small" xml:space="preserve">
+    <value>小(两三天内完成)</value>
+  </data>
+  <data name="ToolTip_StoryPoints_Unknown" xml:space="preserve">
+    <value>故事点尚未确定</value>
+  </data>
+  <data name="Message_HasUnknownStoryPointsInReleasedItem" xml:space="preserve">
+    <value>存在不明用户故事点的发布条目</value>
+  </data>
+  <data name="CheckBoxSwitch_ShowDetail" xml:space="preserve">
+    <value>详细</value>
+  </data>
+  <data name="CheckBoxSwitch_ShowOutline" xml:space="preserve">
+    <value>概要</value>
+  </data>
+  <data name="ToolTip_ShowCardDetailOrOutline" xml:space="preserve">
+    <value>显示卡片的详细或概要信息的切换</value>
+  </data>
+  <data name="ToolTip_CardsCountImage" xml:space="preserve">
+    <value>卡片合计</value>
+  </data>
+  <data name="ToolTip_CardTotalPointsImage" xml:space="preserve">
+    <value>故事点合计</value>
+  </data>
+  <data name="CardEdit_DesignOverview" xml:space="preserve">
+    <value>设计概要：</value>
+  </data>
+  <data name="CardEdit_MergedIntoMaster" xml:space="preserve">
+    <value>已合并到master</value>
+  </data>
+  <data name="CardEdit_IsScheduledToRelease" xml:space="preserve">
+    <value>发布条目</value>
+  </data>
+  <data name="CardEdit_MergedIntoMajorBranch" xml:space="preserve">
+    <value>已合并到主分支</value>
+  </data>
+  <data name="CardEdit_MergedIntoMasterAndMajorBranch" xml:space="preserve">
+    <value>已合并到master和主分支</value>
+  </data>
+</root>

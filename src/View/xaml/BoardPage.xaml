@@ -1,0 +1,283 @@
+﻿<Page x:Class="Kanban.BoardPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:dd="clr-namespace:DragAndDropLib"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      xmlns:local="clr-namespace:Kanban"
+      xmlns:p = "clr-namespace:Kanban.Properties"
+      xmlns:vm="clr-namespace:Kanban.ViewModel"
+      xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
+      xmlns:clr="clr-namespace:System;assembly=mscorlib"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="1200"
+      Title="看板" Loaded="OnPageLoaded">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="CheckBoxSwitchStyle.xaml"/>
+                <ResourceDictionary Source="CheckBoxShowDetailStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <local:BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter"/>
+            <Image x:Key="Refresh" Source="images/refresh.png"/>
+            <Image x:Key="ZoomIn"  Source="images/zoom-in.png"/>
+            <Image x:Key="ZoomOut" Source="images/zoom-out.png"/>
+
+            <local:SingleLineTextConverter x:Key="TextConverter"/>
+            <BitmapImage x:Key="Remove" UriSource="/images/remove.png"/>
+            <BitmapImage x:Key="EditIcon" UriSource="/images/edit-icon.png"/>
+            <BitmapImage x:Key="MergeCompleted" UriSource="/images/merge_completed.png"/>
+
+            <DataTemplate x:Key="cardListBoxDataTemplate" DataType="{x:Type vm:Card}">
+                <Border Margin="5" BorderThickness="2" BorderBrush="Blue" 
+                    Background="{Binding RelativeSource=
+                          {
+                             RelativeSource 
+                             Mode=FindAncestor, 
+                             AncestorType={x:Type ListBoxItem}
+                          }, 
+                          Path=Background
+                         }"
+                    CornerRadius="4">
+                    <StackPanel Orientation="Vertical" Width="{local:AppSettings Key=CardWidth}"  Margin="5,10,5,10" ToolTip="{Binding Path=CardContentsInfo}" ToolTipService.ShowDuration="600000">
+                        <StackPanel.Resources>
+                            <Style TargetType="{x:Type FrameworkElement}">
+                                <Setter Property="TextBlock.Foreground" Value="Black" />
+                            </Style>
+                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type FrameworkElement}}" />
+                            <Style TargetType="{x:Type Label}" BasedOn="{StaticResource {x:Type FrameworkElement}}" />
+                        </StackPanel.Resources>
+                        <StackPanel.Background>
+                            <SolidColorBrush Color="{Binding Path=CardBackgroundColor}" />
+                        </StackPanel.Background>
+                        <TextBlock Height="40" TextWrapping="Wrap" Text="{Binding Path=Title,  StringFormat={x:Static p:Resources.Card_WorkItemFormat}}" TextTrimming="CharacterEllipsis">
+                            <TextBlock.Background>
+                                <SolidColorBrush Color="{Binding Path=CardTitleBackgroundColor}" />
+                            </TextBlock.Background>
+                        </TextBlock>
+                        <TextBlock Text="{Binding Path=Tag, StringFormat={x:Static p:Resources.Card_TagFormat}}"
+                                   TextTrimming="CharacterEllipsis"
+                                   Visibility="{Binding Path=ShowDetailedCard, Converter={StaticResource booleanToVisibilityConverter}}"
+                                   ToolTip="{x:Static p:Resources.ToolTip_ShowCardDetailOrOutline}">
+                            <TextBlock.Background>
+                                <SolidColorBrush Color="{Binding Path=CardTagBackgroundColor}" />
+                            </TextBlock.Background>
+                        </TextBlock>
+                        <TextBlock Background="LightYellow" TextTrimming="CharacterEllipsis"
+                               Visibility="{Binding Path=ShowDetailedCard, Converter={StaticResource booleanToVisibilityConverter}}">
+                            <Run Text="{x:Static p:Resources.Card_ResponsiblePerson}"/>
+                            <Run Text="{Binding Executors}" FontWeight="Bold" FontSize="14" Foreground="Blue" />
+                        </TextBlock>
+                        <TextBlock FontSize="12" FontWeight="Bold" Foreground="Blue" Text="{Binding Path=ReleaseDate, StringFormat={x:Static p:Resources.Card_ReleaseDateFormat}}" />
+                        <TextBlock Text="{Binding Path=StateChangedDate,
+                               StringFormat={x:Static p:Resources.Card_StateChangedDateFormat}}"
+                               Visibility="{Binding Path=ShowDetailedCard, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                        <TextBlock Text="{Binding Path=CreateDate,
+                               StringFormat={x:Static p:Resources.Card_CreateDateFormat}}"
+                               Visibility="{Binding Path=ShowDetailedCard, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                        <StackPanel Orientation="Horizontal"
+                                Visibility="{Binding Path=ShowDetailedCard, Converter={StaticResource booleanToVisibilityConverter}}">
+                            <Image HorizontalAlignment="Left" Margin="5, 0, 0, 0" Width="16" Height="16" Source="{Binding Path=ProcessCycleTimeDaysImage}" ToolTip="{x:Static p:Resources.ToolTip_WorkedDays}"/>
+                            <Image HorizontalAlignment="Left" Width="200" Height="16" Source="{Binding Path=ProcessCycleTimeImage}" ToolTip="{x:Static p:Resources.ToolTip_WorkedDays}" />
+                        </StackPanel>
+                        <DockPanel>
+                            <!-- Margin: Left, Top, Right, Bottom -->
+                            <Image DockPanel.Dock="Left" Margin="5, 0, 0, 0" Width="24" Height="24" Source="{Binding Path=CardStoryPoints}" ToolTip="{Binding Path=ToolTipOfStoryPoints}" />
+                            <Image DockPanel.Dock="Left" Margin="2, 0, 0, 0" Width="24" Height="24" Source="{Binding Path=CardTypeImageUri}" ToolTip="{Binding Path=ToolTipOfCardType}" />
+                            <Button Tag="{Binding}" DockPanel.Dock="Left" Width="24" Height="24" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" Click="OnEditCard"  ToolTip="{x:Static p:Resources.ToolTip_Edit}" >
+                                <StackPanel>
+                                    <Image Width="24" Height="24" Source="{StaticResource EditIcon}" />
+                                </StackPanel>
+                            </Button>
+                            <Image DockPanel.Dock="Left" Width="24" Height="24"  Margin="2, 0, 0, 0" Source="{StaticResource MergeCompleted}" ToolTip="{x:Static p:Resources.CardEdit_MergedIntoMasterAndMajorBranch}"
+                                   Visibility="{Binding Path=IsMergeCompleted, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                            <Image DockPanel.Dock="Right" Width="24" Height="24"  Margin="5, 0, 5, 0" Source="{Binding Path=CardPriority}" ToolTip="{x:Static p:Resources.ToolTip_Priority}"/>
+                            <Button Tag="{Binding}" DockPanel.Dock="Right" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Command="{Binding Path=DeleteCardCommand}" ToolTip="{x:Static p:Resources.ToolTip_Delete}">
+                                <StackPanel>
+                                    <Image Width="24" Height="24" Source="{StaticResource Remove}" />
+                                </StackPanel>
+                            </Button>
+                            <Button Tag="{Binding}" DockPanel.Dock="Right" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Command="{Binding Path=SwitchFrontBackCommand}" ToolTip="{Binding Path=ToolTipFrontBack}" >
+                                <StackPanel>
+                                    <Image Width="24" Height="24" Source="{Binding Path=FrontBackImageUri}" />
+                                </StackPanel>
+                            </Button>
+                        </DockPanel>
+                    </StackPanel>
+                </Border>
+            </DataTemplate>
+
+            <DataTemplate x:Key="scrollStageDataTemplate" DataType="{x:Type vm:WIPDoneViewModel}">
+                <DockPanel DataContext="{Binding}">
+                    <dd:ItemsControlDragDropDecorator
+                        DockPanel.Dock="Bottom"  
+                        ItemType="{x:Type vm:Card}"
+                        DataTemplate="{StaticResource
+                        cardListBoxDataTemplate}" >
+                        <local:ScrollingListBox
+                            Margin="10"
+                            HorizontalContentAlignment="Stretch"
+                            ItemsSource="{Binding Path=Cards}"
+                            SelectedItem="{Binding SelectedCard}"
+                            ItemTemplate="{StaticResource cardListBoxDataTemplate}" >
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{x:Null}">
+                                    <EventSetter Event="MouseDoubleClick" Handler="OnDoubleClicked"/>
+                                    <Setter Property="Control.Padding" Value="0"></Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="ListBoxItem.IsSelected" Value="True">
+                                            <Setter Property="ListBoxItem.Background" Value="SkyBlue" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </local:ScrollingListBox>
+                    </dd:ItemsControlDragDropDecorator>
+                </DockPanel>
+            </DataTemplate>
+
+            <DataTemplate x:Key="stageDataTemplate" DataType="{x:Type vm:WIPDoneViewModel}">
+                <DockPanel DataContext="{Binding}">
+                    <dd:ItemsControlDragDropDecorator DockPanel.Dock="Bottom"  
+                    ItemType="{x:Type vm:Card}" DataTemplate="{StaticResource cardListBoxDataTemplate}" >
+                        <ListBox Margin="10" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Path=Cards}" SelectedItem="{Binding SelectedCard}" ItemTemplate="{StaticResource cardListBoxDataTemplate}" >
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{x:Null}">
+                                    <EventSetter Event="MouseDoubleClick" Handler="OnDoubleClicked"/>
+                                    <Setter Property="Control.Padding" Value="0"></Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="ListBoxItem.IsSelected" Value="True">
+                                            <Setter Property="ListBoxItem.Background" Value="SkyBlue" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </ListBox>
+                    </dd:ItemsControlDragDropDecorator>
+                </DockPanel>
+            </DataTemplate>
+
+            <DataTemplate x:Key="firstProcessStepDataTemplate" DataType="{x:Type vm:ProcessStepViewModel}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="24" />
+                        <RowDefinition Height="24" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="200" Width="auto" />
+                        <ColumnDefinition MinWidth="200" Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Background="{Binding LabelColorName}" />
+                    <Border Grid.Row="1" Grid.Column="0" BorderThickness="1" BorderBrush="Green" />
+                    <Border Grid.Row="1" Grid.Column="1" BorderThickness="1" BorderBrush="Green" />
+                    <TextBlock Grid.Row="0" HorizontalAlignment="Center" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding StepName}" />
+                    <StackPanel Grid.Row="1"  Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock VerticalAlignment="Bottom" Text="{Binding WIPTitle}" />
+                        <Image Width="18" Height="18" Source="{Binding Path=WIPCardsCountImage}" ToolTip="{x:Static p:Resources.ToolTip_CardsCountImage}"/>
+                        <Image Width="18" Height="18" Source="{Binding Path=WIPCardTotalPointsImage}" ToolTip="{x:Static p:Resources.ToolTip_CardTotalPointsImage}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1"  Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock VerticalAlignment="Bottom" Text="{Binding DoneTitle}" />
+                        <Image Width="18" Height="18" Source="{Binding Path=DoneCardsCountImage}"  ToolTip="{x:Static p:Resources.ToolTip_CardsCountImage}"/>
+                        <Image Width="18" Height="18" Source="{Binding Path=DoneCardTotalPointsImage}" ToolTip="{x:Static p:Resources.ToolTip_CardTotalPointsImage}"/>
+                    </StackPanel>
+                    <ContentControl Grid.Row="2" Grid.Column="0" Content="{Binding WIPCards}"
+           				ContentTemplate="{StaticResource scrollStageDataTemplate}">
+                    </ContentControl>
+                    <ContentControl Grid.Row="2" Grid.Column="1" Content="{Binding DoneCards}"
+           				ContentTemplate="{StaticResource stageDataTemplate}">
+                    </ContentControl>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="processStepDataTemplate" DataType="{x:Type vm:ProcessStepViewModel}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="24" />
+                        <RowDefinition Height="24" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="200" Width="auto" />
+                        <ColumnDefinition MinWidth="200" Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Background="{Binding LabelColorName}" />
+                    <Border Grid.Row="1" Grid.Column="0" BorderThickness="1" BorderBrush="Green" />
+                    <Border Grid.Row="1" Grid.Column="1" BorderThickness="1" BorderBrush="Green" />
+                    <TextBlock Grid.Row="0" HorizontalAlignment="Center" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding StepName}" />
+                    <StackPanel Grid.Row="1"  Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock VerticalAlignment="Bottom" Text="{Binding WIPTitle}" />
+                        <Image Width="18" Height="18" Source="{Binding Path=WIPCardsCountImage}" ToolTip="{x:Static p:Resources.ToolTip_CardsCountImage}"/>
+                        <Image Width="18" Height="18" Source="{Binding Path=WIPCardTotalPointsImage}" ToolTip="{x:Static p:Resources.ToolTip_CardTotalPointsImage}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1"  Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock VerticalAlignment="Bottom" Text="{Binding DoneTitle}" />
+                        <Image Width="18" Height="18" Source="{Binding Path=DoneCardsCountImage}"  ToolTip="{x:Static p:Resources.ToolTip_CardsCountImage}"/>
+                        <Image Width="18" Height="18" Source="{Binding Path=DoneCardTotalPointsImage}" ToolTip="{x:Static p:Resources.ToolTip_CardTotalPointsImage}"/>
+                    </StackPanel>
+                    <ContentControl Grid.Row="2" Grid.Column="0" Content="{Binding WIPCards}"
+           				ContentTemplate="{StaticResource stageDataTemplate}">
+                    </ContentControl>
+                    <ContentControl Grid.Row="2" Grid.Column="1" Content="{Binding DoneCards}"
+           				ContentTemplate="{StaticResource stageDataTemplate}">
+                    </ContentControl>
+                </Grid>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" Grid.ColumnSpan="2" >
+            <ToolBar x:Name="mainToolBar" VerticalAlignment="Top" DockPanel.Dock="Left" >
+                <Button x:Name="addButton" Width="32" Height="32" VerticalAlignment="Center" Command="{Binding Path=AddCardCommand, Mode=OneTime}" ToolTip="{x:Static p:Resources.ToolTip_AddCard}">
+                    <local:AutoGreyableImage Source="/Kanban;component/images/add.png"/>
+                </Button>
+                <Button x:Name="zoomButton" Width="32" Height="32" VerticalAlignment="Center" Click="OnZoomButtonClicked" ToolTip="{x:Static p:Resources.ToolTip_Zoom}">
+                    <DynamicResource ResourceKey="ZoomOut"/>
+                </Button>
+                <Button x:Name="refreshButton" Width="32" Height="32" VerticalAlignment="Center" Command="{Binding Path=ReloadBoardCommand, Mode=OneTime}" CommandParameter="{Binding Text, ElementName=CardFilterTexBox}" ToolTip="{x:Static p:Resources.ToolTip_Refresh}">
+                    <DynamicResource ResourceKey="Refresh"/>
+                </Button>
+                <StackPanel Orientation="Horizontal" Margin="10, 0, 0, 0">
+                    <TextBlock Foreground="Blue" Text="{x:Static p:Resources.BoardPage_Filter}" VerticalAlignment="Center"/>
+                    <TextBox x:Name="CardFilterTexBox" HorizontalAlignment="Stretch" VerticalAlignment="Center" BorderThickness="1" BorderBrush="DarkGray" MinWidth="100" TextWrapping="NoWrap" ToolTip="{x:Static p:Resources.ToolTip_Filtering}">
+                        <TextBox.InputBindings>
+                            <KeyBinding Command="{Binding Path=FilterCardsCommand, Mode=OneTime}" CommandParameter="{Binding Text, ElementName=CardFilterTexBox}" Key="Enter" />
+                        </TextBox.InputBindings>
+                    </TextBox>
+                </StackPanel>
+                <StackPanel Margin="5, 0, 0, 0" Orientation="Horizontal">
+                    <CheckBox x:Name="showFrontKanban" Style="{DynamicResource CheckBoxSwitchStyle}" Content="{x:Static p:Resources.BoardPage_BoardLabel}" Foreground="Blue" VerticalAlignment="Center" IsChecked="{Binding ShowFrontBoard}" ToolTip="{x:Static p:Resources.ToolTip_SwitchBoardFrontAndBack}"/>
+                    <Image Width="24" Height="24" Source="{Binding Path=BoardFrontBackImageUri}" ToolTip="{Binding Path=BoardFrontBackImageToolTip}" />
+                </StackPanel>
+                <StackPanel Margin="20, 0, 0, 0" Orientation="Horizontal">
+                    <CheckBox  x:Name="showDetailedCards" IsEnabled="True" Style="{DynamicResource CheckBoxShowDetailStyle}"  Foreground="Blue" VerticalAlignment="Center" IsChecked="{Binding ShowDetailedCards}" ToolTip="{x:Static p:Resources.ToolTip_ShowCardDetailOrOutline}"/>
+                </StackPanel>
+            </ToolBar>
+        </DockPanel>
+        <ScrollViewer x:Name="boardPageScrollViewer" Grid.Row="1" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">
+            <Grid x:Name="boardPage" >
+                <!-- 下記画面要素は参考のみで、PageLoad時にCode behindによりすべて削除される -->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <!-- 要求仕様 -->
+                <ContentControl Grid.Column="0" Content="{Binding}" ContentTemplate="{StaticResource processStepDataTemplate}" />
+                <!-- 開発 -->
+                <ContentControl Grid.Column="1" Content="{Binding}" ContentTemplate="{StaticResource processStepDataTemplate}" />
+                <!-- 確認 -->
+                <ContentControl Grid.Column="2" Content="{Binding}" ContentTemplate="{StaticResource processStepDataTemplate}" />
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>

@@ -1,7 +1,5 @@
-﻿using MongoDB.Driver;
-using System.Collections.Generic;
-using Kanban.Util;
-using MongoDB.Bson;
+﻿using Kanban.Util;
+using MongoDB.Driver;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Friend1a")]
 namespace Kanban.Repository

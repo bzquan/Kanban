@@ -1,0 +1,128 @@
+﻿<Window x:Class="Kanban.EditCardDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:p = "clr-namespace:Kanban.Properties"
+        xmlns:local="clr-namespace:Kanban"
+        xmlns:vm="clr-namespace:Kanban.ViewModel;assembly=KanbanViewModel"
+        d:DataContext="{d:DesignInstance vm:EditCardDialogViewModel}"
+        mc:Ignorable="d"
+        Title="{x:Static p:Resources.CardEdit_Title}"
+        Height="800" SizeToContent="Width"
+        WindowStartupLocation="CenterScreen"
+        Closed="OnClosed"
+        Loaded="OnLoaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid local:GridHelpers.RowCount="14" Grid.Row="0" Margin="0,0,10,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" Content="{x:Static p:Resources.CardEdit_WorkItem}"/>
+            <TextBox x:Name="CardTitle"
+                     Grid.Row="0"
+                     Grid.Column="1"
+                     Text="{Binding Path=Card.Title}"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Center"
+                     TextWrapping="NoWrap">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Return"
+                                Command="{Binding UpdateTitleCommand}"
+                                CommandParameter="{Binding ElementName=CardTitle, Path=Text}" />
+                </TextBox.InputBindings>
+            </TextBox>
+            <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Content="{x:Static p:Resources.CardEdit_Tag}"/>
+            <TextBox x:Name="CardTag"
+                     Grid.Row="1"
+                     Grid.Column="1"
+                     Text="{Binding Path=Card.Tag}"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Center"
+                     TextWrapping="NoWrap">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Return"
+                                Command="{Binding UpdateTagCommand}"
+                                CommandParameter="{Binding ElementName=CardTag, Path=Text}" />
+                </TextBox.InputBindings>
+            </TextBox>
+            <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Content="{x:Static p:Resources.CardEdit_ResponsiblePerson}"/>
+            <TextBox x:Name="Executors"
+                     Grid.Row="2"
+                     Grid.Column="1"
+                     Text="{Binding Card.Executors}"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Center"
+                     TextWrapping="NoWrap">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Return"
+                                Command="{Binding UpdateExecutorsCommand}"
+                                CommandParameter="{Binding ElementName=Executors, Path=Text}" />
+                </TextBox.InputBindings>
+            </TextBox>
+            <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" Content="{x:Static p:Resources.CardEdit_Description}"/>
+            <TextBox x:Name="CardSummary" Grid.Row="3" Grid.Column="1"
+                     Text ="{Binding Card.Summary}"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     AcceptsReturn="True"
+                     MinHeight="50"
+                     MinWidth="300"
+                     TextWrapping="NoWrap"
+                     HorizontalAlignment="Stretch"/>
+            <GridSplitter Grid.Row="4" Grid.Column="1" Height="5" HorizontalAlignment="Stretch"/>
+            <Label Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" Content="{x:Static p:Resources.CardEdit_TestCases}"/>
+            <TextBox x:Name="CardTestCases" Grid.Row="5" Grid.Column="1"
+                     Text ="{Binding Card.TestCases}"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     AcceptsReturn="True"
+                     MinHeight="50"
+                     MinWidth="300"
+                     TextWrapping="NoWrap"
+                     HorizontalAlignment="Stretch"/>
+            <GridSplitter Grid.Row="6" Grid.Column="1" Height="5" HorizontalAlignment="Stretch"/>
+            <Label Grid.Row="7" Grid.Column="0" HorizontalAlignment="Right" Content="{x:Static p:Resources.CardEdit_DesignOverview}"/>
+            <TextBox x:Name="DesignOverview" Grid.Row="7" Grid.Column="1"
+                     Text ="{Binding Card.DesignOverview}"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     AcceptsReturn="True"
+                     MinHeight="50"
+                     MinWidth="300"
+                     TextWrapping="NoWrap"
+                     HorizontalAlignment="Stretch"/>
+            <GridSplitter Grid.Row="8" Grid.Column="1" Height="5" HorizontalAlignment="Stretch"/>
+            <Label Grid.Row="9" Grid.Column="0" HorizontalAlignment="Right" Content="{x:Static p:Resources.CardEdit_CardType}"/>
+            <ComboBox x:Name="CardTypeComboBox" Grid.Row="9" Grid.Column="1"  HorizontalAlignment="Stretch" SelectedItem="{Binding Path=CardType, Mode=TwoWay}"/>
+            <Label Grid.Row="10" Grid.Column="0" HorizontalAlignment="Right" Content="{x:Static p:Resources.CardEdit_CreateDate}"/>
+            <DatePicker x:Name="CreateDate" Grid.Row="10" Grid.Column="1" SelectedDate ="{Binding Card.CreateDate, Mode=TwoWay, TargetNullValue={x:Static System:DateTime.Now}}" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+            <Label Grid.Row="11" Grid.Column="0" HorizontalAlignment="Right" Content="{x:Static p:Resources.CardEdit_ReleaseDate}"/>
+            <DatePicker x:Name="ReleaseDate" HorizontalAlignment="Stretch" Grid.Row="11" Grid.Column="1"  SelectedDate ="{Binding Card.ReleaseDate, Mode=TwoWay, TargetNullValue={x:Static System:DateTime.Now}}" VerticalAlignment="Top"/>
+            <Label Grid.Row="12" Grid.Column="0" HorizontalAlignment="Right" Content="{x:Static p:Resources.CardEdit_StoryPoints}"/>
+            <ComboBox x:Name="StoryPointsComboBox" Grid.Row="12" Grid.Column="1"  HorizontalAlignment="Stretch" ItemsSource="{Binding Path=StoryPointsRange, Mode=OneWay}" SelectedItem="{Binding Path=StoryPoints, Mode=TwoWay}">
+            </ComboBox>
+            <Label Grid.Row="13" Grid.Column="0" HorizontalAlignment="Right" Content="{x:Static p:Resources.CardEdit_WorkState}"/>
+            <StackPanel Grid.Row="13" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <CheckBox x:Name="IsBlockedCheckBox"  Content="{x:Static p:Resources.CardEdit_Blocked}" IsChecked="{Binding Card.IsBlocked}"/>
+                <CheckBox x:Name="IsMergedIntoMasterCheckBox" Margin="10,0,0,0" Content="{x:Static p:Resources.CardEdit_MergedIntoMaster}" IsChecked="{Binding Card.IsMergedIntoMaster}" HorizontalAlignment="Stretch"/>
+                <CheckBox x:Name="IsMergedIntoMajorBranchCheckBox" Margin="10,0,0,0" Content="{x:Static p:Resources.CardEdit_MergedIntoMajorBranch}" IsChecked="{Binding Card.IsMergedIntoMajorBranch}" HorizontalAlignment="Stretch"/>
+                <CheckBox x:Name="IsScheduledToReleaseCheckBox" Margin="10,0,0,0" Content="{x:Static p:Resources.CardEdit_IsScheduledToRelease}" IsChecked="{Binding Card.IsScheduledToRelease}" HorizontalAlignment="Stretch"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Background="LightBlue" Content="{x:Static p:Resources.CardEdit_StateChangeHistory}"/>
+            <DataGrid x:Name="activityDataGrid" Grid.Row="1" DockPanel.Dock="Top" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" IsReadOnly="True"  CanUserAddRows="False" CanUserDeleteRows="False" />
+        </Grid>
+    </Grid>
+</Window>

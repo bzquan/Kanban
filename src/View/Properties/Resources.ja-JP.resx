@@ -1,0 +1,550 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="BoardPage_BoardLabel" xml:space="preserve">
+    <value>看板</value>
+  </data>
+  <data name="BoardPage_Filter" xml:space="preserve">
+    <value>絞り込み:</value>
+  </data>
+  <data name="Board_DetailFormat" xml:space="preserve">
+    <value>詳細：{0}</value>
+  </data>
+  <data name="Board_NameFormat" xml:space="preserve">
+    <value>名称：{0}</value>
+  </data>
+  <data name="CardEdit_Blocked" xml:space="preserve">
+    <value>不順</value>
+  </data>
+  <data name="CardEdit_CardType" xml:space="preserve">
+    <value>作業種別：</value>
+  </data>
+  <data name="CardEdit_CreateDate" xml:space="preserve">
+    <value>作成日：</value>
+  </data>
+  <data name="CardEdit_Description" xml:space="preserve">
+    <value>概要：</value>
+  </data>
+  <data name="CardEdit_Estimation" xml:space="preserve">
+    <value>規模：</value>
+  </data>
+  <data name="CardEdit_ReleaseDate" xml:space="preserve">
+    <value>リリース日：</value>
+  </data>
+  <data name="CardEdit_ResponsiblePerson" xml:space="preserve">
+    <value>担当者：</value>
+  </data>
+  <data name="CardEdit_StateChanged" xml:space="preserve">
+    <value>状態変更日：</value>
+  </data>
+  <data name="CardEdit_StateChangedOfHistory" xml:space="preserve">
+    <value>状態への遷移日</value>
+  </data>
+  <data name="CardEdit_StateChangeHistory" xml:space="preserve">
+    <value>作業状態変更履歴：</value>
+  </data>
+  <data name="CardEdit_StateOfHistory" xml:space="preserve">
+    <value>状態</value>
+  </data>
+  <data name="CardEdit_Title" xml:space="preserve">
+    <value>作業項目の編集</value>
+  </data>
+  <data name="CardEdit_WorkItem" xml:space="preserve">
+    <value>作業名：</value>
+  </data>
+  <data name="CardEdit_WorkState" xml:space="preserve">
+    <value>作業進行状態：</value>
+  </data>
+  <data name="Card_CreateDateFormat" xml:space="preserve">
+    <value>作成日：{0:yyyy/MM/dd}</value>
+  </data>
+  <data name="Card_ReleaseDateFormat" xml:space="preserve">
+    <value>リリース日：{0:yyyy/MM/dd}</value>
+  </data>
+  <data name="Card_ResponsiblePerson" xml:space="preserve">
+    <value>担当者：</value>
+  </data>
+  <data name="Card_StateChangedDateFormat" xml:space="preserve">
+    <value>状態変更日：{0:yyyy/MM/dd}</value>
+  </data>
+  <data name="Card_WorkItemFormat" xml:space="preserve">
+    <value>作業：{0}</value>
+  </data>
+  <data name="CheckBoxSwitch_Off" xml:space="preserve">
+    <value>裏面</value>
+  </data>
+  <data name="CheckBoxSwitch_On" xml:space="preserve">
+    <value>表面</value>
+  </data>
+  <data name="Kanban_Practice1" xml:space="preserve">
+    <value>1.見える化</value>
+  </data>
+  <data name="Kanban_Practice2" xml:space="preserve">
+    <value>2.仕掛りの制限</value>
+  </data>
+  <data name="Kanban_Practice3" xml:space="preserve">
+    <value>3.流れの向上</value>
+  </data>
+  <data name="Kanban_Practice4" xml:space="preserve">
+    <value>4.フィードバック</value>
+  </data>
+  <data name="Kanban_Practice5" xml:space="preserve">
+    <value>5.進化、改善</value>
+  </data>
+  <data name="Kanban_PracticeCycleTimeNote" xml:space="preserve">
+    <value>補足: サイクルタイム = 仕掛り項目数 / スループット</value>
+  </data>
+  <data name="Kanban_PracticeTitle" xml:space="preserve">
+    <value>実践</value>
+  </data>
+  <data name="Main_KanbanDetail" xml:space="preserve">
+    <value>看板の情報:</value>
+  </data>
+  <data name="Main_KanbanName" xml:space="preserve">
+    <value>看板名:</value>
+  </data>
+  <data name="Main_Process" xml:space="preserve">
+    <value>作業手順の定義</value>
+  </data>
+  <data name="Main_Title" xml:space="preserve">
+    <value>看板</value>
+  </data>
+  <data name="Metrics_AveCycleTime" xml:space="preserve">
+    <value>平均サイクルタイム: </value>
+  </data>
+  <data name="Metrics_AveThroughput" xml:space="preserve">
+    <value>平均スループット:</value>
+  </data>
+  <data name="Metrics_AveWIP" xml:space="preserve">
+    <value>平均WIP:</value>
+  </data>
+  <data name="Metrics_CycleTimeLabel" xml:space="preserve">
+    <value>サイクルタイム: </value>
+  </data>
+  <data name="Metrics_DateLabel" xml:space="preserve">
+    <value>日付</value>
+  </data>
+  <data name="Metrics_DaysPerItem" xml:space="preserve">
+    <value>日/項目</value>
+  </data>
+  <data name="Metrics_DistributionLabel" xml:space="preserve">
+    <value>分布(%)</value>
+  </data>
+  <data name="Metrics_DistributionLabel1" xml:space="preserve">
+    <value>分布</value>
+  </data>
+  <data name="Metrics_DoneCumulative" xml:space="preserve">
+    <value>(完了累積)</value>
+  </data>
+  <data name="Metrics_DoneItems" xml:space="preserve">
+    <value>完了項目数: </value>
+  </data>
+  <data name="Metrics_DurationOfMetrics" xml:space="preserve">
+    <value>計測期間:{0}日間</value>
+  </data>
+  <data name="Metrics_EstimatedCycleTime" xml:space="preserve">
+    <value>予想サイクルタイム: </value>
+  </data>
+  <data name="Metrics_EstimationMuch" xml:space="preserve">
+    <value>△過多見積: </value>
+  </data>
+  <data name="Metrics_EstimationProper" xml:space="preserve">
+    <value>○適切見積: </value>
+  </data>
+  <data name="Metrics_EstimationSmall" xml:space="preserve">
+    <value>▽過少見積: </value>
+  </data>
+  <data name="Metrics_FormatLabelDate" xml:space="preserve">
+    <value>日</value>
+  </data>
+  <data name="Metrics_FormatLabelDay" xml:space="preserve">
+    <value>日</value>
+  </data>
+  <data name="Metrics_ItemsLabel" xml:space="preserve">
+    <value>項目数</value>
+  </data>
+  <data name="Metrics_MaxWIP" xml:space="preserve">
+    <value>最大WIP:</value>
+  </data>
+  <data name="Metrics_OccuredDate" xml:space="preserve">
+    <value>発生日:</value>
+  </data>
+  <data name="Metrics_PerWeek" xml:space="preserve">
+    <value>/週</value>
+  </data>
+  <data name="Metrics_TotalDate" xml:space="preserve">
+    <value>日数:</value>
+  </data>
+  <data name="Metrics_UnknownWeeks" xml:space="preserve">
+    <value>∞週間</value>
+  </data>
+  <data name="Metrics_Weeks" xml:space="preserve">
+    <value>週間</value>
+  </data>
+  <data name="Process_MetricsBegin" xml:space="preserve">
+    <value>計測先頭</value>
+  </data>
+  <data name="Process_MetricsEnd" xml:space="preserve">
+    <value>計測末尾</value>
+  </data>
+  <data name="Setting_DBBackup" xml:space="preserve">
+    <value>バックアップ</value>
+  </data>
+  <data name="Setting_DBCancel_ToolTip" xml:space="preserve">
+    <value>処理の取り消し</value>
+  </data>
+  <data name="Setting_DBFolder" xml:space="preserve">
+    <value>場所：</value>
+  </data>
+  <data name="Setting_DBInformation" xml:space="preserve">
+    <value>情報:</value>
+  </data>
+  <data name="Setting_DBPriority" xml:space="preserve">
+    <value>データベース復元時の優先順位</value>
+  </data>
+  <data name="Setting_DBRestore" xml:space="preserve">
+    <value>復元</value>
+  </data>
+  <data name="Setting_Language" xml:space="preserve">
+    <value>言語：</value>
+  </data>
+  <data name="Setting_Title" xml:space="preserve">
+    <value>言語設定とデータベース</value>
+  </data>
+  <data name="ToolTip_AddBoard" xml:space="preserve">
+    <value>ボードの追加</value>
+  </data>
+  <data name="ToolTip_AddCard" xml:space="preserve">
+    <value>カードの追加</value>
+  </data>
+  <data name="ToolTip_AddProcessStep" xml:space="preserve">
+    <value>作業の追加</value>
+  </data>
+  <data name="ToolTip_BoardBack" xml:space="preserve">
+    <value>裏看板</value>
+  </data>
+  <data name="ToolTip_BoardFront" xml:space="preserve">
+    <value>表看板</value>
+  </data>
+  <data name="ToolTip_Delete" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="ToolTip_Edit" xml:space="preserve">
+    <value>編集</value>
+  </data>
+  <data name="ToolTip_Filtering" xml:space="preserve">
+    <value>Enterで実行(空白またはカンマが検索語の区切り文字)
+リリース日は区切り無しの年月日(20191101、191101、1101)</value>
+  </data>
+  <data name="ToolTip_GotoSetting" xml:space="preserve">
+    <value>管理画面へ</value>
+  </data>
+  <data name="ToolTip_MoveToBack" xml:space="preserve">
+    <value>裏面へ移動</value>
+  </data>
+  <data name="ToolTip_MoveToFront" xml:space="preserve">
+    <value>表面へ移動</value>
+  </data>
+  <data name="ToolTip_OpenBoard" xml:space="preserve">
+    <value>看板へ</value>
+  </data>
+  <data name="ToolTip_Priority" xml:space="preserve">
+    <value>優先順位</value>
+  </data>
+  <data name="ToolTip_Refresh" xml:space="preserve">
+    <value>画面更新</value>
+  </data>
+  <data name="ToolTip_SwitchBoardFrontAndBack" xml:space="preserve">
+    <value>看板表裏の切り替え</value>
+  </data>
+  <data name="ToolTip_WorkedDays" xml:space="preserve">
+    <value>実稼働日数</value>
+  </data>
+  <data name="ToolTip_Zoom" xml:space="preserve">
+    <value>拡大/縮小</value>
+  </data>
+  <data name="Agile_Manifesto1" xml:space="preserve">
+    <value>△ 個人と対話</value>
+  </data>
+  <data name="Agile_Manifesto2" xml:space="preserve">
+    <value>△ 動くソフトウェア</value>
+  </data>
+  <data name="Agile_Manifesto3" xml:space="preserve">
+    <value>△ 顧客との協調</value>
+  </data>
+  <data name="Agile_Manifesto4" xml:space="preserve">
+    <value>△ 変化への対応</value>
+  </data>
+  <data name="DateTime_LongFormatter" xml:space="preserve">
+    <value>yyyy/MM/dd HH:mm</value>
+  </data>
+  <data name="DateTime_MonthDayFormatter" xml:space="preserve">
+    <value>MM/dd</value>
+  </data>
+  <data name="Message_DeleteComfirmQuesion" xml:space="preserve">
+    <value>&lt;{0}&gt;を削除しますか?</value>
+  </data>
+  <data name="Message_DeleteComfirmTitle" xml:space="preserve">
+    <value>削除確認</value>
+  </data>
+  <data name="Message_DeleteErrorTitle" xml:space="preserve">
+    <value>削除エラー</value>
+  </data>
+  <data name="Message_DeleteProcessStepComfirm" xml:space="preserve">
+    <value>作業手順を削除すると、当該手順の作業履歴も削除されます。本当に&lt;{0}&gt;を削除しますか?</value>
+  </data>
+  <data name="Message_DeleteProcessStepError" xml:space="preserve">
+    <value>作業中の項目があるか、または作業手順が3以下であるため、&lt;{0}&gt;を削除できません。</value>
+  </data>
+  <data name="CardEdit_StateOfHistoryBlockedOrMerged" xml:space="preserve">
+    <value>不順とマージ状態</value>
+  </data>
+  <data name="Metrics_ItemsOfBlocked" xml:space="preserve">
+    <value>不順項目数</value>
+  </data>
+  <data name="Metrics_ItemsOfBugfix" xml:space="preserve">
+    <value>障害対応項目数</value>
+  </data>
+  <data name="CardEdit_Tag" xml:space="preserve">
+    <value>タグ：</value>
+  </data>
+  <data name="Card_TagFormat" xml:space="preserve">
+    <value>タグ：{0}</value>
+  </data>
+  <data name="Setting_Database" xml:space="preserve">
+    <value>データベース:</value>
+  </data>
+  <data name="Setting_DropDB" xml:space="preserve">
+    <value>データベースの削除</value>
+  </data>
+  <data name="DropDB_Title" xml:space="preserve">
+    <value>データベースの削除</value>
+  </data>
+  <data name="View_Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="Board_DefaultDescription" xml:space="preserve">
+    <value>プロジェクト詳細</value>
+  </data>
+  <data name="Board_DefaultTitle" xml:space="preserve">
+    <value>新規プロジェクト</value>
+  </data>
+  <data name="Card_DefaultTitle" xml:space="preserve">
+    <value>新規項目</value>
+  </data>
+  <data name="Help_KanbanDescription" xml:space="preserve">
+    <value>開発プロセスを改善するため、作業状況を見える化するツール。</value>
+  </data>
+  <data name="Process_BackLogTitle" xml:space="preserve">
+    <value>Backlog(Limit:∞)</value>
+  </data>
+  <data name="Process_DevelopmentTitle" xml:space="preserve">
+    <value>開発(Limit:5)</value>
+  </data>
+  <data name="Process_DoneTitle" xml:space="preserve">
+    <value>完了</value>
+  </data>
+  <data name="Process_NewProcessStepTitle" xml:space="preserve">
+    <value>新規作業(Limit:1)</value>
+  </data>
+  <data name="Process_PreparingTitle" xml:space="preserve">
+    <value>準備中</value>
+  </data>
+  <data name="Process_ReleaseTitle" xml:space="preserve">
+    <value>リリース(Limit:∞)</value>
+  </data>
+  <data name="Process_RequirementTitle" xml:space="preserve">
+    <value>仕様(Limit:3)</value>
+  </data>
+  <data name="Process_TestTitle" xml:space="preserve">
+    <value>試験(Limit:3)</value>
+  </data>
+  <data name="Process_WIPTitle" xml:space="preserve">
+    <value>作業中</value>
+  </data>
+  <data name="AboutControl_ReleaseNote" xml:space="preserve">
+    <value>改定履歴:</value>
+  </data>
+  <data name="ToolTip_ReleaseNote" xml:space="preserve">
+    <value>改定履歴</value>
+  </data>
+  <data name="CardEdit_StoryPoints" xml:space="preserve">
+    <value>ストーリー・ポイント：</value>
+  </data>
+  <data name="ToolTip_StoryPoints_Small" xml:space="preserve">
+    <value>小(二､三日以内完了)</value>
+  </data>
+  <data name="Metrics_StoryPointsLabel" xml:space="preserve">
+    <value>ストーリーポイント</value>
+  </data>
+  <data name="Metrics_Last6WeeksAveVelocity" xml:space="preserve">
+    <value>最近六週間の平均速度: {0} / 二週間</value>
+  </data>
+  <data name="CardEdit_TestCases" xml:space="preserve">
+    <value>確認項目：</value>
+  </data>
+  <data name="ToolTip_StoryPoints_Extra_Large" xml:space="preserve">
+    <value>超大(二週間以上)</value>
+  </data>
+  <data name="ToolTip_StoryPoints_Large" xml:space="preserve">
+    <value>大(二週間以内完了)</value>
+  </data>
+  <data name="ToolTip_StoryPoints_Medium" xml:space="preserve">
+    <value>中(一週間以内完了)</value>
+  </data>
+  <data name="ToolTip_StoryPoints_Unknown" xml:space="preserve">
+    <value>未定のストーリポイント</value>
+  </data>
+  <data name="Message_HasUnknownStoryPointsInReleasedItem" xml:space="preserve">
+    <value>リリースされた項目に未定のストリートポイントがある</value>
+  </data>
+  <data name="CheckBoxSwitch_ShowDetail" xml:space="preserve">
+    <value>詳細</value>
+  </data>
+  <data name="CheckBoxSwitch_ShowOutline" xml:space="preserve">
+    <value>概要</value>
+  </data>
+  <data name="ToolTip_ShowCardDetailOrOutline" xml:space="preserve">
+    <value>カードの詳細/概要表示の切り替え</value>
+  </data>
+  <data name="ToolTip_CardsCountImage" xml:space="preserve">
+    <value>カードの合計</value>
+  </data>
+  <data name="ToolTip_CardTotalPointsImage" xml:space="preserve">
+    <value>ストリートポイントの合計</value>
+  </data>
+  <data name="CardEdit_DesignOverview" xml:space="preserve">
+    <value>処置内容：</value>
+  </data>
+  <data name="CardEdit_MergedIntoMaster" xml:space="preserve">
+    <value>masterへマージ済み</value>
+  </data>
+  <data name="CardEdit_IsScheduledToRelease" xml:space="preserve">
+    <value>リリース対象</value>
+  </data>
+  <data name="CardEdit_MergedIntoMajorBranch" xml:space="preserve">
+    <value>Major branchへマージ済み</value>
+  </data>
+  <data name="CardEdit_MergedIntoMasterAndMajorBranch" xml:space="preserve">
+    <value>masterとmajor branchへマージ済み</value>
+  </data>
+  <data name="ToolTip_StoryPoints" xml:space="preserve">
+    <value>ストーリーポイント</value>
+  </data>
+</root>
