@@ -13,15 +13,19 @@
   <ItemGroup>
     <Compile Remove="src\View\fonts\**" />
     <Compile Remove="src\View\images\**" />
+    <Compile Remove="src\View\ReleaseNote\**" />
     <Compile Remove="src\View\xaml\images\**" />
     <EmbeddedResource Remove="src\View\fonts\**" />
     <EmbeddedResource Remove="src\View\images\**" />
+    <EmbeddedResource Remove="src\View\ReleaseNote\**" />
     <EmbeddedResource Remove="src\View\xaml\images\**" />
     <None Remove="src\View\fonts\**" />
     <None Remove="src\View\images\**" />
+    <None Remove="src\View\ReleaseNote\**" />
     <None Remove="src\View\xaml\images\**" />
     <Page Remove="src\View\fonts\**" />
     <Page Remove="src\View\images\**" />
+    <Page Remove="src\View\ReleaseNote\**" />
     <Page Remove="src\View\xaml\images\**" />
   </ItemGroup>
 
@@ -65,6 +69,9 @@
     <None Remove="images\folder.png" />
     <None Remove="images\forward.png" />
     <None Remove="images\front_board.png" />
+    <None Remove="images\FST -logo.jpg" />
+    <None Remove="images\FST-logo.jpg" />
+    <None Remove="images\FST-logo.png" />
     <None Remove="images\go-left.png" />
     <None Remove="images\go-right.png" />
     <None Remove="images\help.png" />
@@ -103,11 +110,14 @@
     <None Remove="images\zoom-in.png" />
     <None Remove="images\zoom-out.ico" />
     <None Remove="images\zoom-out.png" />
-    <None Remove="src\View\ReleaseNote\ReleaseNote.html" />
+    <None Remove="ReleaseNote\ReleaseNote.html" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="src\View\ReleaseNote\ReleaseNote.html" />
+    <Resource Include="images\FST-logo.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <EmbeddedResource Include="ReleaseNote\ReleaseNote.html" />
   </ItemGroup>
 
   <ItemGroup>
@@ -221,6 +231,9 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="images\front_board.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\FST-logo.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="images\go-left.png">

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Navigation;
-using System.Windows.Media;
-
+﻿using Kanban.Util;
 using Kanban.ViewModel;
-using Kanban.Util;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace Kanban
 {
@@ -95,7 +91,7 @@ namespace Kanban
             vm.ApplicationLogo = Util.Util.DrawingImageFromResource("front_board.png");
             vm.Title = Properties.Resources.Main_Title;
             vm.Description = Properties.Resources.Help_KanbanDescription;
-            vm.PublisherLogo = Util.Util.DrawingImageFromResource("TDD.png");
+            vm.PublisherLogo = Util.Util.DrawingImageFromResource("FST-logo.png");
             vm.ReleaseNote = LoadReleaseNote();
             vm.Version = ExtractVersionNoFromReleaseNote(vm.ReleaseNote);
 
