@@ -2,6 +2,7 @@
 using Kanban.Repository;
 using Kanban.Util;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
@@ -84,8 +85,49 @@ namespace Kanban.ViewModel
 
         private static void RestartApplication()
         {
-            System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
-            Application.Current.Shutdown();
+            try
+            {
+                var processStartInfo = MakeProcessStartInfo();
+                Process.Start(processStartInfo);
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"Failed to restart the Kanban: {ex.Message}";
+                MessageBox.Show(errorMessage,
+                                "Change language",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Error);
+            }
+            finally
+            {
+                Application.Current.Shutdown();
+            }
+        }
+
+        private static ProcessStartInfo MakeProcessStartInfo()
+        {
+            string assemblyPath = Application.ResourceAssembly.Location;
+            string[] cmdArgs = Environment.GetCommandLineArgs();
+            string arguments = string.Join(" ", cmdArgs.Skip(1).Select(a => $"\"{a}\""));
+
+            if (assemblyPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+            {
+                return new ProcessStartInfo("dotnet", $"\"{assemblyPath}\" {arguments}")
+                {
+                    UseShellExecute = false,
+                    WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory
+                };
+            }
+            else
+            {
+                return new ProcessStartInfo(assemblyPath)
+                {
+                    UseShellExecute = true,
+                    Arguments = arguments,
+                    WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory
+                };
+            }
+
         }
 
         private void OnDatabaseDropped(object sender, DatabaseDroppedArg arg)
@@ -103,7 +145,7 @@ namespace Kanban.ViewModel
                 if ((value != null) && (m_CurrentDBName != value))
                 {
                     MessageBoxResult result = MessageBox.Show(
-                                                   "You need to restart the application to make new databse effective",
+                                                   "You need to restart the application to make new database effective",
                                                    "Change database",
                                                    MessageBoxButton.YesNo,
                                                    MessageBoxImage.Information);
