@@ -5,11 +5,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-//[assembly: AssemblyTitle("Kanban")]
-[assembly: AssemblyDescription("")]
-//[assembly: AssemblyConfiguration("")]
-//[assembly: AssemblyCompany("")]
-//[assembly: AssemblyProduct("Kanban")]
+[assembly: AssemblyTitle("Kanban")]
+[assembly: AssemblyDescription("Kanban")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("FST Co., Ltd.")]
+[assembly: AssemblyProduct("Kanban")]
 [assembly: AssemblyCopyright("Copyright © 2016-2026")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
