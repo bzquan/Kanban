@@ -31,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Board.ico" />
     <None Remove="fonts\BRADHITC.ttf" />
     <None Remove="images\about.png" />
     <None Remove="images\add.png" />
@@ -120,6 +121,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Board.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="fonts\BRADHITC.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
