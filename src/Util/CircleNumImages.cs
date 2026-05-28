@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
 
@@ -76,17 +71,16 @@ namespace Kanban.Util
         {
             FontFamily handwrite_font = HandWriteFontFamily.Bradley_Hand_ITC_FontFamily;
 
-            double emSize = key.Text.Length < 3 ? 64 : 48; // テキストの書式設定に使用するフォント サイズ
+            double emSize = key.Text.Length < 3 ? 64 : 48; // テキストの書式設定に使用するフォントサイズ
             Typeface font_face = new Typeface(handwrite_font, FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
-            FormattedText formattedText =
-                new FormattedText(
-                    key.Text,
-                    CultureInfo.InvariantCulture,
-                    FlowDirection.LeftToRight,
-                    font_face,
-                    emSize,
-                    new SolidColorBrush(key.FontColor));
-            return formattedText;
+
+            return new FormattedText(key.Text,
+                                     CultureInfo.InvariantCulture,
+                                     FlowDirection.LeftToRight,
+                                     font_face,
+                                     emSize,
+                                     new SolidColorBrush(key.FontColor),
+                                     Util.PixelsPerDip());
         }
 
         private static DrawingImage DrawCircleNumImage(NumberImageValue key, int size, FormattedText formattedText)
