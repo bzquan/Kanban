@@ -61,10 +61,7 @@ public class SystemSettingViewModel : NotifyPropertyChangedBase
 
     public string CurrentLanguage
     {
-        get
-        {
-            return EnumUtil.GetEnumDescription(m_AppSettings.Language);
-        }
+        get => EnumUtil.GetEnumDescription(m_AppSettings.Language);
         set
         {
             Languages language = EnumUtil.ToEnumValue<Languages>(value);
@@ -166,7 +163,7 @@ public class SystemSettingViewModel : NotifyPropertyChangedBase
 
     public string DBBackupFolder
     {
-        get { return m_AppSettings.DBBackupFolder; }
+        get => m_AppSettings.DBBackupFolder;
         set
         {
             m_AppSettings.DBBackupFolder = value.Trim();
@@ -178,7 +175,7 @@ public class SystemSettingViewModel : NotifyPropertyChangedBase
 
     public DBPriority4Restore DBPriority4Restore
     {
-        get { return m_AppSettings.DBPriority4Restore; }
+        get => m_AppSettings.DBPriority4Restore;
         set
         {
             m_AppSettings.DBPriority4Restore = value;
@@ -190,15 +187,9 @@ public class SystemSettingViewModel : NotifyPropertyChangedBase
     public string DBPriority4Restore_CurrentDB => EnumUtil.GetEnumDescription(DBPriority4Restore.CurrentDB);
     public string DBPriority4Restore_ToBeRestoredDB => EnumUtil.GetEnumDescription(DBPriority4Restore.ToBeRestoredDB);
 
-    private bool CanDumpDB()
-    {
-        return HaveDBBackupTools() && IsDBBackupFolderValid();
-    }
+    private bool CanDumpDB() => HaveDBBackupTools() && IsDBBackupFolderValid();
 
-    private bool CanRestoreDB()
-    {
-        return HaveDBBackupTools() && IsDBRestoreFolderExist();
-    }
+    private bool CanRestoreDB() => HaveDBBackupTools() && IsDBRestoreFolderExist();
 
     private bool HaveDBBackupTools()
     {
