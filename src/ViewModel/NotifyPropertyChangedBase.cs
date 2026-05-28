@@ -21,7 +21,7 @@ public abstract class NotifyPropertyChangedBase : INotifyPropertyChanged
         return true;
     }
 
-    protected void SetProperty<TTarget, TValue>(TTarget target, TValue newValue, [CallerMemberName] string? targetPropertyName = null, [CallerMemberName] string propertyName = null)
+    protected void SetProperty<TTarget, TValue>(TTarget target, TValue newValue, [CallerMemberName] string? targetPropertyName = null, [CallerMemberName] string? propertyName = null)
     {
         System.Reflection.PropertyInfo prop = target.GetType().GetProperty(targetPropertyName);
         if (!EqualityComparer<TValue>.Default.Equals((TValue)prop.GetValue(target), newValue))

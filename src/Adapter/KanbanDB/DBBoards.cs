@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Bson;
-using System.Reflection;
 
 namespace Kanban.Repository
 {
@@ -26,10 +19,10 @@ namespace Kanban.Repository
         public async Task Insert(Board board) => await BoardsCollection.InsertOneAsync(board);
         public async Task Insert(List<Board> boards) => await BoardsCollection.InsertManyAsync(boards);
 
-        public async Task<ReplaceOneResult> Save(Board board) => await BoardsCollection.ReplaceOneAsync(
-                                            doc => doc._id == board._id,
-                                            board,
-                                            new UpdateOptions { IsUpsert = true });
+        public async Task<ReplaceOneResult> Save(Board board) =>
+            await BoardsCollection.ReplaceOneAsync(doc => doc._id == board._id,
+                                                   board,
+                                                   new ReplaceOptions { IsUpsert = true });
 
         public async Task<Board> CreateNewBord()
         {
@@ -85,7 +78,7 @@ namespace Kanban.Repository
             DeleteResult result = await BoardsCollection.DeleteOneAsync(filter);
             return result;
         }
-        
+
         public static string NameOfProcessStepSeqNo =>
             nameof(WorkState) + "." + nameof(WorkState.ProcessStepSeqNo);
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -51,7 +50,7 @@ namespace Kanban.Util
             return true;
         }
 
-        public static string GetFullPath(string fileName)
+        public static string? GetFullPath(string fileName)
         {
             if (File.Exists(fileName))
                 return Path.GetFullPath(fileName);
@@ -113,13 +112,13 @@ namespace Kanban.Util
         /// </summary>
         /// <param name="image_name"></param>
         /// <returns>イメージ</returns>
-        public static BitmapImage ImageFromResource(string image_name)
+        public static BitmapImage? ImageFromResource(string image_name)
         {
             string uri = PackImageURI(image_name);
             return (uri != null) ? new BitmapImage(new Uri(uri)) : null;
         }
 
-        public static string PackImageURI(string image_name)
+        public static string? PackImageURI(string image_name)
         {
             if (image_name != null)
                 return "pack://application:,,,/Kanban;component/images/" + image_name;
@@ -164,12 +163,12 @@ namespace Kanban.Util
             if (obj != null) action(obj);
         }
 
-        public static TR IfNotNull<T, TR>(this T obj, Func<T, TR> func) where T : class
+        public static TR? IfNotNull<T, TR>(this T obj, Func<T, TR> func) where T : class
         {
             return (obj != null) ? func(obj) : default(TR);
         }
 
-        public static SolidColorBrush BrushFromColorName(string colorName)
+        public static SolidColorBrush? BrushFromColorName(string colorName)
         {
             return (SolidColorBrush)new BrushConverter().ConvertFromString(colorName);
         }

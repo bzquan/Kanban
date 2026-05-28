@@ -95,7 +95,7 @@ namespace Kanban.Infrastructure.HtmlConverter
         /// String representing the attribute name to be searched for
         /// </param>
         /// <returns></returns>
-        public static string GetAttribute(XmlElement element, string attributeName)
+        public static string? GetAttribute(XmlElement element, string attributeName)
         {
             attributeName = attributeName.ToLower();
 
@@ -1009,7 +1009,7 @@ namespace Kanban.Infrastructure.HtmlConverter
             }
         }
 
-        private static XmlElement GetCellFromSingleCellTable(XmlElement htmlTableElement)
+        private static XmlElement? GetCellFromSingleCellTable(XmlElement htmlTableElement)
         {
             XmlElement singleCell = null;
 

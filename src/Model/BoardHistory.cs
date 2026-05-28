@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 
 using static Kanban.Util.DateTimeUtil;
 using static Kanban.Util.Util;
@@ -117,14 +114,17 @@ namespace Kanban.Model
                                                               x.Date.IsWorkingDay());
 
                 DateTime maxWIPDate = CardsByDateList.First(x => x.CardCount == maxWIP).Date;
-                return new WIPInfo { MaxWIP = maxWIP,
-                                     AverageWIP = averageWIP,
-                                     MaxWIPDate = maxWIPDate,
-                                     WorkingDays4MaxWIP = workingDays };
+                return new WIPInfo
+                {
+                    MaxWIP = maxWIP,
+                    AverageWIP = averageWIP,
+                    MaxWIPDate = maxWIPDate,
+                    WorkingDays4MaxWIP = workingDays
+                };
             }
         }
 
-        public CardsByDate GetCardsByDate(DateTime date)
+        public CardsByDate? GetCardsByDate(DateTime date)
         {
             return CardsByDateList.FirstOrDefault(x => x.Date == date);
         }

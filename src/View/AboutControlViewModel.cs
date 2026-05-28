@@ -25,110 +25,109 @@
 
 namespace Kanban
 {
-	using System;
-	using System.ComponentModel;
-	using System.Reflection;
-	using System.Windows;
-	using System.Windows.Media;
+    using System;
+    using System.Reflection;
+    using System.Windows;
+    using System.Windows.Media;
 
-	public class AboutControlViewModel : ViewModel.NotifyPropertyChangedBase
+    public class AboutControlViewModel : ViewModel.NotifyPropertyChangedBase
     {
-		private ImageSource _ApplicationLogo;
-		private string _Title;
-		private string _Description;
-		private string _Version;
-		private ImageSource _PublisherLogo;
-		private string _Copyright;
-		private string _ReleaseNotes;
-		private string _HyperlinkText;
-		private Uri _Hyperlink;
+        private ImageSource _ApplicationLogo;
+        private string _Title;
+        private string _Description;
+        private string _Version;
+        private ImageSource _PublisherLogo;
+        private string _Copyright;
+        private string _ReleaseNotes;
+        private string _HyperlinkText;
+        private Uri _Hyperlink;
         private string _Publisher;
         private bool _isSemanticVersioning;
 
-		public AboutControlViewModel()
-		{
-			Window = new Window();
-			Window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-			Window.SizeToContent = SizeToContent.WidthAndHeight;
-			Window.ResizeMode = ResizeMode.NoResize;
-			Window.WindowStyle = WindowStyle.None;
+        public AboutControlViewModel()
+        {
+            Window = new Window();
+            Window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            Window.SizeToContent = SizeToContent.WidthAndHeight;
+            Window.ResizeMode = ResizeMode.NoResize;
+            Window.WindowStyle = WindowStyle.None;
 
-			Window.ShowInTaskbar = false;
-			Window.Title = "About";
-			Window.Deactivated += Window_Deactivated;
+            Window.ShowInTaskbar = false;
+            Window.Title = "About";
+            Window.Deactivated += Window_Deactivated;
 
-			Assembly assembly = Assembly.GetEntryAssembly();
-			Version = assembly.GetName().Version.ToString();
-			Title = assembly.GetName().Name;
-			
-			AssemblyCopyrightAttribute copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>();
-			AssemblyDescriptionAttribute description = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>();
-			AssemblyCompanyAttribute company = assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
+            Assembly assembly = Assembly.GetEntryAssembly();
+            Version = assembly.GetName().Version.ToString();
+            Title = assembly.GetName().Name;
+
+            AssemblyCopyrightAttribute copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>();
+            AssemblyDescriptionAttribute description = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>();
+            AssemblyCompanyAttribute company = assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
 
             Copyright = copyright.Copyright;
-			Description = description.Description;
-			Publisher = company.Company;
-		}
+            Description = description.Description;
+            Publisher = company.Company;
+        }
 
-		/// <summary>
-		/// Gets or sets the application logo.
-		/// </summary>
-		/// <value>The application logo.</value>
-		public ImageSource ApplicationLogo
-		{
-			get
-			{
-				return _ApplicationLogo;
-			}
-			set
-			{
-				if(_ApplicationLogo != value)
-				{
-					_ApplicationLogo = value;
-					OnPropertyChanged();
-				}
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets the application title.
-		/// </summary>
-		/// <value>The application title.</value>
-		public string Title
-		{
-			get
-			{
-				return _Title;
-			}
-			set
-			{
-				if(_Title != value)
-				{
-					_Title = value;
+        /// <summary>
+        /// Gets or sets the application logo.
+        /// </summary>
+        /// <value>The application logo.</value>
+        public ImageSource ApplicationLogo
+        {
+            get
+            {
+                return _ApplicationLogo;
+            }
+            set
+            {
+                if (_ApplicationLogo != value)
+                {
+                    _ApplicationLogo = value;
                     OnPropertyChanged();
                 }
             }
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the application info.
-		/// </summary>
-		/// <value>The application info.</value>
-		public string Description
-		{
-			get
-			{
-				return _Description;
-			}
-			set
-			{
-				if(_Description != value)
-				{
-					_Description = value;
+        /// <summary>
+        /// Gets or sets the application title.
+        /// </summary>
+        /// <value>The application title.</value>
+        public string Title
+        {
+            get
+            {
+                return _Title;
+            }
+            set
+            {
+                if (_Title != value)
+                {
+                    _Title = value;
                     OnPropertyChanged();
                 }
             }
-		}
+        }
+
+        /// <summary>
+        /// Gets or sets the application info.
+        /// </summary>
+        /// <value>The application info.</value>
+        public string Description
+        {
+            get
+            {
+                return _Description;
+            }
+            set
+            {
+                if (_Description != value)
+                {
+                    _Description = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Gets or sets if Semantic Versioning is used.
@@ -148,14 +147,14 @@ namespace Kanban
             }
         }
 
-		/// <summary>
-		/// Gets or sets the application version.
-		/// </summary>
-		/// <value>The application version.</value>
-		public string Version
-		{
-			get
-			{
+        /// <summary>
+        /// Gets or sets the application version.
+        /// </summary>
+        /// <value>The application version.</value>
+        public string Version
+        {
+            get
+            {
                 if (IsSemanticVersioning)
                 {
                     var tmp = _Version.Split('.');
@@ -163,117 +162,117 @@ namespace Kanban
                     return version;
                 }
 
-				return _Version;
-			}
-			set
-			{
-				if(_Version != value)
-				{
-					_Version = value;
+                return _Version;
+            }
+            set
+            {
+                if (_Version != value)
+                {
+                    _Version = value;
                     OnPropertyChanged();
                 }
             }
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the publisher logo.
-		/// </summary>
-		/// <value>The publisher logo.</value>
-		public ImageSource PublisherLogo
-		{
-			get
-			{
-				return _PublisherLogo;
-			}
-			set
-			{
-				if(_PublisherLogo != value)
-				{
-					_PublisherLogo = value;
+        /// <summary>
+        /// Gets or sets the publisher logo.
+        /// </summary>
+        /// <value>The publisher logo.</value>
+        public ImageSource PublisherLogo
+        {
+            get
+            {
+                return _PublisherLogo;
+            }
+            set
+            {
+                if (_PublisherLogo != value)
+                {
+                    _PublisherLogo = value;
                     OnPropertyChanged();
                 }
             }
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the publisher.
-		/// </summary>
-		/// <value>The publisher.</value>
-		public string Publisher
-		{
-			get
-			{
-				return _Publisher;
-			}
-			set
-			{
-				if(_Publisher != value)
-				{
-					_Publisher = value;
+        /// <summary>
+        /// Gets or sets the publisher.
+        /// </summary>
+        /// <value>The publisher.</value>
+        public string Publisher
+        {
+            get
+            {
+                return _Publisher;
+            }
+            set
+            {
+                if (_Publisher != value)
+                {
+                    _Publisher = value;
                     OnPropertyChanged();
                 }
             }
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the copyright label.
-		/// </summary>
-		/// <value>The copyright label.</value>
-		public string Copyright
-		{
-			get
-			{
-				return _Copyright;
-			}
-			set
-			{
-				if(_Copyright != value)
-				{
-					_Copyright = value;
+        /// <summary>
+        /// Gets or sets the copyright label.
+        /// </summary>
+        /// <value>The copyright label.</value>
+        public string Copyright
+        {
+            get
+            {
+                return _Copyright;
+            }
+            set
+            {
+                if (_Copyright != value)
+                {
+                    _Copyright = value;
                     OnPropertyChanged();
                 }
             }
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the hyperlink text.
-		/// </summary>
-		/// <value>The hyperlink text.</value>
-		public string HyperlinkText
-		{
-			get
-			{
-				return _HyperlinkText;
-			}
-			set
-			{
-				try
-				{
-					Hyperlink = new Uri(value);
-					_HyperlinkText = value;
+        /// <summary>
+        /// Gets or sets the hyperlink text.
+        /// </summary>
+        /// <value>The hyperlink text.</value>
+        public string HyperlinkText
+        {
+            get
+            {
+                return _HyperlinkText;
+            }
+            set
+            {
+                try
+                {
+                    Hyperlink = new Uri(value);
+                    _HyperlinkText = value;
                     OnPropertyChanged();
                 }
                 catch
-				{
-				}
-			}
-		}
+                {
+                }
+            }
+        }
 
-		public Uri Hyperlink
-		{
-			get
-			{
-				return _Hyperlink;
-			}
-			set
-			{
-				if(_Hyperlink != value)
-				{
-					_Hyperlink = value;
+        public Uri Hyperlink
+        {
+            get
+            {
+                return _Hyperlink;
+            }
+            set
+            {
+                if (_Hyperlink != value)
+                {
+                    _Hyperlink = value;
                     OnPropertyChanged();
                 }
             }
-		}
+        }
 
         /// <summary>
         /// Release note in HTML
@@ -294,15 +293,15 @@ namespace Kanban
             }
         }
 
-		public Window Window
-		{
-			get;
-			set;
-		}
+        public Window Window
+        {
+            get;
+            set;
+        }
 
-		void Window_Deactivated(object sender, System.EventArgs e)
-		{
-			Window.Close();
-		}
-	}
+        void Window_Deactivated(object sender, System.EventArgs e)
+        {
+            Window.Close();
+        }
+    }
 }

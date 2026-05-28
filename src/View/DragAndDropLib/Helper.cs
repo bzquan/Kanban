@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Controls;
-using System.Collections;
+﻿using System.Collections;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace DragAndDropLib
 {
@@ -86,7 +81,7 @@ namespace DragAndDropLib
             }
         }
 
-        public static object GetDataObjectFromItemsControl(ItemsControl itemsControl, Point p)
+        public static object? GetDataObjectFromItemsControl(ItemsControl itemsControl, Point p)
         {
             UIElement element = itemsControl.InputHitTest(p) as UIElement;
             while (element != null)
@@ -107,7 +102,7 @@ namespace DragAndDropLib
             return null;
         }
 
-        public static UIElement GetItemContainerFromPoint(ItemsControl itemsControl, Point p)
+        public static UIElement? GetItemContainerFromPoint(ItemsControl itemsControl, Point p)
         {
             UIElement element = itemsControl.InputHitTest(p) as UIElement;
             while (element != null)
@@ -128,14 +123,14 @@ namespace DragAndDropLib
             return null;
         }
 
-        public static UIElement GetItemContainerFromItemsControl(ItemsControl itemsControl)
+        public static UIElement? GetItemContainerFromItemsControl(ItemsControl itemsControl)
         {
             UIElement container = null;
             if (itemsControl != null && itemsControl.Items.Count > 0)
             {
                 container = itemsControl.ItemContainerGenerator.ContainerFromIndex(0) as UIElement;
             }
-            else 
+            else
             {
                 container = itemsControl;
             }
@@ -209,7 +204,7 @@ namespace DragAndDropLib
             return null;
         }
 
-        public static ScrollViewer FindScrollViewer(ItemsControl itemsControl)
+        public static ScrollViewer? FindScrollViewer(ItemsControl itemsControl)
         {
             UIElement ele = itemsControl;
             while (ele != null)
@@ -228,9 +223,9 @@ namespace DragAndDropLib
             return null;
         }
 
-        public static double ScrollOffsetUp(double verticaloffset, double offset)
+        public static double ScrollOffsetUp(double verticalOffset, double offset)
         {
-            return verticaloffset - offset < 0.0 ? 0.0 : verticaloffset - offset;
+            return verticalOffset - offset < 0.0 ? 0.0 : verticalOffset - offset;
         }
     }
 }

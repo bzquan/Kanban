@@ -1,9 +1,4 @@
 ﻿using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Kanban.Repository
 {
@@ -64,7 +59,7 @@ namespace Kanban.Repository
         private bool ExistCardField(string fieldName)
         {
             var filter = Builders<Card>.Filter.Exists(fieldName, exists: true);
-            var count = m_DBCards.CardsCollection.Find(filter).Count();
+            var count = m_DBCards.CardsCollection.Find(filter).CountDocuments();
             return count > 0;
         }
 
