@@ -1,12 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
+﻿using MongoDB.Bson;
 using MongoDB.Driver;
-
-using static Kanban.Repository.DBClient;
 using static Kanban.Repository.CollectionNames;
-using MongoDB.Bson;
-using System;
 
 namespace Kanban.Repository
 {
@@ -128,7 +122,10 @@ namespace Kanban.Repository
                         .IndexKeys
                         .Ascending("CardID")
                         .Ascending("WorkState");
-            await ActivitiesCollection.Indexes.CreateOneAsync(keys);
+
+            var options = new CreateIndexOptions();
+            var model = new CreateIndexModel<Activity>(keys, options);
+            await ActivitiesCollection.Indexes.CreateOneAsync(model);
         }
 
         private IMongoCollection<Activity> ActivitiesCollection => m_DBClient.DB.GetCollection<Activity>(ActivitiesCollectionName);
