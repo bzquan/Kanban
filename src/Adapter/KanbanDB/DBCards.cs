@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Bson;
-
-using static Kanban.Repository.CollectionNames;
 using System.Text.RegularExpressions;
+using static Kanban.Repository.CollectionNames;
 
 namespace Kanban.Repository
 {
@@ -308,7 +302,7 @@ namespace Kanban.Repository
             var filter_workState_step = Builders<Card>.Filter.Eq(NameOfProcessStepSeqNo, step.PhaseSeqNo);
             var filter = Builders<Card>.Filter.And(filter_boardID, filter_workState_step);
 
-            return CardsCollection.Count(filter) > 0;
+            return CardsCollection.CountDocuments(filter) > 0;
         }
 
         public IMongoCollection<Card> CardsCollection => m_DBClient.DB.GetCollection<Card>(CardsCollectionName);
