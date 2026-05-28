@@ -107,7 +107,7 @@
                 </Image.Resources -->
             </Image>
             <TextBlock x:Name="Copyright"
-					   Grid.Row="0"
+					   Grid.Row="1"
 					   Grid.Column="1"
 					   Margin="5,0,0,10"
 					   Text="{Binding Copyright}"/>
