@@ -71,7 +71,7 @@
                             <Run Text="{x:Static p:Resources.Card_ResponsiblePerson}"/>
                             <Run Text="{Binding Executors}" FontWeight="Bold" FontSize="14" Foreground="Blue" />
                         </TextBlock>
-                        <TextBlock FontSize="12" FontWeight="Bold" Foreground="Blue" Text="{Binding Path=ReleaseDate, StringFormat={x:Static p:Resources.Card_ReleaseDateFormat}}" />
+                        <TextBlock FontSize="12" FontWeight="Bold" Foreground="{Binding ReleaseDateForeground}" Text="{Binding Path=ReleaseDate, StringFormat={x:Static p:Resources.Card_ReleaseDateFormat}}" />
                         <TextBlock Text="{Binding Path=StateChangedDate,
                                StringFormat={x:Static p:Resources.Card_StateChangedDateFormat}}"
                                Visibility="{Binding Path=ShowDetailedCard, Converter={StaticResource booleanToVisibilityConverter}}"/>
