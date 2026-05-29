@@ -190,6 +190,7 @@ public class Card : NotifyPropertyChangedBase
         get => CardType switch
         {
             CardType.Feature => s_YellowBrush,
+            CardType.BugFix => s_YellowBrush,
             _ => s_BlueBrush
         };
     }
