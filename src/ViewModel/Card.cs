@@ -13,6 +13,7 @@ public class Card : NotifyPropertyChangedBase
 {
     private static readonly Brush s_BlueBrush;
     private static readonly Brush s_YellowBrush;
+
     private DelegateCommandNoArg m_SwitchFrontBackCommand;
     private DelegateCommandNoArg m_DeleteCardCommand;
     private WorkedDaysImages m_WorkedDays = new WorkedDaysImages();
