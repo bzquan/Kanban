@@ -8,6 +8,7 @@
     <UseWPF>true</UseWPF>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>False</UseWindowsForms>
+    <ApplicationIcon>Board.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
