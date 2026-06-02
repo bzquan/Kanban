@@ -19,10 +19,10 @@ namespace Kanban
         [STAThread]
         public static void Main()
         {
-            SplashScreen splashScreen = new SplashScreen(ImageName4SplashScreen());
+            var splashScreen = new SplashScreen(ImageName4SplashScreen());
             splashScreen.Show(true);
-            Kanban.App app = new Kanban.App();
 
+            Kanban.App app = new Kanban.App();
             app.InitializeComponent();
             app.Run();
         }
@@ -31,7 +31,7 @@ namespace Kanban
         {
             Random random = new Random();
             int image_index = random.Next(1, 7);
-            return String.Format("images/kanban_splash_window{0}.jpg", image_index);
+            return String.Format($"images/kanban_splash_window{image_index}.jpg");
         }
 
         private async void OnStartup(object sender, StartupEventArgs e)
@@ -47,12 +47,12 @@ namespace Kanban
             {
                 m_DependencyInjector.RegisterDependencis();
 
-                Repository.DBUpgrater dbUpgrater = m_DependencyInjector.Resolve<Repository.DBUpgrater>();
+                var dbUpgrater = m_DependencyInjector.Resolve<Repository.DBUpgrater>();
                 await dbUpgrater.UpgrateDB();
 
                 ConfigLocalizations();
 
-                var mainWindow = m_DependencyInjector.Resolve<MainWindow>();// m_Container.Resolve<MainWindow>();
+                var mainWindow = m_DependencyInjector.Resolve<MainWindow>();
                 Application.Current.MainWindow = mainWindow;
                 Application.Current.MainWindow.Show();
 
@@ -79,6 +79,7 @@ namespace Kanban
 
         Window DummyWindow => new Window()
         {
+            WindowStartupLocation = WindowStartupLocation.CenterScreen,
             AllowsTransparency = true,
             Background = System.Windows.Media.Brushes.Transparent,
             WindowStyle = WindowStyle.None,
@@ -94,6 +95,7 @@ namespace Kanban
             Window dummyWindow = DummyWindow;
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
             dummyWindow.Show();
+
             return dummyWindow;
         }
 
