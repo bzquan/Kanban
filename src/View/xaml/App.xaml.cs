@@ -19,12 +19,17 @@ namespace Kanban
         [STAThread]
         public static void Main()
         {
-            var splashScreen = new SplashScreen(ImageName4SplashScreen());
-            splashScreen.Show(true);
+            ShowSplashScreen();
 
             Kanban.App app = new Kanban.App();
             app.InitializeComponent();
             app.Run();
+        }
+
+        private static void ShowSplashScreen()
+        {
+            var splashScreen = new SplashScreen(ImageName4SplashScreen());
+            splashScreen.Show(true);
         }
 
         private static string ImageName4SplashScreen()
