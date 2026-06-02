@@ -52,8 +52,8 @@ namespace Kanban
             {
                 m_DependencyInjector.RegisterDependencis();
 
-                var dbUpgrater = m_DependencyInjector.Resolve<Repository.DBUpgrater>();
-                await dbUpgrater.UpgrateDB();
+                var dbUpgrader = m_DependencyInjector.Resolve<Repository.DBUpgrater>();
+                await dbUpgrader.UpgrateDB();
 
                 ConfigLocalizations();
 
