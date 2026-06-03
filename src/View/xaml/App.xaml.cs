@@ -58,7 +58,6 @@ namespace Kanban
                 ConfigLocalizations();
                 var mainWindow = m_DependencyInjector.Resolve<MainWindow>();
                 Application.Current.MainWindow = mainWindow;
-                throw new Exception("Test unhandled exception");
                 Application.Current.MainWindow.Show();
 
                 TeardownDummyWindow(dummyWindow);
