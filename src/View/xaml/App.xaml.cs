@@ -56,16 +56,16 @@ namespace Kanban
                 await dbUpgrader.UpgrateDB();
 
                 ConfigLocalizations();
-
                 var mainWindow = m_DependencyInjector.Resolve<MainWindow>();
                 Application.Current.MainWindow = mainWindow;
+                throw new Exception("Test unhandled exception");
                 Application.Current.MainWindow.Show();
 
                 TeardownDummyWindow(dummyWindow);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(dummyWindow, ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowExceptionMessages(dummyWindow, ex);
                 dummyWindow.Close();
                 Shutdown(1);
             }
@@ -116,7 +116,7 @@ namespace Kanban
             if (!e.Handled)
             {
                 e.Handled = true;
-                if (!IsStartingUp) ShowExceptionMessages(e.Exception);
+                if (!IsStartingUp) ShowExceptionMessages(Application.Current.MainWindow, e.Exception);
             }
         }
 
@@ -124,12 +124,12 @@ namespace Kanban
         {
         }
 
-        void ShowExceptionMessages(Exception ex)
+        void ShowExceptionMessages(Window owner, Exception ex)
         {
             string error_msg = String.Format
                 ("{0} Error:  {1}\r\n\r\n{2}",
                    ex.Source, ex.Message, ex.StackTrace);
-            MessageBox.Show(error_msg, "UnhandledException", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(owner, error_msg, "UnhandledException", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }
