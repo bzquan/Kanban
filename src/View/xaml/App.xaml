@@ -2,7 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Kanban"
-             xmlns:prop="clr-namespace:Kanban.Properties" DispatcherUnhandledException="Application_DispatcherUnhandledException" Exit="Application_Exit" Startup="OnStartup">
+             xmlns:prop="clr-namespace:Kanban.Properties"
+             DispatcherUnhandledException="Application_DispatcherUnhandledException"
+             Exit="Application_Exit" Startup="OnStartup">
     <Application.Resources>
         <prop:Settings x:Key="setting" />
     </Application.Resources>
