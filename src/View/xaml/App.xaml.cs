@@ -65,7 +65,7 @@ namespace Kanban
             }
             catch (Exception ex)
             {
-                ShowExceptionMessages(ex);
+                MessageBox.Show(dummyWindow, ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 dummyWindow.Close();
                 Shutdown(1);
             }
