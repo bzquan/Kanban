@@ -204,10 +204,7 @@ public class Card : NotifyPropertyChangedBase
         }
     }
 
-    public string CardTypeImageUri
-    {
-        get => CardTypePresentation.CardTypeIconUri(CardType);
-    }
+    public string CardTypeImageUri => CardTypePresentation.CardTypeIconUri(CardType);
 
     public string ToolTipOfCardType
     {
@@ -260,10 +257,7 @@ public class Card : NotifyPropertyChangedBase
 
     public Color CardBackgroundColor => CardTypePresentation.CardBackgroundColor(CardType);
 
-    public string ToolTipOfStoryPoints
-    {
-        get => ViewModelProperties.ToolTip_StoryPoints(CardModel.EstimatedWorkEffort);
-    }
+    public string ToolTipOfStoryPoints => ViewModelProperties.ToolTip_StoryPoints(CardModel.EstimatedWorkEffort);
 
     public bool IsBlocked
     {
@@ -410,16 +404,7 @@ public class Card : NotifyPropertyChangedBase
         }
     }
 
-    public Color CardTagBackgroundColor
-    {
-        get
-        {
-            if (IsScheduledToRelease)
-                return BoardPageViewModel.IsLatestScheduledReleaseDate(ReleaseDate) ? Colors.Yellow : Colors.Orange;
-            else
-                return Colors.SkyBlue;
-        }
-    }
+    public Color CardTagBackgroundColor => IsScheduledToRelease ? (BoardPageViewModel.IsLatestScheduledReleaseDate(ReleaseDate) ? Colors.Yellow : Colors.Orange) : Colors.SkyBlue;
 
     private void OnLatestScheduledReleaseDateChanged(object sender, LatestScheduledReleaseDateChangedArg arg)
     {
