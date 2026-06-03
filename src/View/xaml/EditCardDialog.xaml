@@ -6,7 +6,7 @@
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:p = "clr-namespace:Kanban.Properties"
         xmlns:local="clr-namespace:Kanban"
-        xmlns:vm="clr-namespace:Kanban.ViewModel;assembly=KanbanViewModel"
+        xmlns:vm="clr-namespace:Kanban.ViewModel"
         d:DataContext="{d:DesignInstance vm:EditCardDialogViewModel}"
         mc:Ignorable="d"
         Title="{x:Static p:Resources.CardEdit_Title}"
@@ -73,6 +73,7 @@
                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
                      AcceptsReturn="True"
                      MinHeight="50"
+                     MaxHeight="200"
                      MinWidth="300"
                      TextWrapping="NoWrap"
                      HorizontalAlignment="Stretch"/>
@@ -84,6 +85,7 @@
                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
                      AcceptsReturn="True"
                      MinHeight="50"
+                     MaxHeight="150"
                      MinWidth="300"
                      TextWrapping="NoWrap"
                      HorizontalAlignment="Stretch"/>
@@ -95,6 +97,7 @@
                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
                      AcceptsReturn="True"
                      MinHeight="50"
+                     MaxHeight="150"
                      MinWidth="300"
                      TextWrapping="NoWrap"
                      HorizontalAlignment="Stretch"/>
