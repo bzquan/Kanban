@@ -40,6 +40,16 @@ namespace Kanban.Model
             }
         }
 
+        public string Developers
+        {
+            get { return BoardOfRepository.Developers; }
+            set
+            {
+                BoardOfRepository.Developers = value;
+                UpdateProperty(value);
+            }
+        }
+
         private List<Repository.ProcessStep> ProcessSteps
         {
             get { return DevProcess.ProcessSteps; }

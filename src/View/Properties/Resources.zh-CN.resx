@@ -487,8 +487,8 @@
   <data name="CardEdit_StoryPoints" xml:space="preserve">
     <value>故事点：</value>
   </data>
-  <data name="ToolTip_StoryPoints" xml:space="preserve">
-    <value>故事点</value>
+  <data name="ToolTip_StoryPoints_Small" xml:space="preserve">
+    <value>小(两三天内完成)</value>
   </data>
   <data name="Metrics_StoryPointsLabel" xml:space="preserve">
     <value>用户故事点</value>
@@ -507,9 +507,6 @@
   </data>
   <data name="ToolTip_StoryPoints_Medium" xml:space="preserve">
     <value>中(一周内完成)</value>
-  </data>
-  <data name="ToolTip_StoryPoints_Small" xml:space="preserve">
-    <value>小(两三天内完成)</value>
   </data>
   <data name="ToolTip_StoryPoints_Unknown" xml:space="preserve">
     <value>故事点尚未确定</value>
@@ -546,5 +543,11 @@
   </data>
   <data name="CardEdit_MergedIntoMasterAndMajorBranch" xml:space="preserve">
     <value>已合并到master和主分支</value>
+  </data>
+  <data name="ToolTip_StoryPoints" xml:space="preserve">
+    <value>故事点</value>
+  </data>
+  <data name="Main_Developers" xml:space="preserve">
+    <value>负责人列表(用分号分割):</value>
   </data>
 </root>

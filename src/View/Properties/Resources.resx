@@ -547,4 +547,7 @@ Release date format is year month and day(e.g. 20191101、191101、1101)</value>
   <data name="ToolTip_StoryPoints" xml:space="preserve">
     <value>Story point</value>
   </data>
+  <data name="Main_Developers" xml:space="preserve">
+    <value>Developers(Seperate by semicolon):</value>
+  </data>
 </root>

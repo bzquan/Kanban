@@ -547,4 +547,7 @@
   <data name="ToolTip_StoryPoints" xml:space="preserve">
     <value>ストーリーポイント</value>
   </data>
+  <data name="Main_Developers" xml:space="preserve">
+    <value>担当者リスト(区切はセミコロン):</value>
+  </data>
 </root>

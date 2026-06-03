@@ -12,6 +12,7 @@ namespace Kanban.Repository
             Description = description;
         }
         public string Description { get; set; }
+        public string Developers { get; set; }
         public List<ProcessStep> ProcessSteps { get; set; }
     }
 }

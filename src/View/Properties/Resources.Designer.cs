@@ -565,6 +565,15 @@ namespace Kanban.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Developers(Seperate by semicolon):.
+        /// </summary>
+        public static string Main_Developers {
+            get {
+                return ResourceManager.GetString("Main_Developers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Note of Kanban:.
         /// </summary>
         public static string Main_KanbanDetail {
