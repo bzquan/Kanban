@@ -101,16 +101,12 @@ public class Card : NotifyPropertyChangedBase
 
     public DrawingImage CardPriority
     {
-        get
-        {
-            string seqNo = (CardModel.SeqNo + 1).ToString();
-            return GetCircleNumImage(text: seqNo, background: Colors.LightCyan, font_color: Colors.Blue);
-        }
+        get => GetCircleNumImage(text: (CardModel.SeqNo + 1).ToString(), background: Colors.LightCyan, font_color: Colors.Blue);
     }
 
     public int SeqNo
     {
-        get { return CardModel.SeqNo; }
+        get => CardModel.SeqNo;
         set
         {
             // SeqNo画像の送信のため、SeqNoImageの更新を通知する
@@ -120,63 +116,63 @@ public class Card : NotifyPropertyChangedBase
 
     public string Title
     {
-        get { return CardModel.Title; }
-        set { SetProperty(CardModel, value); }
+        get => CardModel.Title;
+        set => SetProperty(CardModel, value);
     }
 
     public string Tag
     {
-        get { return CardModel.Tag; }
-        set { SetProperty(CardModel, value); }
+        get => CardModel.Tag;
+        set => SetProperty(CardModel, value);
     }
 
     public bool ShowDetailedCard { get; set; }
 
     public string Executors
     {
-        get { return CardModel.Executors; }
-        set { SetProperty(CardModel, value); }
+        get => CardModel.Executors;
+        set => SetProperty(CardModel, value);
     }
 
     public string Summary
     {
-        get { return CardModel.Summary; }
-        set { SetProperty(CardModel, value); }
+        get => CardModel.Summary;
+        set => SetProperty(CardModel, value);
     }
 
     public Model.WorkState WorkState
     {
-        get { return CardModel.WorkState; }
-        set { CardModel.WorkState = value; }
+        get => CardModel.WorkState;
+        set => CardModel.WorkState = value;
     }
 
     public string TestCases
     {
-        get { return CardModel.TestCases; }
-        set { CardModel.TestCases = value; }
+        get => CardModel.TestCases;
+        set => CardModel.TestCases = value;
     }
 
     public string DesignOverview
     {
-        get { return CardModel.DesignOverview; }
-        set { CardModel.DesignOverview = value; }
+        get => CardModel.DesignOverview;
+        set => CardModel.DesignOverview = value;
     }
 
     public DateTime CreateDate
     {
-        get { return CardModel.CreateDate; }
-        set { SetProperty(CardModel, value); }
+        get => CardModel.CreateDate;
+        set => SetProperty(CardModel, value);
     }
 
     public DateTime StateChangedDate
     {
-        get { return CardModel.StateChangedDate; }
-        set { SetProperty(CardModel, value); }
+        get => CardModel.StateChangedDate;
+        set => SetProperty(CardModel, value);
     }
 
     public DateTime ReleaseDate
     {
-        get { return CardModel.ReleaseDate; }
+        get => CardModel.ReleaseDate;
         set
         {
             SetProperty(CardModel, value);
@@ -197,7 +193,7 @@ public class Card : NotifyPropertyChangedBase
 
     public Repository.CardType CardType
     {
-        get { return CardModel.CardType; }
+        get => CardModel.CardType;
         set
         {
             // 画面更新のため、下記属性の更新を通知する
@@ -210,22 +206,22 @@ public class Card : NotifyPropertyChangedBase
 
     public string CardTypeImageUri
     {
-        get { return CardTypePresentation.CardTypeIconUri(CardType); }
+        get => CardTypePresentation.CardTypeIconUri(CardType);
     }
 
     public string ToolTipOfCardType
     {
-        get { return CardTypePresentation.CardTypeToolTip(CardType); }
+        get => CardTypePresentation.CardTypeToolTip(CardType);
     }
 
     public Repository.EstimatedWorkEffort EstimatedWorkEffort
     {
-        get { return CardModel.EstimatedWorkEffort; }
+        get => CardModel.EstimatedWorkEffort;
     }
 
     public int StoryPoints
     {
-        get { return CardModel.StoryPoints; }
+        get => CardModel.StoryPoints;
         set
         {
             SetProperty(CardModel, value);
@@ -262,19 +258,16 @@ public class Card : NotifyPropertyChangedBase
         }
     }
 
-    public Color CardBackgroundColor
-    {
-        get { return CardTypePresentation.CardBackgroundColor(CardType); }
-    }
+    public Color CardBackgroundColor => CardTypePresentation.CardBackgroundColor(CardType);
 
     public string ToolTipOfStoryPoints
     {
-        get { return ViewModelProperties.ToolTip_StoryPoints(CardModel.EstimatedWorkEffort); }
+        get => ViewModelProperties.ToolTip_StoryPoints(CardModel.EstimatedWorkEffort);
     }
 
     public bool IsBlocked
     {
-        get { return CardModel.IsBlocked; }
+        get => CardModel.IsBlocked;
         set
         {
             if (IsBlocked != value)
@@ -289,7 +282,7 @@ public class Card : NotifyPropertyChangedBase
 
     public bool IsMergedIntoMaster
     {
-        get { return CardModel.IsMergedIntoMaster; }
+        get => CardModel.IsMergedIntoMaster;
         set
         {
             if (IsMergedIntoMaster != value)
@@ -305,7 +298,7 @@ public class Card : NotifyPropertyChangedBase
 
     public bool IsMergedIntoMajorBranch
     {
-        get { return CardModel.IsMergedIntoMajorBranch; }
+        get => CardModel.IsMergedIntoMajorBranch;
         set
         {
             if (IsMergedIntoMajorBranch != value)
@@ -323,7 +316,7 @@ public class Card : NotifyPropertyChangedBase
 
     public bool IsOnBackBoard
     {
-        get { return CardModel.IsOnBackBoard; }
+        get => CardModel.IsOnBackBoard;
         set
         {
             SetProperty(CardModel, value);
@@ -344,10 +337,7 @@ public class Card : NotifyPropertyChangedBase
 
     public string ToolTipFrontBack
     {
-        get
-        {
-            return IsOnBackBoard ? ViewModelProperties.ToolTip_MoveToFront : ViewModelProperties.ToolTip_MoveToBack;
-        }
+        get => IsOnBackBoard ? ViewModelProperties.ToolTip_MoveToFront : ViewModelProperties.ToolTip_MoveToBack;
     }
 
     public DrawingImage ProcessCycleTimeDaysImage
