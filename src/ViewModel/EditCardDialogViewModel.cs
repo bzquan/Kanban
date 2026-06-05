@@ -14,7 +14,7 @@ public class EditCardDialogViewModel : NotifyPropertyChangedBase
     public DelegateCommand<string> UpdateTitleCommand { get; private set; }
     public DelegateCommand<string> UpdateTagCommand { get; private set; }
     public DelegateCommand<string> UpdateExecutorsCommand { get; private set; }
-    public ObservableCollection<string> Executors { get; set; }
+    public ObservableCollection<string> Executors { get; set; } = new();
 
     public EditCardDialogViewModel(Board board, Card card, IViewModelProperties properties, Model.IActivityRepository activityRepository)
     {
@@ -45,7 +45,10 @@ public class EditCardDialogViewModel : NotifyPropertyChangedBase
     {
         char[] delimiters = new char[] { ';', '；', '\r', '\n' };
         var executors = Board.Developers?.Split(delimiters, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim());
-        Executors = executors is not null ? new ObservableCollection<string>(executors) : new ObservableCollection<string>();
+        if (executors is not null)
+        {
+            Executors = new ObservableCollection<string>(executors);
+        }
     }
 
     private void InitializeActivityDataTable()
