@@ -53,19 +53,11 @@
                 </TextBox.InputBindings>
             </TextBox>
             <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Content="{x:Static p:Resources.CardEdit_ResponsiblePerson}"/>
-            <TextBox x:Name="Executors"
-                     Grid.Row="2"
-                     Grid.Column="1"
-                     Text="{Binding Card.Executors}"
-                     HorizontalAlignment="Stretch"
-                     VerticalAlignment="Center"
-                     TextWrapping="NoWrap">
-                <TextBox.InputBindings>
-                    <KeyBinding Key="Return"
-                                Command="{Binding UpdateExecutorsCommand}"
-                                CommandParameter="{Binding ElementName=Executors, Path=Text}" />
-                </TextBox.InputBindings>
-            </TextBox>
+            <ComboBox Grid.Row="2"
+                      Grid.Column="1"
+                      ItemsSource="{Binding Executors}" 
+                      Text="{Binding SelectedExecutors, UpdateSourceTrigger=PropertyChanged}" 
+                      IsEditable="True" />
             <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" Content="{x:Static p:Resources.CardEdit_Description}"/>
             <TextBox x:Name="CardSummary" Grid.Row="3" Grid.Column="1"
                      Text ="{Binding Card.Summary}"

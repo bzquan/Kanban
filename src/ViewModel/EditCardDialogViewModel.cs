@@ -13,7 +13,6 @@ public class EditCardDialogViewModel : NotifyPropertyChangedBase
 
     public DelegateCommand<string> UpdateTitleCommand { get; private set; }
     public DelegateCommand<string> UpdateTagCommand { get; private set; }
-    public DelegateCommand<string> UpdateExecutorsCommand { get; private set; }
     public ObservableCollection<string> Executors { get; set; } = new();
 
     public EditCardDialogViewModel(Board board, Card card, IViewModelProperties properties, Model.IActivityRepository activityRepository)
@@ -29,7 +28,6 @@ public class EditCardDialogViewModel : NotifyPropertyChangedBase
 
         UpdateTitleCommand = new DelegateCommand<string>(OnTitleChanged);
         UpdateTagCommand = new DelegateCommand<string>(OnTagChanged);
-        UpdateExecutorsCommand = new DelegateCommand<string>(OnExecutorsChanged);
 
         Board = board;
         Card = card;
@@ -60,6 +58,12 @@ public class EditCardDialogViewModel : NotifyPropertyChangedBase
         };
 
         ActivityTable.Columns.AddRange(activityColumns);
+    }
+
+    public string SelectedExecutors
+    {
+        get => Card.Executors;
+        set => Card.Executors = value;
     }
 
     public Card Card { get; set; }
@@ -97,7 +101,6 @@ public class EditCardDialogViewModel : NotifyPropertyChangedBase
 
     private void OnTitleChanged(string title) => Card.Title = title;
     private void OnTagChanged(string tag) => Card.Tag = tag;
-    private void OnExecutorsChanged(string executors) => Card.Executors = executors;
 
     async void RenewActivitiesDataTable(Card card)
     {
