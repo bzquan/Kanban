@@ -42,7 +42,10 @@
                           Path=Background
                          }"
                     CornerRadius="4">
-                    <StackPanel Orientation="Vertical" Width="{local:AppSettings Key=CardWidth}"  Margin="5,10,5,10" ToolTip="{Binding Path=CardContentsInfo}" ToolTipService.ShowDuration="600000">
+                    <StackPanel Orientation="Vertical" Width="{local:AppSettings Key=CardWidth}"  Margin="5,10,5,10"
+                                Background="{Binding CardBackgroundBrush}"
+                                ToolTip="{Binding CardContentsInfo}"
+                                ToolTipService.ShowDuration="600000">
                         <StackPanel.Resources>
                             <Style TargetType="{x:Type FrameworkElement}">
                                 <Setter Property="TextBlock.Foreground" Value="Black" />
@@ -50,21 +53,16 @@
                             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type FrameworkElement}}" />
                             <Style TargetType="{x:Type Label}" BasedOn="{StaticResource {x:Type FrameworkElement}}" />
                         </StackPanel.Resources>
-                        <StackPanel.Background>
-                            <SolidColorBrush Color="{Binding Path=CardBackgroundColor}" />
-                        </StackPanel.Background>
-                        <TextBlock Height="40" TextWrapping="Wrap" Text="{Binding Path=Title,  StringFormat={x:Static p:Resources.Card_WorkItemFormat}}" TextTrimming="CharacterEllipsis">
-                            <TextBlock.Background>
-                                <SolidColorBrush Color="{Binding Path=CardTitleBackgroundColor}" />
-                            </TextBlock.Background>
+                        <TextBlock Height="40" TextWrapping="Wrap"
+                                   Text="{Binding Path=Title, StringFormat={x:Static p:Resources.Card_WorkItemFormat}}"
+                                   TextTrimming="CharacterEllipsis"
+                                   Background="{Binding CardTitleBackgroundBrush}">
                         </TextBlock>
                         <TextBlock Text="{Binding Path=Tag, StringFormat={x:Static p:Resources.Card_TagFormat}}"
                                    TextTrimming="CharacterEllipsis"
+                                   Background="{Binding CardTagBackgroundBrush}"
                                    Visibility="{Binding Path=ShowDetailedCard, Converter={StaticResource booleanToVisibilityConverter}}"
                                    ToolTip="{x:Static p:Resources.ToolTip_ShowCardDetailOrOutline}">
-                            <TextBlock.Background>
-                                <SolidColorBrush Color="{Binding Path=CardTagBackgroundColor}" />
-                            </TextBlock.Background>
                         </TextBlock>
                         <TextBlock Background="LightYellow" TextTrimming="CharacterEllipsis"
                                Visibility="{Binding Path=ShowDetailedCard, Converter={StaticResource booleanToVisibilityConverter}}">

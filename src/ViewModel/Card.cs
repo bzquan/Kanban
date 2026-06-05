@@ -177,7 +177,7 @@ public class Card : NotifyPropertyChangedBase
         {
             SetProperty(CardModel, value);
             // 画面更新のため、CardTitleBackgroundColorの変更を通知する。
-            base.OnPropertyChanged(nameof(CardTagBackgroundColor));
+            base.OnPropertyChanged(nameof(CardTagBackgroundBrush));
         }
     }
 
@@ -196,8 +196,9 @@ public class Card : NotifyPropertyChangedBase
         get => CardModel.CardType;
         set
         {
+            CardModel.CardType = value;
             // 画面更新のため、下記属性の更新を通知する
-            SetProperty(CardModel, value, nameof(CardModel.CardType), nameof(CardBackgroundColor));
+            base.OnPropertyChanged(nameof(CardBackgroundBrush));
             base.OnPropertyChanged(nameof(CardTypeImageUri));
             base.OnPropertyChanged(nameof(ToolTipOfCardType));
             base.OnPropertyChanged(nameof(ReleaseDateForeground));
@@ -255,7 +256,7 @@ public class Card : NotifyPropertyChangedBase
         }
     }
 
-    public Color CardBackgroundColor => CardTypePresentation.CardBackgroundColor(CardType);
+    public Brush CardBackgroundBrush => new SolidColorBrush(CardTypePresentation.CardBackgroundColor(CardType));
 
     public string ToolTipOfStoryPoints => ViewModelProperties.ToolTip_StoryPoints(CardModel.EstimatedWorkEffort);
 
@@ -269,7 +270,7 @@ public class Card : NotifyPropertyChangedBase
                 SetProperty(CardModel, value);
                 CreateNewActivities(WorkState);
                 // 画面更新のため、CardTitleBackgroundColorの変更を通知する。
-                base.OnPropertyChanged(nameof(CardTitleBackgroundColor));
+                base.OnPropertyChanged(nameof(CardTitleBackgroundBrush));
             }
         }
     }
@@ -284,7 +285,7 @@ public class Card : NotifyPropertyChangedBase
                 SetProperty(CardModel, value);
                 CreateNewActivities(WorkState);
                 // 画面更新のため、CardTitleBackgroundColorの変更を通知する。
-                base.OnPropertyChanged(nameof(CardTitleBackgroundColor));
+                base.OnPropertyChanged(nameof(CardTitleBackgroundBrush));
                 base.OnPropertyChanged(nameof(IsMergeCompleted));
             }
         }
@@ -300,7 +301,7 @@ public class Card : NotifyPropertyChangedBase
                 SetProperty(CardModel, value);
                 CreateNewActivities(WorkState);
                 // 画面更新のため、CardTitleBackgroundColorの変更を通知する。
-                base.OnPropertyChanged(nameof(CardTitleBackgroundColor));
+                base.OnPropertyChanged(nameof(CardTitleBackgroundBrush));
                 base.OnPropertyChanged(nameof(IsMergeCompleted));
             }
         }
@@ -373,20 +374,23 @@ public class Card : NotifyPropertyChangedBase
         }));
     }
 
-    public Color CardTitleBackgroundColor
+    public Brush CardTitleBackgroundBrush
     {
         get
         {
+            var color = Colors.BurlyWood;
             if (IsBlocked)
-                return Colors.DeepPink;
+                color = Colors.DeepPink;
             else if (IsMergedIntoMaster && IsMergedIntoMajorBranch)
-                return Colors.Lime;
+                color = Colors.Lime;
             else if (IsMergedIntoMaster)
-                return Colors.Green;
+                color = Colors.Green;
             else if (IsMergedIntoMajorBranch)
-                return Colors.Cyan;
+                color = Colors.Cyan;
             else
-                return Colors.BurlyWood;
+                color = Colors.BurlyWood;
+
+            return new SolidColorBrush(color);
         }
     }
 
@@ -399,19 +403,26 @@ public class Card : NotifyPropertyChangedBase
             {
                 SetProperty(CardModel, value);
                 // 画面更新のため、CardTagBackgroundColorの変更を通知する。
-                base.OnPropertyChanged(nameof(CardTagBackgroundColor));
+                base.OnPropertyChanged(nameof(CardTagBackgroundBrush));
             }
         }
     }
 
-    public Color CardTagBackgroundColor => IsScheduledToRelease ? (BoardPageViewModel.IsLatestScheduledReleaseDate(ReleaseDate) ? Colors.Yellow : Colors.Orange) : Colors.SkyBlue;
+    public Brush CardTagBackgroundBrush
+    {
+        get
+        {
+            var color = IsScheduledToRelease ? (BoardPageViewModel.IsLatestScheduledReleaseDate(ReleaseDate) ? Colors.Yellow : Colors.Orange) : Colors.SkyBlue;
+            return new SolidColorBrush(color);
+        }
+    }
 
     private void OnLatestScheduledReleaseDateChanged(object sender, LatestScheduledReleaseDateChangedArg arg)
     {
         if (IsScheduledToRelease)
         {
             // 画面更新のため、CardTagBackgroundColorの変更を通知する。
-            base.OnPropertyChanged(nameof(CardTagBackgroundColor));
+            base.OnPropertyChanged(nameof(CardTagBackgroundBrush));
         }
     }
 
