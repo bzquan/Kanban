@@ -113,21 +113,22 @@ public class SystemSettingViewModel : NotifyPropertyChangedBase
 
         if (assemblyPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
         {
-            return new ProcessStartInfo("dotnet", $"\"{assemblyPath}\" {arguments}")
-            {
-                UseShellExecute = false,
-                WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory
-            };
+            assemblyPath = assemblyPath.Replace(".dll", ".exe", StringComparison.OrdinalIgnoreCase);
+            //return new ProcessStartInfo("dotnet", $"\"{assemblyPath}\" {arguments}")
+            //{
+            //    UseShellExecute = false,
+            //    WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory
+            //};
         }
-        else
+        //else
+        //{
+        return new ProcessStartInfo(assemblyPath)
         {
-            return new ProcessStartInfo(assemblyPath)
-            {
-                UseShellExecute = true,
-                Arguments = arguments,
-                WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory
-            };
-        }
+            UseShellExecute = true,
+            Arguments = arguments,
+            WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory
+        };
+        //}
 
     }
 
