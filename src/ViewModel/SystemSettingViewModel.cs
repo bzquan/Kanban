@@ -194,7 +194,7 @@ public class SystemSettingViewModel : NotifyPropertyChangedBase
             string selectedFolder = folderDialog.FolderName;
 
             DBBackupFolder = folderDialog.FolderName;
-            DBBackup.RestoreDB(DBBackupFolder, DBPriority4Restore.NoPriority);
+            DBBackup.RestoreDB(DBBackupFolder);
         }
     }
 }

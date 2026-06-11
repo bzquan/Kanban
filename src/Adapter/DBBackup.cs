@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-using Kanban.Util;
+﻿using Kanban.Util;
 using static Kanban.Util.KanbanDefinitions;
 using static Kanban.Util.Util;
 
@@ -26,16 +19,14 @@ namespace Kanban.Infrastructure
             m_ProcessExecuteCompositeCommand = new ProcessExecuteCompositeCommand(processExecutorClient);
         }
 
-        private bool CommandStarted { get; set; } = false;
-
         public void DumpDB(string dst_folder)
         {
             string param = DBHost + "--out " + dst_folder;
-            EnqueueCammand(MongoDBDumpToolPath, param);
+            EnqueueCommand(MongoDBDumpToolPath, param);
             m_ProcessExecuteCompositeCommand.Execute();
         }
 
-        private void EnqueueCammand(string programPath, string param)
+        private void EnqueueCommand(string programPath, string param)
         {
             ProcessArgument argument = new ProcessArgument { ProgramPath = programPath, Arguments = param };
             IProcessExecutor processExecutor = m_ProcessExecutorFactory();
@@ -50,7 +41,7 @@ namespace Kanban.Infrastructure
             string tool_path = ConfigReader.GetValue("DB_BACKUP_TOOL_PATH", "\\");
             if (ExistOnFolder(tool_path, MongoDumpTool, MongoRestoreTool)) return true;
 
-            // Check if backup tools exist on a folader of PATH environment variables
+            // Check if backup tools exist on a folder of PATH environment variables
             return ExistsOnPath(MongoDumpTool, MongoRestoreTool);
         }
 
@@ -75,53 +66,16 @@ namespace Kanban.Infrastructure
 
         private string DBHost => "--host " + m_DBClient.DBHost + " ";
 
-        public void RestoreDB(string src_folder, DBPriority4Restore db_priority)
+        public void RestoreDB(string src_folder)
         {
-            if (db_priority == DBPriority4Restore.ToBeRestoredDB)
-            {
-                CreateRestoreCommands4ToBeRestoredDB(src_folder);
-            }
-            else
-            {
-                CreateRestoreCommands4CurrentDB(src_folder, db_priority);
-            }
-
+            CreateRestoreCommands4CurrentDB(src_folder);
             m_ProcessExecuteCompositeCommand.Execute();
         }
 
-        private string TempFolder => System.IO.Path.Combine(StartupFolder(), "tempdb");
-
-        private void CreateRestoreCommands4ToBeRestoredDB(string src_folder)
-        {
-            CreateBackupDBTemporarily();
-            RestoreSrcDB(src_folder);
-            RestoreTemprorilyBackedupDB();
-        }
-
-        private void CreateBackupDBTemporarily()
-        {
-            string param = DBHost + "--out " + TempFolder;
-            EnqueueCammand(MongoDBDumpToolPath, param);
-        }
-
-        private void RestoreSrcDB(string src_folder)
+        private void CreateRestoreCommands4CurrentDB(string src_folder)
         {
             string param = "--drop " + DBHost + src_folder;
-            EnqueueCammand(MongoDBRestoreToolPath, param);
-        }
-
-        private void RestoreTemprorilyBackedupDB()
-        {
-            string param = DBHost + TempFolder;
-            EnqueueCammand(MongoDBRestoreToolPath, param);
-        }
-
-        private void CreateRestoreCommands4CurrentDB(string src_folder, DBPriority4Restore db_priority)
-        {
-            bool is_drop = db_priority == DBPriority4Restore.NoPriority;
-            string drop_param = is_drop ? "--drop " : "";
-            string param = drop_param + DBHost + src_folder;
-            EnqueueCammand(MongoDBRestoreToolPath, param);
+            EnqueueCommand(MongoDBRestoreToolPath, param);
         }
 
         private string MongoDBRestoreToolPath

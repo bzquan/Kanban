@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Kanban.Util;
 using System.Configuration;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using Kanban.Util;
 
 namespace Kanban.Infrastructure
 {
@@ -61,14 +56,6 @@ namespace Kanban.Infrastructure
         {
             get { return (string)this["DBBackupFolder"]; }
             set { this["DBBackupFolder"] = value; }
-        }
-
-        [UserScopedSetting()]
-        [DefaultSettingValueAttribute("CurrentDB")]
-        public DBPriority4Restore DBPriority4Restore
-        {
-            get { return (DBPriority4Restore)this["DBPriority4Restore"]; }
-            set { this["DBPriority4Restore"] = value; }
         }
 
         [UserScopedSetting()]

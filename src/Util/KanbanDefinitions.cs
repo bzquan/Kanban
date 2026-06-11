@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace Kanban.Util
 {
@@ -24,18 +22,6 @@ namespace Kanban.Util
 
         [Description("English")]
         English,
-    }
-
-    public enum DBPriority4Restore
-    {
-        [Description("English:Current database|日本語:現在のデータベース|中文:当前数据库")]
-        CurrentDB,
-
-        [Description("English:Database to be restored|日本語:復元元のデータベース|中文:要恢复的数据库")]
-        ToBeRestoredDB,
-
-        [Description("English:Override|日本語:上書き|中文:覆盖")]
-        NoPriority,
     }
 
     public enum MetricChartType
