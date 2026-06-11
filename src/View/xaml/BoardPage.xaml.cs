@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Kanban.Util;
+using Kanban.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Input;
-
-using Kanban.ViewModel;
-using System.Threading;
-using System.Threading.Tasks;
-using Kanban.Util;
 
 namespace Kanban
 {
@@ -23,7 +17,7 @@ namespace Kanban
         MainWindow MainWindow { get; }
         Board m_Board;
         List<ProcessStepView> m_ProcessStepView = new List<ProcessStepView>();
-        BoardPageViewModel m_BoardPageViewModel;
+        BoardPageViewModel BoardPageViewModel { get; }
         IAppSettings m_AppSettings;
         IViewModelProperties m_Properties;
         Model.IActivityRepository m_ActivityRepository;
@@ -38,7 +32,7 @@ namespace Kanban
             m_Properties = properties;
             m_ActivityRepository = activityRepository;
 
-            m_BoardPageViewModel = boardPageViewModel;
+            BoardPageViewModel = boardPageViewModel;
             boardPageViewModel.Initialize(board);
 
             boardPage.SizeChanged += OnBoardSizeChanged;
@@ -48,8 +42,8 @@ namespace Kanban
         private void OnPageLoaded(object sender, RoutedEventArgs e)
         {
             InitializeProcessSteps();
-            DataContext = m_BoardPageViewModel;
-            m_BoardPageViewModel.LoadContents(cardFilter: "");
+            DataContext = BoardPageViewModel;
+            BoardPageViewModel.LoadContents(cardFilter: "");
         }
 
         private void InitializeProcessSteps()
@@ -71,7 +65,7 @@ namespace Kanban
                 AddGridColumnDefinition(step.PhaseSeqNo);
                 ProcessStepView processStepView = CreateProcessStepView(step.PhaseSeqNo);
                 m_ProcessStepView.Add(processStepView);
-                processStepView.Content = m_BoardPageViewModel.GetProcessStepViewModel(step.PhaseSeqNo);
+                processStepView.Content = BoardPageViewModel.GetProcessStepViewModel(step.PhaseSeqNo);
             }
         }
 
@@ -90,7 +84,7 @@ namespace Kanban
         {
             string processStepDataTemplateName = (column == 0) ? "firstProcessStepDataTemplate"
                                                                : "processStepDataTemplate";
-            
+
             ProcessStepView processStepView = new ProcessStepView(this, processStepDataTemplateName);
             Grid.SetColumn(processStepView, column);
             boardPage.Children.Add(processStepView);
@@ -106,13 +100,6 @@ namespace Kanban
             ShowEditCardDialog(card);
         }
 
-        void OnEditCard(object sender, RoutedEventArgs e)
-        {
-            Button cmd = (Button)sender;
-            Card card = cmd.Tag as Card;
-            ShowEditCardDialog(card);
-        }
-
         private void ShowEditCardDialog(Card card)
         {
             if (card == null) return;
@@ -120,6 +107,13 @@ namespace Kanban
             EditCardDialog editCardDialog = new EditCardDialog(m_Board, card, m_Properties, m_ActivityRepository);
             editCardDialog.Owner = MainWindow;
             editCardDialog.ShowDialog();
+        }
+
+        void OnReplicateCard(object sender, RoutedEventArgs e)
+        {
+            Button cmd = (Button)sender;
+            Card card = cmd.Tag as Card;
+            BoardPageViewModel.ReplicateCard(card);
         }
 
         private void OnPageSizeChanged(object sender, SizeChangedEventArgs e) => UpdateZoomRate();

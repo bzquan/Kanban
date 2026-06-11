@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using Kanban.Util;
 using System.Windows.Input;
-using Kanban.Model;
-using Kanban.Util;
 
 namespace Kanban.ViewModel
 {
@@ -15,7 +8,7 @@ namespace Kanban.ViewModel
         private static DateTime? LatestScheduledReleaseDate { get; set; } = null;
 
         private bool m_ShowFrontBoard = true;
-        private bool m_ShowDetialCards = true;
+        private bool m_ShowCardDetails = true;
         private string m_CurrentFilter = "";
         private ProcessStepViewModelFactory m_ProcessStepViewModelFactory;
         private List<ProcessStepViewModel> m_ProcessStepViewModel = new List<ProcessStepViewModel>();
@@ -99,14 +92,14 @@ namespace Kanban.ViewModel
 
         public bool ShowDetailedCards
         {
-            get { return m_ShowDetialCards; }
+            get { return m_ShowCardDetails; }
 
             set
             {
-                if (m_ShowDetialCards == value) return;
+                if (m_ShowCardDetails == value) return;
 
                 Board.ShowDetailedCards = value;
-                m_ShowDetialCards = value;
+                m_ShowCardDetails = value;
                 OnPropertyChanged();
 
                 LoadContents(CurrentFilter);
@@ -133,18 +126,23 @@ namespace Kanban.ViewModel
             return m_ProcessStepViewModel.First(x => x.ProcessStep.PhaseSeqNo == seqNo);
         }
 
+        public void ReplicateCard(Card srcCard)
+        {
+            m_ProcessStepViewModel[0].ReplicateCard(srcCard);
+        }
+
         private Repository.ProcessStep GetStepByName(string value)
         {
             return Board.ProcessSteps.First(x => x.Name == value);
         }
-
-        private bool CanAddCard() => ShowFrontBoard;
 
         private void OnAddCard()
         {
             m_ProcessStepViewModel[0].AddNewCard();
             EventAggregator<NewCardAddedArg>.Instance.Publish(this, new NewCardAddedArg());
         }
+
+        private bool CanAddCard() => ShowFrontBoard;
 
         private void OnCardsOfBoardRetrieved(object sender, CardsOfBoardRetrievedArgs arg)
         {

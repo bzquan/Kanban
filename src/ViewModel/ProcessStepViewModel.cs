@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using static Kanban.Util.CircleNumImages;
 
 namespace Kanban.ViewModel
@@ -145,6 +143,11 @@ namespace Kanban.ViewModel
         public void AddNewCard()
         {
             WIPCards.AddNewCard();
+        }
+
+        public void ReplicateCard(Card srcCard)
+        {
+            WIPCards.ReplicateCard(srcCard);
         }
     }
 }

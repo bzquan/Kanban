@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using System.Runtime.CompilerServices;
 
 namespace Kanban.Model
@@ -29,6 +26,17 @@ namespace Kanban.Model
         }
 
         public Board Board { get; set; }
+
+        public void ReplicateFrom(Card srcCard)
+        {
+            Title = srcCard.Title;
+            Tag = srcCard.Tag;
+            Executors = srcCard.Executors;
+            Summary = srcCard.Summary;
+            TestCases = srcCard.TestCases;
+            DesignOverview = srcCard.DesignOverview;
+            CardType = srcCard.CardType;
+        }
 
         public void DeleteFromDB()
         {

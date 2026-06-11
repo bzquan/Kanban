@@ -89,8 +89,21 @@ namespace Kanban.ViewModel
 
         public async void AddNewCard()
         {
-            Card card = await m_CardFactory(Board, CardWorkState);
+            Card card = await m_CardFactory(Board, CardWorkState, srcCard: null);
             m_Cards.Add(card);
+        }
+
+        public async void ReplicateCard(Card srcCard)
+        {
+            if (srcCard is not null)
+            {
+                Card card = await m_CardFactory(Board, CardWorkState, srcCard);
+                m_Cards.Add(card);
+            }
+            else
+            {
+                throw new ArgumentNullException("srcCard to be replicated is null");
+            }
         }
 
         /// <summary>

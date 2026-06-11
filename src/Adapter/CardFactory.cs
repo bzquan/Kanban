@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Kanban.Model;
 using MongoDB.Bson;
 
 namespace Kanban.Infrastructure
@@ -20,9 +16,10 @@ namespace Kanban.Infrastructure
             m_Localization = localization;
         }
 
-        public async Task<Model.Card> CreateCard(ObjectId boardID, Model.WorkState workState)
+        public async Task<Model.Card> CreateCard(ObjectId boardID, Model.WorkState workState, Card srcCard)
         {
             Model.Card card = new Model.Card(boardID, workState, m_Localization.CardDefaultTitle);
+            card.ReplicateFrom(srcCard);
             await m_DBCards.Insert(card.CardOfRepository);
             card.WorkState = await CreateNewActivities(boardID, card, workState);
 

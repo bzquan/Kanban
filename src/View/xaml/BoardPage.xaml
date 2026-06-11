@@ -28,7 +28,7 @@
 
             <local:SingleLineTextConverter x:Key="TextConverter"/>
             <BitmapImage x:Key="Remove" UriSource="/images/remove.png"/>
-            <BitmapImage x:Key="EditIcon" UriSource="/images/edit-icon.png"/>
+            <BitmapImage x:Key="AddIcon" UriSource="/images/add.png"/>
             <BitmapImage x:Key="MergeCompleted" UriSource="/images/merge_completed.png"/>
 
             <DataTemplate x:Key="cardListBoxDataTemplate" DataType="{x:Type vm:Card}">
@@ -85,9 +85,9 @@
                             <!-- Margin: Left, Top, Right, Bottom -->
                             <Image DockPanel.Dock="Left" Margin="5, 0, 0, 0" Width="24" Height="24" Source="{Binding Path=CardStoryPoints}" ToolTip="{Binding Path=ToolTipOfStoryPoints}" />
                             <Image DockPanel.Dock="Left" Margin="2, 0, 0, 0" Width="24" Height="24" Source="{Binding Path=CardTypeImageUri}" ToolTip="{Binding Path=ToolTipOfCardType}" />
-                            <Button Tag="{Binding}" DockPanel.Dock="Left" Width="24" Height="24" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" Click="OnEditCard"  ToolTip="{x:Static p:Resources.ToolTip_Edit}" >
+                            <Button Tag="{Binding}" DockPanel.Dock="Left" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" Click="OnReplicateCard"  ToolTip="{x:Static p:Resources.ToolTip_Edit}" >
                                 <StackPanel>
-                                    <Image Width="24" Height="24" Source="{StaticResource EditIcon}" />
+                                    <Image Width="24" Height="24" Source="{StaticResource AddIcon}" />
                                 </StackPanel>
                             </Button>
                             <Image DockPanel.Dock="Left" Width="24" Height="24"  Margin="2, 0, 0, 0" Source="{StaticResource MergeCompleted}" ToolTip="{x:Static p:Resources.CardEdit_MergedIntoMasterAndMajorBranch}"

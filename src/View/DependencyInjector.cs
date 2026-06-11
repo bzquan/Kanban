@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Unity;
+﻿using Unity;
 using Unity.Lifetime;
 using Unity.Resolution;
 
@@ -28,7 +27,7 @@ namespace Kanban
             m_DI4Repository.RegisterDependencis();
             m_DI4Infrastructure.RegisterDependencis();
             m_DI4Model.RegisterDependencis();
-            m_DI4ViewModel.RegisterDependencis();
+            m_DI4ViewModel.RegisterDependencies();
             m_DI4View.RegisterDependencis();
         }
 
@@ -65,10 +64,10 @@ namespace Kanban
     {
         internal DI4ViewModel(IUnityContainer DIContainer) : base(DIContainer) { }
 
-        internal void RegisterDependencis()
+        internal void RegisterDependencies()
         {
             DIContainer
-                .RegisterInstance(new ViewModel.CardFactory(async (board, cardWorkState) => await CreateCard(board, cardWorkState)))
+                .RegisterInstance(new ViewModel.CardFactory(async (board, cardWorkState, srcCard) => await CreateCard(board, cardWorkState, srcCard)))
                 .RegisterInstance(new ViewModel.WIPDoneViewModelFactory((board, cardWorkState, cardFilter, loadCardsOnBackBoard) =>
                                         new ViewModel.WIPDoneViewModel(board,
                                                              cardWorkState,
@@ -81,10 +80,10 @@ namespace Kanban
                 .RegisterInstance(new ViewModel.ProcessStepViewModelFactory((board, processStep) => ResolveProcessStepViewModel(board, processStep)));
         }
 
-        private async Task<ViewModel.Card> CreateCard(ViewModel.Board board, Model.WorkState cardWorkState)
+        private async Task<ViewModel.Card> CreateCard(ViewModel.Board board, Model.WorkState cardWorkState, ViewModel.Card srcCard)
         {
             Model.ICardFactory cardFactory = DIContainer.Resolve<Model.ICardFactory>();
-            Model.Card card = await cardFactory.CreateCard(board._id, cardWorkState);
+            Model.Card card = await cardFactory.CreateCard(board._id, cardWorkState, srcCard.CardModel);
             return new ViewModel.Card(card, board.ShowDetailedCards);
         }
 
@@ -93,7 +92,7 @@ namespace Kanban
             return DIContainer.Resolve<ViewModel.ProcessStepViewModel>(
                         new ParameterOverride("board", board),
                         new ParameterOverride("step", processStep),
-                        new ParameterOverride("boardsViewModelFactory", DIContainer.Resolve<ViewModel.WIPDoneViewModelFactory>()) );
+                        new ParameterOverride("boardsViewModelFactory", DIContainer.Resolve<ViewModel.WIPDoneViewModelFactory>()));
         }
     }
 
