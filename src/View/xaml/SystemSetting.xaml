@@ -31,9 +31,6 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -47,61 +44,25 @@
             <ComboBox x:Name="databaseComboBox" HorizontalAlignment="Left" ItemsSource="{Binding Path=DatabaseNames}" SelectedItem="{Binding Path=CurrentDatabase, Mode=TwoWay}" Height="28" VerticalContentAlignment="Center" />
             <Button x:Name="dropDBButton" Margin="10, 0, 0, 0" Content="{x:Static p:Resources.Setting_DropDB}" Click="OnDropDatabase"/>
         </StackPanel>
-        <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right"  Content="{x:Static p:Resources.Setting_DBFolder}"/>
-        <Grid Grid.Row="2" Grid.Column="1" Margin="0, 5, 0, 5">
-            <StackPanel Orientation="Horizontal">
-                <TextBox MinWidth="400" MaxWidth="600" HorizontalAlignment="Left" Text="{Binding Path=DBBackupFolder}"/>
-                <Button Width="24" Height="24" Margin="5, 0, 5, 0" HorizontalAlignment="Right" VerticalAlignment="Center" Click="OnSelectBackupFolder">
-                    <DynamicResource ResourceKey="Folder"/>
-                </Button>
-            </StackPanel>
-        </Grid>
-        <StackPanel Grid.Row="3" Grid.Column="1">
-            <Label Content="{x:Static p:Resources.Setting_DBPriority}"/>
-            <Border BorderBrush="LightGray" BorderThickness="1">
-                <StackPanel Orientation="Vertical" Grid.Column="0">
-                    <StackPanel Orientation="Horizontal">
-                        <RadioButton GroupName="DBPriority" IsChecked="{Binding Path=DBPriority4Restore, Converter={StaticResource enumBooleanConverter}, ConverterParameter=NoPriority}" Content="{Binding Path=DBPriority4Restore_NoPriority}" />
-                        <Image Source="{StaticResource OverwriteDB}" Height="24"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <RadioButton GroupName="DBPriority" IsChecked="{Binding Path=DBPriority4Restore, Converter={StaticResource enumBooleanConverter}, ConverterParameter=CurrentDB}" Content="{Binding Path=DBPriority4Restore_CurrentDB}"/>
-                        <Image Source="{StaticResource LocalDB}" Height="24"/>
-                        <Image Source="{StaticResource GoLeftArrow}" Height="16" Width="24"/>
-                        <Image Source="{StaticResource RemoteDB}" Height="24"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <RadioButton GroupName="DBPriority" IsChecked="{Binding Path=DBPriority4Restore, Converter={StaticResource enumBooleanConverter}, ConverterParameter=ToBeRestoredDB}" Content="{Binding Path=DBPriority4Restore_ToBeRestoredDB}"/>
-                        <Image Source="{StaticResource LocalDB}" Height="24"/>
-                        <Image Source="{StaticResource GoRightArrow}" Height="16" Width="24"/>
-                        <Image Source="{StaticResource RemoteDB}" Height="24"/>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-        </StackPanel>
-        <Grid Grid.Row="4" Grid.Column="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" /> 
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding Path=DumpDBCommand, Mode=OneTime}">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="{StaticResource BackupDB}" Height="24"/>
-                    <TextBlock Text="{x:Static p:Resources.Setting_DBBackup}" VerticalAlignment="Center" />
-                </StackPanel>
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left">
+            <Button
+                Margin="0, 5, 0, 0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Command="{Binding Path=RestoreDBCommand, Mode=OneTime}"
+                ToolTip="{x:Static p:Resources.Setting_DBRestore}">
+                <Image Source="{StaticResource RestoreDB}" Width="24" Height="24"/>
             </Button>
-            <Button  Grid.Column="1" Margin="5, 0, 0, 0" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding Path=RestoreDBCommand, Mode=OneTime}">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="{StaticResource RestoreDB}" Height="24"/>
-                    <TextBlock Text="{x:Static p:Resources.Setting_DBRestore}" VerticalAlignment="Center" />
-                </StackPanel>
-            </Button>
-            <Button x:Name="terminateProcess" IsEnabled="False" Width="28" Height="28" Grid.Column="2" ToolTip="{x:Static p:Resources.Setting_DBCancel_ToolTip}" Margin="5, 0, 0, 0" HorizontalAlignment="Right" VerticalAlignment="Center" Click="OnStopProcess" >
+            <Button x:Name="terminateProcess" IsEnabled="False" Width="28" Height="28"
+                    ToolTip="{x:Static p:Resources.Setting_DBCancel_ToolTip}"
+                    Margin="5, 5, 0, 0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Click="OnStopProcess" >
                 <DynamicResource ResourceKey="Stop_inactive"/>
             </Button>
-        </Grid>
-        <Label Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" Content="{x:Static p:Resources.Setting_DBInformation}"/>
-        <TextBox x:Name="InfoTextBox" IsReadOnly="True" Grid.Row="6" Grid.Column="1" Margin="0,5,5,-5" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" AcceptsReturn="True" />
+        </StackPanel>
+        <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" Content="{x:Static p:Resources.Setting_DBInformation}"/>
+        <TextBox x:Name="InfoTextBox" IsReadOnly="True" Grid.Row="3" Grid.Column="1" Margin="0,5,5,5" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" AcceptsReturn="True" />
     </Grid>
 </Page>

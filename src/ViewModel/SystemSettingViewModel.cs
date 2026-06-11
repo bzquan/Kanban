@@ -1,10 +1,10 @@
 ﻿using Kanban.Model;
 using Kanban.Repository;
 using Kanban.Util;
+using Microsoft.Win32;
 using MongoDB.Driver.Linq;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
 using System.Windows;
 using System.Windows.Input;
 
@@ -189,7 +189,7 @@ public class SystemSettingViewModel : NotifyPropertyChangedBase
 
     private bool CanDumpDB() => HaveDBBackupTools() && IsDBBackupFolderValid();
 
-    private bool CanRestoreDB() => HaveDBBackupTools() && IsDBRestoreFolderExist();
+    private bool CanRestoreDB() => HaveDBBackupTools();
 
     private bool HaveDBBackupTools()
     {
@@ -199,9 +199,23 @@ public class SystemSettingViewModel : NotifyPropertyChangedBase
 
     private bool IsDBBackupFolderValid() => (DBBackupFolder?.Length > 0);
 
-    private bool IsDBRestoreFolderExist() => Directory.Exists(DBBackupFolder);
-
     private void DumpDB() => m_DBBackup.DumpDB(DBBackupFolder);
 
-    private void RestoreDB() => m_DBBackup.RestoreDB(DBBackupFolder, DBPriority4Restore);
+    private void RestoreDB()
+    {
+        var folderDialog = new OpenFolderDialog
+        {
+            Title = "Select the folder where Kanban database backed up",
+            InitialDirectory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),
+            Multiselect = false
+        };
+
+        if (folderDialog.ShowDialog() == true)
+        {
+            string selectedFolder = folderDialog.FolderName;
+
+            DBBackupFolder = folderDialog.FolderName;
+            m_DBBackup.RestoreDB(DBBackupFolder, DBPriority4Restore);
+        }
+    }
 }

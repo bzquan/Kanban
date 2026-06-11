@@ -96,6 +96,7 @@
     <None Remove="images\remove.png" />
     <None Remove="images\restore_database.png" />
     <None Remove="images\restore_database1.png" />
+    <None Remove="images\restore_database2.png" />
     <None Remove="images\save.png" />
     <None Remove="images\small.png" />
     <None Remove="images\stop-inactive.png" />
@@ -115,6 +116,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
     <Resource Include="images\FST-logo.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -304,6 +306,9 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="images\restore_database1.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\restore_database2.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="images\save.png">
