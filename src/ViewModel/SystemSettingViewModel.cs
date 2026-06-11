@@ -114,22 +114,14 @@ public class SystemSettingViewModel : NotifyPropertyChangedBase
         if (assemblyPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
         {
             assemblyPath = assemblyPath.Replace(".dll", ".exe", StringComparison.OrdinalIgnoreCase);
-            //return new ProcessStartInfo("dotnet", $"\"{assemblyPath}\" {arguments}")
-            //{
-            //    UseShellExecute = false,
-            //    WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory
-            //};
         }
-        //else
-        //{
+
         return new ProcessStartInfo(assemblyPath)
         {
             UseShellExecute = true,
             Arguments = arguments,
             WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory
         };
-        //}
-
     }
 
     private void OnDatabaseDropped(object sender, DatabaseDroppedArg arg)
