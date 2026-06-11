@@ -8,7 +8,7 @@ namespace Kanban.ViewModel
         private static DateTime? LatestScheduledReleaseDate { get; set; } = null;
 
         private ProcessStepViewModelFactory ProcessStepViewModelFactory { get; }
-        private List<ProcessStepViewModel> m_ProcessStepViewModel = new List<ProcessStepViewModel>();
+        private List<ProcessStepViewModel> ProcessStepViewModels { get; } = new List<ProcessStepViewModel>();
         private IAppSettings AppSettings { get; }
         private IViewModelProperties Properties { get; }
 
@@ -36,7 +36,7 @@ namespace Kanban.ViewModel
             foreach (Repository.ProcessStep step in board.ProcessSteps)
             {
                 ProcessStepViewModel processStepViewModel = ProcessStepViewModelFactory(board, step);
-                m_ProcessStepViewModel.Add(processStepViewModel);
+                ProcessStepViewModels.Add(processStepViewModel);
             }
 
             AppSettings.LastUsedBoardID = board._id.ToString();
@@ -67,7 +67,7 @@ namespace Kanban.ViewModel
         public void LoadContents(string cardFilter)
         {
             CurrentFilter = cardFilter;
-            m_ProcessStepViewModel.ForEach(x => x.LoadContents(cardFilter, loadCardsOnBackBoard: !ShowFrontBoard));
+            ProcessStepViewModels.ForEach(x => x.LoadContents(cardFilter, loadCardsOnBackBoard: !ShowFrontBoard));
         }
 
         public bool ShowFrontBoard
@@ -118,12 +118,12 @@ namespace Kanban.ViewModel
 
         public ProcessStepViewModel GetProcessStepViewModel(int seqNo)
         {
-            return m_ProcessStepViewModel.First(x => x.ProcessStep.PhaseSeqNo == seqNo);
+            return ProcessStepViewModels.First(x => x.ProcessStep.PhaseSeqNo == seqNo);
         }
 
         public void ReplicateCard(Card srcCard)
         {
-            m_ProcessStepViewModel[0].ReplicateCard(srcCard);
+            ProcessStepViewModels[0].ReplicateCard(srcCard);
         }
 
         private Repository.ProcessStep GetStepByName(string value)
@@ -133,7 +133,7 @@ namespace Kanban.ViewModel
 
         private void OnAddCard()
         {
-            m_ProcessStepViewModel[0].AddNewCard();
+            ProcessStepViewModels[0].AddNewCard();
             EventAggregator<NewCardAddedArg>.Instance.Publish(this, new NewCardAddedArg());
         }
 
@@ -141,7 +141,7 @@ namespace Kanban.ViewModel
 
         private void OnCardsOfBoardRetrieved(object sender, CardsOfBoardRetrievedArgs arg)
         {
-            if ((m_ProcessStepViewModel.Last().ProcessStep.PhaseSeqNo == arg.ProcessStepSeqNo))
+            if ((ProcessStepViewModels.Last().ProcessStep.PhaseSeqNo == arg.ProcessStepSeqNo))
             {
                 PublishLatestScheduledReleaseDate();
             }
@@ -162,9 +162,9 @@ namespace Kanban.ViewModel
         {
             var scheduledReleaseDates = new SortedSet<DateTime>();
             // 最後尾の処理Step以外からリリース予定日を抽出する
-            for (int i = 0; i < m_ProcessStepViewModel.Count - 1; i++)
+            for (int i = 0; i < ProcessStepViewModels.Count - 1; i++)
             {
-                scheduledReleaseDates.UnionWith(m_ProcessStepViewModel[i].GetScheduledReleaseDates());
+                scheduledReleaseDates.UnionWith(ProcessStepViewModels[i].GetScheduledReleaseDates());
             }
 
             DateTime now = DateTime.Now;
