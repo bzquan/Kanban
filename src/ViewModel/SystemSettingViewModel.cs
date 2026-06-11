@@ -12,23 +12,23 @@ namespace Kanban.ViewModel;
 
 public class SystemSettingViewModel : NotifyPropertyChangedBase
 {
-    private DBBackupFactory m_DBBackupFactory;
+    private DBBackupFactory DBBackupFactory { get; }
     private ObservableCollection<string> m_DatabaseNames = new ObservableCollection<string>();
 
-    private IAppSettings m_AppSettings;
-    private IDBClient m_DBClient;
+    private IAppSettings AppSettings { get; }
+    private IDBClient DBClient { get; }
     private string m_CurrentDBName;
     private bool? m_HaveDBBackupTools;
+    private IDBBackup DBBackup { get; set; }
 
-    private IDBBackup m_DBBackup;
     private DelegateCommandNoArg m_DumpDBCommand;
     private DelegateCommandNoArg m_RestoreDBCommand;
 
     public SystemSettingViewModel(IAppSettings appSettings, IDBClient dbClient, DBBackupFactory dbBackupFactory)
     {
-        m_AppSettings = appSettings;
-        m_DBBackupFactory = dbBackupFactory;
-        m_DBClient = dbClient;
+        AppSettings = appSettings;
+        DBBackupFactory = dbBackupFactory;
+        DBClient = dbClient;
         LoadDatabaseNames();
         m_CurrentDBName = dbClient.DBName;
 
@@ -43,7 +43,7 @@ public class SystemSettingViewModel : NotifyPropertyChangedBase
 
     private void LoadDatabaseNames()
     {
-        var dbNames = m_DBClient.GetDatabaseNames()
+        var dbNames = DBClient.GetDatabaseNames()
             .Where(dbName => dbName != ("admin") && dbName != ("config"))
             .ToList();
 
@@ -55,20 +55,20 @@ public class SystemSettingViewModel : NotifyPropertyChangedBase
     {
         set
         {
-            m_DBBackup = m_DBBackupFactory(value);
+            DBBackup = DBBackupFactory(value);
         }
     }
 
     public string CurrentLanguage
     {
-        get => EnumUtil.GetEnumDescription(m_AppSettings.Language);
+        get => EnumUtil.GetEnumDescription(AppSettings.Language);
         set
         {
             Languages language = EnumUtil.ToEnumValue<Languages>(value);
-            if (m_AppSettings.Language != language)
+            if (AppSettings.Language != language)
             {
-                m_AppSettings.Language = language;
-                Util.Util.SetLanguage(m_AppSettings.Language);
+                AppSettings.Language = language;
+                Util.Util.SetLanguage(AppSettings.Language);
 
                 MessageBoxResult result = MessageBox.Show(
                                                "You need to restart the application to make new language effective",
@@ -153,7 +153,7 @@ public class SystemSettingViewModel : NotifyPropertyChangedBase
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    m_AppSettings.Database = value;
+                    AppSettings.Database = value;
                     RestartApplication();
                 }
             }
@@ -163,29 +163,15 @@ public class SystemSettingViewModel : NotifyPropertyChangedBase
 
     public string DBBackupFolder
     {
-        get => m_AppSettings.DBBackupFolder;
+        get => AppSettings.DBBackupFolder;
         set
         {
-            m_AppSettings.DBBackupFolder = value.Trim();
+            AppSettings.DBBackupFolder = value.Trim();
             base.OnPropertyChanged();
             m_DumpDBCommand.RaiseCanExecuteChanged();
             m_RestoreDBCommand.RaiseCanExecuteChanged();
         }
     }
-
-    public DBPriority4Restore DBPriority4Restore
-    {
-        get => m_AppSettings.DBPriority4Restore;
-        set
-        {
-            m_AppSettings.DBPriority4Restore = value;
-            base.OnPropertyChanged();
-        }
-    }
-
-    public string DBPriority4Restore_NoPriority => EnumUtil.GetEnumDescription(DBPriority4Restore.NoPriority);
-    public string DBPriority4Restore_CurrentDB => EnumUtil.GetEnumDescription(DBPriority4Restore.CurrentDB);
-    public string DBPriority4Restore_ToBeRestoredDB => EnumUtil.GetEnumDescription(DBPriority4Restore.ToBeRestoredDB);
 
     private bool CanDumpDB() => HaveDBBackupTools() && IsDBBackupFolderValid();
 
@@ -193,13 +179,13 @@ public class SystemSettingViewModel : NotifyPropertyChangedBase
 
     private bool HaveDBBackupTools()
     {
-        m_HaveDBBackupTools = m_HaveDBBackupTools ?? m_DBBackup.HaveDBBackupTools();
+        m_HaveDBBackupTools = m_HaveDBBackupTools ?? DBBackup.HaveDBBackupTools();
         return m_HaveDBBackupTools.Value;
     }
 
     private bool IsDBBackupFolderValid() => (DBBackupFolder?.Length > 0);
 
-    private void DumpDB() => m_DBBackup.DumpDB(DBBackupFolder);
+    private void DumpDB() => DBBackup.DumpDB(DBBackupFolder);
 
     private void RestoreDB()
     {
@@ -215,7 +201,7 @@ public class SystemSettingViewModel : NotifyPropertyChangedBase
             string selectedFolder = folderDialog.FolderName;
 
             DBBackupFolder = folderDialog.FolderName;
-            m_DBBackup.RestoreDB(DBBackupFolder, DBPriority4Restore);
+            DBBackup.RestoreDB(DBBackupFolder, DBPriority4Restore.NoPriority);
         }
     }
 }
