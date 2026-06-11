@@ -7,13 +7,10 @@ namespace Kanban.ViewModel
     {
         private static DateTime? LatestScheduledReleaseDate { get; set; } = null;
 
-        private bool m_ShowFrontBoard = true;
-        private bool m_ShowCardDetails = true;
-        private string m_CurrentFilter = "";
-        private ProcessStepViewModelFactory m_ProcessStepViewModelFactory;
+        private ProcessStepViewModelFactory ProcessStepViewModelFactory { get; }
         private List<ProcessStepViewModel> m_ProcessStepViewModel = new List<ProcessStepViewModel>();
-        private IAppSettings m_AppSettings;
-        private IViewModelProperties m_Properties;
+        private IAppSettings AppSettings { get; }
+        private IViewModelProperties Properties { get; }
 
         public Board Board { get; set; }
         public ICommand FilterCardsCommand { get; private set; }
@@ -22,9 +19,9 @@ namespace Kanban.ViewModel
 
         public BoardPageViewModel(ProcessStepViewModelFactory processStepViewModelFactory, IAppSettings appSettings, IViewModelProperties properties)
         {
-            m_ProcessStepViewModelFactory = processStepViewModelFactory;
-            m_AppSettings = appSettings;
-            m_Properties = properties;
+            ProcessStepViewModelFactory = processStepViewModelFactory;
+            AppSettings = appSettings;
+            Properties = properties;
 
             FilterCardsCommand = new DelegateCommand<string>(LoadContents);
             AddCardCommand = new DelegateCommandNoArg(OnAddCard, CanAddCard);
@@ -38,11 +35,11 @@ namespace Kanban.ViewModel
             Board = board;
             foreach (Repository.ProcessStep step in board.ProcessSteps)
             {
-                ProcessStepViewModel processStepViewModel = m_ProcessStepViewModelFactory(board, step);
+                ProcessStepViewModel processStepViewModel = ProcessStepViewModelFactory(board, step);
                 m_ProcessStepViewModel.Add(processStepViewModel);
             }
 
-            m_AppSettings.LastUsedBoardID = board._id.ToString();
+            AppSettings.LastUsedBoardID = board._id.ToString();
         }
 
         public static bool IsLatestScheduledReleaseDate(DateTime dateTime)
@@ -54,19 +51,18 @@ namespace Kanban.ViewModel
 
         private string CurrentFilter
         {
-            get { return m_CurrentFilter; }
+            get => field;
             set
             {
-                m_CurrentFilter = value;
-
+                field = value;
                 if (IsFiltering())
                     EventAggregator<DragAndDropLib.DisallowDragAndDropRequestArg>.Instance.Publish(this, new DragAndDropLib.DisallowDragAndDropRequestArg());
                 else
                     EventAggregator<DragAndDropLib.AllowDragAndDropRequestArg>.Instance.Publish(this, new DragAndDropLib.AllowDragAndDropRequestArg());
             }
-        }
+        } = "";
 
-        private bool IsFiltering() => (m_CurrentFilter?.Trim()?.Length > 0);
+        private bool IsFiltering() => (CurrentFilter?.Trim()?.Length > 0);
 
         public void LoadContents(string cardFilter)
         {
@@ -76,36 +72,35 @@ namespace Kanban.ViewModel
 
         public bool ShowFrontBoard
         {
-            get { return m_ShowFrontBoard; }
+            get => field;
             set
             {
-                if (m_ShowFrontBoard == value) return;
+                if (field == value) return;
 
-                m_ShowFrontBoard = value;
+                field = value;
                 OnPropertyChanged();
                 LoadContents(CurrentFilter);
                 OnPropertyChanged(nameof(BoardFrontBackImageUri));
                 OnPropertyChanged(nameof(BoardFrontBackImageToolTip));
                 AddCardCommand.RaiseCanExecuteChanged();
             }
-        }
+        } = true;
 
         public bool ShowDetailedCards
         {
-            get { return m_ShowCardDetails; }
-
+            get => field;
             set
             {
-                if (m_ShowCardDetails == value) return;
+                if (field == value) return;
 
                 Board.ShowDetailedCards = value;
-                m_ShowCardDetails = value;
+                field = value;
                 OnPropertyChanged();
 
                 LoadContents(CurrentFilter);
                 AddCardCommand.RaiseCanExecuteChanged();
             }
-        }
+        } = true;
 
         public string BoardFrontBackImageUri
         {
@@ -118,7 +113,7 @@ namespace Kanban.ViewModel
 
         public string BoardFrontBackImageToolTip
         {
-            get { return ShowFrontBoard ? m_Properties.ToolTip_BoardFront : m_Properties.ToolTip_BoardBack; }
+            get { return ShowFrontBoard ? Properties.ToolTip_BoardFront : Properties.ToolTip_BoardBack; }
         }
 
         public ProcessStepViewModel GetProcessStepViewModel(int seqNo)
