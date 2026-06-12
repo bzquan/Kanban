@@ -38,7 +38,7 @@ public partial class App : Application
     {
         Random random = new Random();
         int image_index = random.Next(1, 7);
-        return String.Format($"images/kanban_splash_window{image_index}.jpg");
+        return $"images/kanban_splash_window{image_index}.jpg";
     }
 
     private async void OnStartup(object sender, StartupEventArgs e)
