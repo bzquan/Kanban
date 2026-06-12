@@ -23,6 +23,8 @@ public partial class App : Application
 
         Kanban.App app = new Kanban.App();
         app.InitializeComponent();
+        app.ConfigLocalizations();
+
         app.Run();
     }
 
@@ -50,12 +52,10 @@ public partial class App : Application
 
         try
         {
-            m_DependencyInjector.RegisterDependencis();
+            ConfigLocalizations();
 
             var dbUpgrader = m_DependencyInjector.Resolve<Repository.DBUpgrater>();
             await dbUpgrader.UpgrateDB();
-
-            ConfigLocalizations();
 
             var mainWindow = m_DependencyInjector.Resolve<MainWindow>();
             Application.Current.MainWindow = mainWindow;
@@ -71,8 +71,10 @@ public partial class App : Application
         }
     }
 
-    private void ConfigLocalizations()
+    public void ConfigLocalizations()
     {
+        m_DependencyInjector.RegisterDependencis();
+
         var appSetting = m_DependencyInjector.Resolve<Util.IAppSettings>();
         Util.Util.SetLanguage(appSetting.Language);
         Util.EnumUtil.CurrentLanguage = appSetting.Language;
