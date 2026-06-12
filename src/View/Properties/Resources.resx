@@ -550,4 +550,7 @@ Release date format is year month and day(e.g. 20191101、191101、1101)</value>
   <data name="Main_Developers" xml:space="preserve">
     <value>Developers(Seperate by semicolon):</value>
   </data>
+  <data name="ToolTip_ReplicateCard" xml:space="preserve">
+    <value>Replicate card</value>
+  </data>
 </root>

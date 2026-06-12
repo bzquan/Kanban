@@ -32,13 +32,20 @@ public static class Util
                 shortDatePattern = "yyyy/MM/dd";
                 longDatePattern = "yyyy/MM/dd HH:mm";
                 break;
+            default:
+                locale = "en";
+                shortDatePattern = "dd/MMM/yyyy";
+                longDatePattern = "dd/MMM/yyyy HH:mm";
+                break;
         }
 
         var cultureInfo = new CultureInfo(locale);
         cultureInfo.DateTimeFormat.ShortDatePattern = shortDatePattern;
         cultureInfo.DateTimeFormat.LongDatePattern = longDatePattern;
-        System.Threading.Thread.CurrentThread.CurrentCulture = cultureInfo;
-        System.Threading.Thread.CurrentThread.CurrentUICulture = cultureInfo;
+
+        CultureInfo.CurrentUICulture = cultureInfo;
+        Thread.CurrentThread.CurrentCulture = cultureInfo;
+        Thread.CurrentThread.CurrentUICulture = cultureInfo;
     }
 
     public static bool ExistsOnPath(params string[] fileNames)

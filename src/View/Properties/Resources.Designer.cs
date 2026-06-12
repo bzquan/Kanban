@@ -1259,6 +1259,15 @@ namespace Kanban.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Replicate card.
+        /// </summary>
+        public static string ToolTip_ReplicateCard {
+            get {
+                return ResourceManager.GetString("ToolTip_ReplicateCard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show detailed/outline of cards.
         /// </summary>
         public static string ToolTip_ShowCardDetailOrOutline {

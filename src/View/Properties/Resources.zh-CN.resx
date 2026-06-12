@@ -550,4 +550,7 @@
   <data name="Main_Developers" xml:space="preserve">
     <value>负责人列表(用分号分割):</value>
   </data>
+  <data name="ToolTip_ReplicateCard" xml:space="preserve">
+    <value>复制生成新卡片</value>
+  </data>
 </root>

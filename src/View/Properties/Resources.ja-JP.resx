@@ -550,4 +550,7 @@
   <data name="Main_Developers" xml:space="preserve">
     <value>担当者リスト(区切はセミコロン):</value>
   </data>
+  <data name="ToolTip_ReplicateCard" xml:space="preserve">
+    <value>コピーして新規カードを作成</value>
+  </data>
 </root>
