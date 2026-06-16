@@ -1,8 +1,4 @@
 ﻿using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Kanban.Model
 {
@@ -147,25 +143,25 @@ namespace Kanban.Model
                 var velocity = releasedCards
                                  .Where(r => r.ReleaseDate >= fromDate && r.ReleaseDate <= toDate)
                                  .Sum(r => r.Card.StoryPoints);
-                var hasUknownStoryPoints = releasedCards
+                var hasUnknownStoryPoints = releasedCards
                                                    .Where(r => r.ReleaseDate >= fromDate && r.ReleaseDate <= toDate)
                                                    .FirstOrDefault(r => r.Card.StoryPoints == Repository.Card.UNKNOWN_STORY_POINTS) != null;
 
-                                                   
-                velocityList.Add(new TeamVelocity(velocity, toDate, hasUknownStoryPoints));
+
+                velocityList.Add(new TeamVelocity(velocity, toDate, hasUnknownStoryPoints));
             }
 
             return velocityList;
         }
-        
+
         private int BuildAverageVelocity4TwoWeeks(List<ReleasedCard> releasedCards)
         {
-            int totalUserStoryPontsReleased = 0;
+            int totalUserStoryPointsReleased = 0;
             DateTime fromDate4AverageVelocity = ToDate.AddDays(-SIX_WEEKS);
-            totalUserStoryPontsReleased = releasedCards
+            totalUserStoryPointsReleased = releasedCards
                                  .Where(r => r.ReleaseDate >= fromDate4AverageVelocity && r.ReleaseDate <= ToDate)
                                  .Sum(r => r.Card.StoryPoints);
-            int averageBy2weeks = totalUserStoryPontsReleased / 3;
+            int averageBy2weeks = totalUserStoryPointsReleased / 3;
             return averageBy2weeks;
         }
         /// <summary>
@@ -254,7 +250,7 @@ namespace Kanban.Model
                 DateTime? endDate = LeavingDateFromProcess(beginDate, activitiesOfCard);
                 if (endDate != null)
                 {
-                    if (IsTimeEnouphStayingProcess(beginDate, endDate.Value))
+                    if (HasStayedEnoughTimeInProcess(beginDate, endDate.Value))
                     {
                         AppendDates(dates, beginDate, endDate.Value);
                     }
@@ -275,8 +271,8 @@ namespace Kanban.Model
         }
 
         // 10分以上留まった場合のみ計測対象とする
-        private bool IsTimeEnouphStayingProcess(DateTime beginDate, DateTime endDate)
-            => (endDate - beginDate).Minutes >= 10;
+        private bool HasStayedEnoughTimeInProcess(DateTime beginDate, DateTime endDate)
+            => (endDate - beginDate).TotalMinutes >= 10;
 
         private void AppendDates(List<DateTime> dates, DateTime from, DateTime to)
         {
