@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="Kanban/Kanban.csproj" />
+  <Project Path="TestKanban/TestKanban.csproj" Id="83ee479d-cc36-4959-842c-616e56234b84" />
 </Solution>
