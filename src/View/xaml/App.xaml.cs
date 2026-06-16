@@ -7,7 +7,7 @@ namespace Kanban;
 /// </summary>
 public partial class App : Application
 {
-    DependencyInjector m_DependencyInjector = new DependencyInjector();
+    DependencyInjector DependencyInjector { get; } = new DependencyInjector();
 
     /// <summary>
     /// Application Entry Point.
@@ -23,6 +23,8 @@ public partial class App : Application
 
         Kanban.App app = new Kanban.App();
         app.InitializeComponent();
+
+        app.RegisterDependencies();
         app.ConfigLocalizations();
 
         app.Run();
@@ -52,12 +54,10 @@ public partial class App : Application
 
         try
         {
-            ConfigLocalizations();
-
-            var dbUpgrader = m_DependencyInjector.Resolve<Repository.DBUpgrater>();
+            var dbUpgrader = DependencyInjector.Resolve<Repository.DBUpgrater>();
             await dbUpgrader.UpgrateDB();
 
-            var mainWindow = m_DependencyInjector.Resolve<MainWindow>();
+            var mainWindow = DependencyInjector.Resolve<MainWindow>();
             Application.Current.MainWindow = mainWindow;
             Application.Current.MainWindow.Show();
 
@@ -71,15 +71,18 @@ public partial class App : Application
         }
     }
 
-    public void ConfigLocalizations()
+    internal void RegisterDependencies()
     {
-        m_DependencyInjector.RegisterDependencis();
+        DependencyInjector.RegisterDependencies();
+    }
 
-        var appSetting = m_DependencyInjector.Resolve<Util.IAppSettings>();
+    internal void ConfigLocalizations()
+    {
+        var appSetting = DependencyInjector.Resolve<Util.IAppSettings>();
         Util.Util.SetLanguage(appSetting.Language);
         Util.EnumUtil.CurrentLanguage = appSetting.Language;
 
-        ViewModel.Card.ViewModelProperties = m_DependencyInjector.Resolve<ViewModel.IViewModelProperties>();
+        ViewModel.Card.ViewModelProperties = DependencyInjector.Resolve<ViewModel.IViewModelProperties>();
     }
 
     bool IsStartingUp { get; set; } = true;
@@ -122,13 +125,13 @@ public partial class App : Application
         }
     }
 
-    private void Application_Exit(object sender, ExitEventArgs e)
-    {
-    }
-
     void ShowExceptionMessages(Window owner, Exception ex)
     {
         var error_msg = $"{ex.Source} Error:  {ex.Message}\r\n\r\n{ex.StackTrace}";
         MessageBox.Show(owner, error_msg, "UnhandledException", MessageBoxButton.OK, MessageBoxImage.Error);
+    }
+
+    private void Application_Exit(object sender, ExitEventArgs e)
+    {
     }
 }

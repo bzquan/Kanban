@@ -22,7 +22,7 @@ namespace Kanban
             m_DI4View = new DI4View(DIContainer);
         }
 
-        public void RegisterDependencis()
+        public void RegisterDependencies()
         {
             m_DI4Repository.RegisterDependencis();
             m_DI4Infrastructure.RegisterDependencis();
