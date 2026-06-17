@@ -23,285 +23,285 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace Kanban
+namespace Kanban;
+
+using System;
+using System.Reflection;
+using System.Windows;
+using System.Windows.Media;
+
+public class AboutControlViewModel : ViewModel.NotifyPropertyChangedBase
 {
-    using System;
-    using System.Reflection;
-    using System.Windows;
-    using System.Windows.Media;
+    private ImageSource _ApplicationLogo;
+    private string _Title;
+    private string _Description;
+    private string _Version;
+    private ImageSource _PublisherLogo;
+    private string _Copyright;
+    private string _ReleaseNotes;
+    private string _HyperlinkText;
+    private Uri _Hyperlink;
+    private string _Publisher;
+    private bool _isSemanticVersioning;
 
-    public class AboutControlViewModel : ViewModel.NotifyPropertyChangedBase
+    public AboutControlViewModel()
     {
-        private ImageSource _ApplicationLogo;
-        private string _Title;
-        private string _Description;
-        private string _Version;
-        private ImageSource _PublisherLogo;
-        private string _Copyright;
-        private string _ReleaseNotes;
-        private string _HyperlinkText;
-        private Uri _Hyperlink;
-        private string _Publisher;
-        private bool _isSemanticVersioning;
+        Window = new Window();
+        Window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+        Window.SizeToContent = SizeToContent.WidthAndHeight;
+        Window.ResizeMode = ResizeMode.NoResize;
+        Window.WindowStyle = WindowStyle.None;
 
-        public AboutControlViewModel()
+        Window.ShowInTaskbar = false;
+        Window.Title = "About";
+        Window.Deactivated += Window_Deactivated;
+
+        Assembly assembly = Assembly.GetEntryAssembly();
+        Version = assembly.GetName().Version.ToString();
+        Title = assembly.GetName().Name;
+
+        AssemblyCopyrightAttribute copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>();
+        AssemblyDescriptionAttribute description = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>();
+        AssemblyCompanyAttribute company = assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
+
+        Copyright = copyright.Copyright;
+        Description = description.Description;
+        Publisher = company.Company;
+        HyperlinkText = "https://www.fujisofttech.co.jp/";
+    }
+
+    /// <summary>
+    /// Gets or sets the application logo.
+    /// </summary>
+    /// <value>The application logo.</value>
+    public ImageSource ApplicationLogo
+    {
+        get
         {
-            Window = new Window();
-            Window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            Window.SizeToContent = SizeToContent.WidthAndHeight;
-            Window.ResizeMode = ResizeMode.NoResize;
-            Window.WindowStyle = WindowStyle.None;
-
-            Window.ShowInTaskbar = false;
-            Window.Title = "About";
-            Window.Deactivated += Window_Deactivated;
-
-            Assembly assembly = Assembly.GetEntryAssembly();
-            Version = assembly.GetName().Version.ToString();
-            Title = assembly.GetName().Name;
-
-            AssemblyCopyrightAttribute copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>();
-            AssemblyDescriptionAttribute description = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>();
-            AssemblyCompanyAttribute company = assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
-
-            Copyright = copyright.Copyright;
-            Description = description.Description;
-            Publisher = company.Company;
+            return _ApplicationLogo;
         }
-
-        /// <summary>
-        /// Gets or sets the application logo.
-        /// </summary>
-        /// <value>The application logo.</value>
-        public ImageSource ApplicationLogo
+        set
         {
-            get
+            if (_ApplicationLogo != value)
             {
-                return _ApplicationLogo;
-            }
-            set
-            {
-                if (_ApplicationLogo != value)
-                {
-                    _ApplicationLogo = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the application title.
-        /// </summary>
-        /// <value>The application title.</value>
-        public string Title
-        {
-            get
-            {
-                return _Title;
-            }
-            set
-            {
-                if (_Title != value)
-                {
-                    _Title = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the application info.
-        /// </summary>
-        /// <value>The application info.</value>
-        public string Description
-        {
-            get
-            {
-                return _Description;
-            }
-            set
-            {
-                if (_Description != value)
-                {
-                    _Description = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets if Semantic Versioning is used.
-        /// </summary>
-        /// <see cref="http://semver.org/"/>
-        /// <value>The bool that indicats whether Semantic Versioning is used.</value>
-        public bool IsSemanticVersioning
-        {
-            get
-            {
-                return _isSemanticVersioning;
-            }
-            set
-            {
-                _isSemanticVersioning = value;
+                _ApplicationLogo = value;
                 OnPropertyChanged();
             }
         }
+    }
 
-        /// <summary>
-        /// Gets or sets the application version.
-        /// </summary>
-        /// <value>The application version.</value>
-        public string Version
+    /// <summary>
+    /// Gets or sets the application title.
+    /// </summary>
+    /// <value>The application title.</value>
+    public string Title
+    {
+        get
         {
-            get
+            return _Title;
+        }
+        set
+        {
+            if (_Title != value)
             {
-                if (IsSemanticVersioning)
-                {
-                    var tmp = _Version.Split('.');
-                    var version = string.Format("{0}.{1}.{2}", tmp[0], tmp[1], tmp[2]);
-                    return version;
-                }
-
-                return _Version;
-            }
-            set
-            {
-                if (_Version != value)
-                {
-                    _Version = value;
-                    OnPropertyChanged();
-                }
+                _Title = value;
+                OnPropertyChanged();
             }
         }
+    }
 
-        /// <summary>
-        /// Gets or sets the publisher logo.
-        /// </summary>
-        /// <value>The publisher logo.</value>
-        public ImageSource PublisherLogo
+    /// <summary>
+    /// Gets or sets the application info.
+    /// </summary>
+    /// <value>The application info.</value>
+    public string Description
+    {
+        get
         {
-            get
+            return _Description;
+        }
+        set
+        {
+            if (_Description != value)
             {
-                return _PublisherLogo;
-            }
-            set
-            {
-                if (_PublisherLogo != value)
-                {
-                    _PublisherLogo = value;
-                    OnPropertyChanged();
-                }
+                _Description = value;
+                OnPropertyChanged();
             }
         }
+    }
 
-        /// <summary>
-        /// Gets or sets the publisher.
-        /// </summary>
-        /// <value>The publisher.</value>
-        public string Publisher
+    /// <summary>
+    /// Gets or sets if Semantic Versioning is used.
+    /// </summary>
+    /// <see cref="http://semver.org/"/>
+    /// <value>The bool that indicats whether Semantic Versioning is used.</value>
+    public bool IsSemanticVersioning
+    {
+        get
         {
-            get
+            return _isSemanticVersioning;
+        }
+        set
+        {
+            _isSemanticVersioning = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the application version.
+    /// </summary>
+    /// <value>The application version.</value>
+    public string Version
+    {
+        get
+        {
+            if (IsSemanticVersioning)
             {
-                return _Publisher;
+                var tmp = _Version.Split('.');
+                var version = string.Format("{0}.{1}.{2}", tmp[0], tmp[1], tmp[2]);
+                return version;
             }
-            set
+
+            return _Version;
+        }
+        set
+        {
+            if (_Version != value)
             {
-                if (_Publisher != value)
-                {
-                    _Publisher = value;
-                    OnPropertyChanged();
-                }
+                _Version = value;
+                OnPropertyChanged();
             }
         }
+    }
 
-        /// <summary>
-        /// Gets or sets the copyright label.
-        /// </summary>
-        /// <value>The copyright label.</value>
-        public string Copyright
+    /// <summary>
+    /// Gets or sets the publisher logo.
+    /// </summary>
+    /// <value>The publisher logo.</value>
+    public ImageSource PublisherLogo
+    {
+        get
         {
-            get
+            return _PublisherLogo;
+        }
+        set
+        {
+            if (_PublisherLogo != value)
             {
-                return _Copyright;
-            }
-            set
-            {
-                if (_Copyright != value)
-                {
-                    _Copyright = value;
-                    OnPropertyChanged();
-                }
+                _PublisherLogo = value;
+                OnPropertyChanged();
             }
         }
+    }
 
-        /// <summary>
-        /// Gets or sets the hyperlink text.
-        /// </summary>
-        /// <value>The hyperlink text.</value>
-        public string HyperlinkText
+    /// <summary>
+    /// Gets or sets the publisher.
+    /// </summary>
+    /// <value>The publisher.</value>
+    public string Publisher
+    {
+        get
         {
-            get
+            return _Publisher;
+        }
+        set
+        {
+            if (_Publisher != value)
             {
-                return _HyperlinkText;
-            }
-            set
-            {
-                try
-                {
-                    Hyperlink = new Uri(value);
-                    _HyperlinkText = value;
-                    OnPropertyChanged();
-                }
-                catch
-                {
-                }
+                _Publisher = value;
+                OnPropertyChanged();
             }
         }
+    }
 
-        public Uri Hyperlink
+    /// <summary>
+    /// Gets or sets the copyright label.
+    /// </summary>
+    /// <value>The copyright label.</value>
+    public string Copyright
+    {
+        get
         {
-            get
-            {
-                return _Hyperlink;
-            }
-            set
-            {
-                if (_Hyperlink != value)
-                {
-                    _Hyperlink = value;
-                    OnPropertyChanged();
-                }
-            }
+            return _Copyright;
         }
-
-        /// <summary>
-        /// Release note in HTML
-        /// </summary>
-        public string ReleaseNote
+        set
         {
-            get
+            if (_Copyright != value)
             {
-                return _ReleaseNotes;
-            }
-            set
-            {
-                if (_ReleaseNotes != value)
-                {
-                    _ReleaseNotes = value;
-                    OnPropertyChanged();
-                }
+                _Copyright = value;
+                OnPropertyChanged();
             }
         }
+    }
 
-        public Window Window
+    /// <summary>
+    /// Gets or sets the hyperlink text.
+    /// </summary>
+    /// <value>The hyperlink text.</value>
+    public string HyperlinkText
+    {
+        get
         {
-            get;
-            set;
+            return _HyperlinkText;
         }
+        set
+        {
+            try
+            {
+                Hyperlink = new Uri(value);
+                _HyperlinkText = value;
+                OnPropertyChanged();
+            }
+            catch
+            {
+            }
+        }
+    }
 
-        void Window_Deactivated(object sender, System.EventArgs e)
+    public Uri Hyperlink
+    {
+        get
         {
-            Window.Close();
+            return _Hyperlink;
         }
+        set
+        {
+            if (_Hyperlink != value)
+            {
+                _Hyperlink = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Release note in HTML
+    /// </summary>
+    public string ReleaseNote
+    {
+        get
+        {
+            return _ReleaseNotes;
+        }
+        set
+        {
+            if (_ReleaseNotes != value)
+            {
+                _ReleaseNotes = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    public Window Window
+    {
+        get;
+        set;
+    }
+
+    void Window_Deactivated(object sender, System.EventArgs e)
+    {
+        Window.Close();
     }
 }

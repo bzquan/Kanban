@@ -80,7 +80,6 @@ namespace Kanban
         {
             SystemSetting dbBackupPage = m_BackupPageFactory();
             this.NavigationService.Navigate(dbBackupPage);
-            //this.NavigationService.Navigate(new Uri("xaml/DBDumpRestorePage.xaml", UriKind.Relative));
         }
 
         private void OnHelp(object sender, RoutedEventArgs e)

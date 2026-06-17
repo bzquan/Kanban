@@ -107,11 +107,11 @@
                 </Image.Resources -->
             </Image>
             <TextBlock x:Name="Copyright"
-					   Grid.Row="1"
+					   Grid.Row="0"
 					   Grid.Column="1"
-					   Margin="5,0,0,10"
+					   Margin="5,10,0,0"
 					   Text="{Binding Copyright}"/>
-            <Label Grid.Row="1" Grid.Column="1">
+            <Label Grid.Row="1" Grid.Column="1" Margin="0,-5,0,0">
 				<Hyperlink x:Name="Hyperlink"
 						   RequestNavigate="Link_RequestNavigate"
 						   NavigateUri="{Binding Hyperlink}">

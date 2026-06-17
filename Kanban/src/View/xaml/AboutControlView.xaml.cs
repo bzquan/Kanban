@@ -25,27 +25,27 @@
 
 namespace Kanban
 {
-	using System.Diagnostics;
-	using System.Windows;
-	using System.Windows.Controls;
-	using System.Windows.Input;
-	using System.Windows.Navigation;
+    using System.Diagnostics;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
+    using System.Windows.Navigation;
 
-	/// <summary>
-	/// Interaction logic for AboutControlView.xaml
-	/// </summary>
-	public partial class AboutControlView : UserControl
-	{
-		public AboutControlView()
-		{
-			InitializeComponent();
-		}
+    /// <summary>
+    /// Interaction logic for AboutControlView.xaml
+    /// </summary>
+    public partial class AboutControlView : UserControl
+    {
+        public AboutControlView()
+        {
+            InitializeComponent();
+        }
 
-		private void Link_RequestNavigate(object sender, RequestNavigateEventArgs e)
-		{
-			Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
-			e.Handled = true;
-		}
+        private void Link_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo() { FileName = e.Uri.AbsoluteUri, UseShellExecute = true });
+            e.Handled = true;
+        }
 
         private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs eventArgs)
         {
