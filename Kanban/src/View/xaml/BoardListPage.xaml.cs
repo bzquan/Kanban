@@ -17,8 +17,13 @@ namespace Kanban
         BoardPageFactory m_BoardPageFactory;
         Func<SystemSetting> m_BackupPageFactory;
         BoardListViewModel m_BoardListViewModel;
+        IAppSettings AppSettings { get; }
 
-        public BoardListPage(BoardPageFactory boardPageFactory, Func<SystemSetting> backupPageFactory, BoardListViewModel boardListViewModel, MetricsChartViewModel metricsChartViewModel)
+        public BoardListPage(BoardPageFactory boardPageFactory,
+                             Func<SystemSetting> backupPageFactory,
+                             BoardListViewModel boardListViewModel,
+                             MetricsChartViewModel metricsChartViewModel,
+                             IAppSettings appSettings)
         {
             InitializeComponent();
 
@@ -35,6 +40,7 @@ namespace Kanban
 
             EventAggregator<GotoBoardPageRequestedArgs>.Instance.Event += OnGotoBoardPageRequested;
             EventAggregator<GotoSystemSettingPageRequestedArg>.Instance.Event += OnGotoSystemSettingPage;
+            AppSettings = appSettings;
         }
 
         private void OnDoubleClicked(object sender, RoutedEventArgs e)
@@ -51,7 +57,6 @@ namespace Kanban
 
             BoardPage page = m_BoardPageFactory(board);
             this.NavigationService.Navigate(page);
-            //this.NavigationService.Navigate(m_BoardPageFactory.CreateBoardPage(board));
         }
 
         private void ScrollViewerOfCanvas_LayoutUpdated(object sender, EventArgs e)
@@ -101,8 +106,11 @@ namespace Kanban
         private string LoadReleaseNote()
         {
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
-            var templateName = "Kanban.ReleaseNote.ReleaseNote.html";
-
+            var templateName = AppSettings.Language switch
+            {
+                Languages.Japanese => "Kanban.ReleaseNote.ReleaseNote_jp.html",
+                _ => "Kanban.ReleaseNote.ReleaseNote.html",
+            };
             using (Stream stream = assembly.GetManifestResourceStream(templateName))
             using (StreamReader reader = new StreamReader(stream))
             {
