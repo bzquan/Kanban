@@ -24,6 +24,15 @@
         <Image x:Key="Stop" Source="/Kanban;component/images/stop.png"/>
         <Image x:Key="Stop_inactive" Source="/Kanban;component/images/stop-inactive.png"/>
         <local:EnumBooleanConverter x:Key="enumBooleanConverter" />
+
+        <!-- Style that automatically grays out an Image when the button is disabled -->
+        <Style x:Key="AutoGrayButtonImage" TargetType="Image">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.4" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Page.Resources>
 
     <Grid>
@@ -51,9 +60,11 @@
                 VerticalAlignment="Center"
                 Command="{Binding Path=RestoreDBCommand, Mode=OneTime}"
                 ToolTip="{x:Static p:Resources.Setting_DBRestore}">
-                <Image Source="{StaticResource RestoreDB}" Width="24" Height="24"/>
+                <Image Source="{StaticResource RestoreDB}" Width="24" Height="24"
+                       Style="{StaticResource AutoGrayButtonImage}"/>
             </Button>
-            <Button x:Name="terminateProcess" IsEnabled="False" Width="28" Height="28"
+            <Button x:Name="terminateProcess"
+                    IsEnabled="False" Width="28" Height="28"
                     ToolTip="{x:Static p:Resources.Setting_DBCancel_ToolTip}"
                     Margin="5, 5, 0, 0"
                     HorizontalAlignment="Right"
