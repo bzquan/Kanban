@@ -112,6 +112,7 @@
     <None Remove="images\zoom-out.ico" />
     <None Remove="images\zoom-out.png" />
     <None Remove="ReleaseNote\ReleaseNote.html" />
+    <None Remove="ReleaseNote\ReleaseNote_jp.html" />
   </ItemGroup>
 
   <ItemGroup>
@@ -351,6 +352,9 @@
     <Resource Include="images\zoom-out.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <EmbeddedResource Include="ReleaseNote\ReleaseNote_jp.html">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
