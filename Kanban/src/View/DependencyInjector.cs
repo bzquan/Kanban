@@ -83,7 +83,7 @@ namespace Kanban
         private async Task<ViewModel.Card> CreateCard(ViewModel.Board board, Model.WorkState cardWorkState, ViewModel.Card srcCard)
         {
             Model.ICardFactory cardFactory = DIContainer.Resolve<Model.ICardFactory>();
-            Model.Card card = await cardFactory.CreateCard(board._id, cardWorkState, srcCard.CardModel);
+            Model.Card card = await cardFactory.CreateCard(board._id, cardWorkState, srcCard?.CardModel);
             return new ViewModel.Card(card, board.ShowDetailedCards);
         }
 
