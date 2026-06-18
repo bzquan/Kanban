@@ -19,10 +19,7 @@ namespace Kanban.Infrastructure
         public async Task<Model.Card> CreateCard(ObjectId boardID, Model.WorkState workState, Card srcCard)
         {
             Model.Card card = new Model.Card(boardID, workState, m_Localization.CardDefaultTitle);
-            if (srcCard is not null)
-            {
-                card.ReplicateFrom(srcCard);
-            }
+            card.ReplicateFrom(srcCard);
             await m_DBCards.Insert(card.CardOfRepository);
             card.WorkState = await CreateNewActivities(boardID, card, workState);
 

@@ -29,6 +29,8 @@ namespace Kanban.Model
 
         public void ReplicateFrom(Card srcCard)
         {
+            if (srcCard is null) return;
+
             Title = srcCard.Title;
             Tag = srcCard.Tag;
             Executors = srcCard.Executors;
