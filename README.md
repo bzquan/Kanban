@@ -14,6 +14,7 @@ This repository contains the source code for a lightweight Kanban board app impl
 - Windows 10/11
 - .NET 10 SDK
 - Visual Studio 2022/2026 or dotnet CLI
+- MongoDB 8.x
 
 ## Build and run
 1. Clone the repository:
