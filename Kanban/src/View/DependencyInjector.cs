@@ -28,7 +28,7 @@ public class DependencyInjector
         m_DI4Infrastructure.RegisterDependencies();
         m_DI4Model.RegisterDependencies();
         m_DI4ViewModel.RegisterDependencies();
-        m_DI4View.RegisterDependencis();
+        m_DI4View.RegisterDependencies();
     }
 
     public T Resolve<T>()
@@ -51,7 +51,7 @@ class DI4View : DIBase
 {
     internal DI4View(IUnityContainer DIContainer) : base(DIContainer) { }
 
-    internal void RegisterDependencis()
+    internal void RegisterDependencies()
     {
         DIContainer
             .RegisterType<MainWindow>(new ContainerControlledLifetimeManager())
