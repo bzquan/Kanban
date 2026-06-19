@@ -129,7 +129,8 @@ namespace Kanban
         private void OnZoomButtonClicked(object sender, RoutedEventArgs e)
         {
             IsZoomed = !IsZoomed;
-            zoomButton.Content = FindResource(GetZoomButtonResource());
+            // update the Image.Source instead of replacing the Button.Content
+            zoomButtonImage.Source = (ImageSource)FindResource(GetZoomButtonResource());
             UpdateZoomRate();
         }
 
@@ -139,7 +140,8 @@ namespace Kanban
             AdjustBoardHeightToFillMainWindow(m_CurrentZoomRate);
 
             boardPage.RenderTransform = new ScaleTransform(m_CurrentZoomRate, m_CurrentZoomRate);
-            zoomButton.Content = FindResource(GetZoomButtonResource());
+            // update the Image.Source instead of replacing the Button.Content
+            zoomButtonImage.Source = (ImageSource)FindResource(GetZoomButtonResource());
             if (IsZoomed)
             {
                 boardPageScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;

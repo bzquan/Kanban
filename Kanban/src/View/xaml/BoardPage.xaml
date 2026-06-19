@@ -22,9 +22,9 @@
             </ResourceDictionary.MergedDictionaries>
 
             <local:BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter"/>
-            <Image x:Key="Refresh" Source="images/refresh.png"/>
-            <Image x:Key="ZoomIn"  Source="images/zoom-in.png"/>
-            <Image x:Key="ZoomOut" Source="images/zoom-out.png"/>
+            <BitmapImage x:Key="Refresh" UriSource="/Kanban;component/images/refresh.png"/>
+            <BitmapImage x:Key="ZoomIn"  UriSource="/Kanban;component/images/zoom-in.png"/>
+            <BitmapImage x:Key="ZoomOut" UriSource="/Kanban;component/images/zoom-out.png"/>
 
             <local:SingleLineTextConverter x:Key="TextConverter"/>
             <BitmapImage x:Key="Remove" UriSource="/images/remove.png"/>
@@ -239,10 +239,10 @@
                     <local:AutoGreyableImage Source="/Kanban;component/images/add.png"/>
                 </Button>
                 <Button x:Name="zoomButton" Width="32" Height="32" VerticalAlignment="Center" Click="OnZoomButtonClicked" ToolTip="{x:Static p:Resources.ToolTip_Zoom}">
-                    <DynamicResource ResourceKey="ZoomOut"/>
+                    <Image x:Name="zoomButtonImage" Source="{DynamicResource ZoomOut}" />
                 </Button>
                 <Button x:Name="refreshButton" Width="32" Height="32" VerticalAlignment="Center" Command="{Binding Path=ReloadBoardCommand, Mode=OneTime}" CommandParameter="{Binding Text, ElementName=CardFilterTexBox}" ToolTip="{x:Static p:Resources.ToolTip_Refresh}">
-                    <DynamicResource ResourceKey="Refresh"/>
+                    <Image Source="{DynamicResource Refresh}" />
                 </Button>
                 <StackPanel Orientation="Horizontal" Margin="10, 0, 0, 0">
                     <TextBlock Foreground="Blue" Text="{x:Static p:Resources.BoardPage_Filter}" VerticalAlignment="Center"/>
