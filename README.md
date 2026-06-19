@@ -42,5 +42,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Troubleshooting
 - If images do not appear at runtime, confirm that the images are present in `Kanban/images` and included as project Resources in Kanban.csproj.
 - If build reports duplicate assembly attributes, check SDK-generated assembly info and project settings (GenerateAssemblyInfo).
-
-If you want screenshots, CI instructions, packaging steps, or a shorter README, tell me which sections to expand or remove.
