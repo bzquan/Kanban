@@ -61,8 +61,8 @@ public partial class App : Application
 
         try
         {
-            var dbUpgrader = DependencyInjector.Resolve<Repository.DBUpgrater>();
-            await dbUpgrader.UpgrateDB();
+            var dbUpgrader = DependencyInjector.Resolve<Repository.DBUpgrader>();
+            await dbUpgrader.UpgradeDB();
 
             var mainWindow = DependencyInjector.Resolve<MainWindow>();
             Application.Current.MainWindow = mainWindow;
