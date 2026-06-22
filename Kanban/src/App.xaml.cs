@@ -19,15 +19,22 @@ public partial class App : Application
     [STAThread]
     public static void Main()
     {
-        ShowSplashScreen();
+        try
+        {
+            ShowSplashScreen();
 
-        Kanban.App app = new Kanban.App();
-        app.InitializeComponent();
+            Kanban.App app = new Kanban.App();
+            app.InitializeComponent();
 
-        app.RegisterDependencies();
-        app.ConfigLocalizations();
+            app.RegisterDependencies();
+            app.ConfigLocalizations();
 
-        app.Run();
+            app.Run();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error:  {ex.Message}\r\n\r\n{ex.StackTrace}", "Exception in Main", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     private static void ShowSplashScreen()
