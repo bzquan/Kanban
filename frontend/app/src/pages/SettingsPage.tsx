@@ -23,9 +23,10 @@ export default function SettingsPage() {
 
   return (
     <Box data-testid="settings-page" sx={{ p: 2, maxWidth: 480 }}>
-      {/* Setting_Title is the WPF SystemSetting window title key. */}
+      {/* WebSettings_Title (web-only): Setting_Title is the WPF window title and
+          still names the DB features spec §4.6 deleted from this page. */}
       <Typography variant="h6" component="h2">
-        {t('Setting_Title')}
+        {t('WebSettings_Title')}
       </Typography>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mt: 2 }}>

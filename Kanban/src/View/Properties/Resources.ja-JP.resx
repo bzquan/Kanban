@@ -634,4 +634,7 @@
   <data name="Metrics_LoadError" xml:space="preserve">
     <value>メトリクスの取得に失敗しました</value>
   </data>
+  <data name="WebSettings_Title" xml:space="preserve">
+    <value>システム設定</value>
+  </data>
 </root>

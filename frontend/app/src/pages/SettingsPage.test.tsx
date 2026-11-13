@@ -35,8 +35,9 @@ async function chooseLanguage(label: string): Promise<void> {
 it('shows the language section (only) with its three endonym options', async () => {
   renderWithProviders(<SettingsPage />)
 
-  // Setting_Title heads the section; Setting_Language labels the select.
-  expect(await screen.findByText('Language setting, DB backup')).toBeInTheDocument()
+  // WebSettings_Title (web-only key: Setting_Title still says "DB backup",
+  // which spec §4.6 contradicts) heads the section; Setting_Language labels the select.
+  expect(await screen.findByText('Settings')).toBeInTheDocument()
   expect(screen.getByText('Language:')).toBeInTheDocument()
   // The DB choice/backup sections of the WPF settings window are deleted (spec §4.6):
   // no folder/restore/backup controls render.
