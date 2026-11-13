@@ -54,6 +54,9 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<Kanban.Services.CardCommandService>();
         services.AddSingleton<Kanban.Services.MetricsQueryService>();
 
+        // 変更通知の口(設計書§4.4): 既定は NoOp。SignalR 実装はこの差し替えだけで導入できる。
+        services.AddSingleton<Kanban.Services.IBoardChangeNotifier, NoOpBoardChangeNotifier>();
+
         return services;
     }
 }

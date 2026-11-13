@@ -12,19 +12,24 @@ public static class MetricsEndpoints
         var group = app.MapGroup("/api/boards");
 
         group.MapGet("/{boardId}/metrics/cfd", async (string boardId, MetricsQueryService service) =>
-            await HandleAsync(service, boardId, (s, id) => s.GetCfdAsync(id), MetricsDtoMapper.From));
+            await HandleAsync(service, boardId, (s, id) => s.GetCfdAsync(id), MetricsDtoMapper.From))
+            .Produces<CfdDto>(200).Produces(400).Produces(404);
 
         group.MapGet("/{boardId}/metrics/cycle-time", async (string boardId, MetricsQueryService service) =>
-            await HandleAsync(service, boardId, (s, id) => s.GetCycleTimeAsync(id), MetricsDtoMapper.From));
+            await HandleAsync(service, boardId, (s, id) => s.GetCycleTimeAsync(id), MetricsDtoMapper.From))
+            .Produces<CycleTimeDto>(200).Produces(400).Produces(404);
 
         group.MapGet("/{boardId}/metrics/throughput", async (string boardId, MetricsQueryService service) =>
-            await HandleAsync(service, boardId, (s, id) => s.GetThroughputAsync(id), MetricsDtoMapper.From));
+            await HandleAsync(service, boardId, (s, id) => s.GetThroughputAsync(id), MetricsDtoMapper.From))
+            .Produces<ThroughputDto>(200).Produces(400).Produces(404);
 
         group.MapGet("/{boardId}/metrics/bugs-blocked", async (string boardId, MetricsQueryService service) =>
-            await HandleAsync(service, boardId, (s, id) => s.GetBugsBlockedAsync(id), MetricsDtoMapper.From));
+            await HandleAsync(service, boardId, (s, id) => s.GetBugsBlockedAsync(id), MetricsDtoMapper.From))
+            .Produces<BugsBlockedDto>(200).Produces(400).Produces(404);
 
         group.MapGet("/{boardId}/metrics/velocity", async (string boardId, MetricsQueryService service) =>
-            await HandleAsync(service, boardId, (s, id) => s.GetVelocityAsync(id), MetricsDtoMapper.From));
+            await HandleAsync(service, boardId, (s, id) => s.GetVelocityAsync(id), MetricsDtoMapper.From))
+            .Produces<VelocityDto>(200).Produces(400).Produces(404);
 
         return app;
     }
