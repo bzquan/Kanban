@@ -44,7 +44,12 @@ export default function BoardListPage() {
   // The server localizes the new board's title/description from uiLanguage.
   const createMutation = useMutation({
     mutationFn: () => boardsApi.create(i18n.language),
-    onSuccess: (board) => navigate(`/boards/${board.id}`),
+    onSuccess: (board) => {
+      // Invalidate alongside the navigate-away: with a non-zero staleTime the
+      // list would otherwise stay stale when we navigate back to it later.
+      void queryClient.invalidateQueries({ queryKey: ['boards'] })
+      navigate(`/boards/${board.id}`)
+    },
   })
 
   const deleteMutation = useMutation({

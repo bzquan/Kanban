@@ -105,6 +105,11 @@ it('create button POSTs {uiLanguage:"ja"} under ja and navigates to the new boar
   expect(post).toBeDefined()
   expect(post?.url).toBe('/api/boards')
   expect(post?.body).toEqual({ uiLanguage: 'ja' })
+
+  // createMutation invalidates ['boards']: a refetch GET is recorded after the POST.
+  await waitFor(() => expect(calls.filter((c) => c.method === 'GET')).toHaveLength(2))
+  expect(calls[1].method).toBe('POST')
+  expect(calls[2]).toEqual({ method: 'GET', url: '/api/boards', body: undefined })
 })
 
 it('delete flow confirms, records DELETE /api/boards/{id} then refetches the list', async () => {
