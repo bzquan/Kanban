@@ -65,6 +65,28 @@ public static class TestDatabase
             s_localizationFactory);
     }
 
+    public static CardCommandService NewCardCommandService()
+    {
+        EnsureWired();
+        return new CardCommandService(
+            new CardFactory(s_cards!, s_activities!, English()),
+            s_cardRepository!,
+            s_activityRepository!,
+            s_cards!,
+            s_boardRepository!);
+    }
+
+    /// <summary>列(前面)カードを SeqNo 圧込みで取得する(Task 6 の SeqNo 不変条件アサート用)。</summary>
+    public static async Task<List<Kanban.Model.Card>> GetColumnCards(Kanban.Model.Board board, int step, bool wip)
+    {
+        EnsureWired();
+        return await s_cardRepository!.GetCards(
+            board,
+            new Kanban.Model.WorkState { ProcessStepSeqNo = step, IsWIP = wip },
+            "",
+            Kanban.Repository.OnBoardFilter.All);
+    }
+
     /// <summary>カードの Activities を StateChangedDate 昇順で返す(Task 6/7 の監査証跡アサート用)。</summary>
     public static async Task<List<Kanban.Repository.Activity>> GetActivities(ObjectId cardId)
     {

@@ -33,6 +33,7 @@ namespace Kanban.Repository
         Task<List<Card>> GetCards(Board board, CardRetrieveCondition retrieveCondition);
         Task<List<Card>> GetCards(Board board);
         Task<List<Card>> GetCards(Board board, List<ObjectId> cardIDs);
+        Task<Card> GetCardById(ObjectId cardId);
         Task<UpdateResult> Update<T>(Card card, string propertyName, T propertyValue);
         Task<DeleteResult> DeleteCards(ObjectId board_id);
         Task<DeleteResult> Delete(Card card);

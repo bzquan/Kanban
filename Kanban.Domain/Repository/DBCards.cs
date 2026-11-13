@@ -39,6 +39,9 @@ namespace Kanban.Repository
             return cards;
         }
 
+        public async Task<Card> GetCardById(ObjectId cardId) =>
+            await CardsCollection.Find(c => c._id == cardId).FirstOrDefaultAsync();
+
         public async Task<List<Card>> GetCards(Board board, List<ObjectId> cardIDs)
         {
             var filter = Builders<Card>.Filter.Where(x => (x.BoardID == board._id) && cardIDs.Contains(x._id));

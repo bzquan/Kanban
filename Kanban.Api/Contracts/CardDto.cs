@@ -33,6 +33,14 @@ public class CardDto
     public WorkStateDto WorkState { get; set; } = new();
 }
 
+/// <summary>POST /api/cards ボディ。</summary>
+public class CardCreateRequest
+{
+    public string? BoardId { get; set; }
+    public int ProcessStepSeqNo { get; set; }
+    public bool IsWip { get; set; } = true;
+}
+
 public static class CardDtoMapper
 {
     public static CardDto From(Kanban.Model.Card card) => new()

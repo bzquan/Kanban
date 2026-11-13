@@ -46,6 +46,53 @@ public class Card : KanbanItem
         Activity.ActivityRepository.DeleteActivitiesOf(this);
     }
 
+    /// <summary>DeleteFromDB の await 可能版(既存同期版はWPF互換のため温存)。</summary>
+    public async Task DeleteFromDBAsync()
+    {
+        await CardRepository.Delete(this);   // DBCards.Delete が Activities も削除する(既存)
+        await Activity.ActivityRepository.DeleteActivitiesOf(this);
+    }
+
+    /// <summary>
+    /// IsBlocked / IsMergedIntoMaster / IsMergedIntoMajorBranch を、既存プロパティsetterと
+    /// 同じ CreateWith* + 同一ステップ新Activity 意味論で await 可能にしたもの(setter自体は温存)。
+    /// </summary>
+    public async Task SetFlagAsync(string flagName, bool value)
+    {
+        switch (flagName)
+        {
+            case nameof(IsBlocked):
+                if (IsBlocked == value) return;
+                CardOfRepository.IsBlocked = value;
+                break;
+            case nameof(IsMergedIntoMaster):
+                if (IsMergedIntoMaster == value) return;
+                CardOfRepository.IsMergedIntoMaster = value;
+                break;
+            case nameof(IsMergedIntoMajorBranch):
+                if (IsMergedIntoMajorBranch == value) return;
+                CardOfRepository.IsMergedIntoMajorBranch = value;
+                break;
+            default:
+                throw new ArgumentException($"unsupported flag: {flagName}", nameof(flagName));
+        }
+
+        WorkState newWorkState = new WorkState
+        {
+            ProcessStepSeqNo = WorkState.ProcessStepSeqNo,
+            IsWIP = WorkState.IsWIP,
+            IsBlocked = CardOfRepository.IsBlocked,
+            IsMergedIntoMaster = CardOfRepository.IsMergedIntoMaster,
+            IsMergedIntoMajorBranch = CardOfRepository.IsMergedIntoMajorBranch,
+        };
+        await CreateNewActivitiesAsync(newWorkState);   // 同一ステップのsnapshot Activity(setterの既存挙動)
+
+        // setterがやっていた fire-and-forget 書き込みを await 経路で決定論的に確定する
+        await CardRepository.Update(this, value, flagName);
+        await CardRepository.Update(this, CardOfRepository.WorkState, nameof(WorkState));
+        await CardRepository.Update(this, CardOfRepository.StateChangedDate, nameof(StateChangedDate));
+    }
+
     public string Tag
     {
         get => CardOfRepository.Tag;
@@ -242,7 +289,16 @@ public class Card : KanbanItem
 
     public DateTime WorkingChangeDateTime { get; set; } = DateTime.Now; // Activity時系列の制御用
 
-    public async void CreateNewActivities(WorkState workState)
+    public void CreateNewActivities(WorkState workState)
+    {
+        // WPF互換: 元からのUIスレッド fire-and-forget  semantics を維持する。
+        // 同期待ち(GetAwaiter().GetResult())はWPFのSynchronizationContextとデッドロックする
+        // 恐れがあるため避ける(計画Task 6 Note の執行者判断・台帳 Ruling 参照)。
+        // API側は必ず CreateNewActivitiesAsync を await する。
+        _ = CreateNewActivitiesAsync(workState);
+    }
+
+    public async Task CreateNewActivitiesAsync(WorkState workState)
     {
         WorkingChangeDateTime = DateTime.Now;
         WorkState newWorkState = new WorkState

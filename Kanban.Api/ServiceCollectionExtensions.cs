@@ -51,6 +51,7 @@ public static class ServiceCollectionExtensions
         // Services(Task 4〜)
         services.AddSingleton<Kanban.Services.ILocalizationFactory, Kanban.Services.JsonLocalizationFactory>();
         services.AddSingleton<Kanban.Services.BoardCommandService>();
+        services.AddSingleton<Kanban.Services.CardCommandService>();
 
         return services;
     }
