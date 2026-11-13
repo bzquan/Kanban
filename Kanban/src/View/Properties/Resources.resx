@@ -354,6 +354,15 @@
   <data name="Setting_Language" xml:space="preserve">
     <value>Language:</value>
   </data>
+  <data name="Setting_LanguageChinese" xml:space="preserve">
+    <value>中文</value>
+  </data>
+  <data name="Setting_LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Setting_LanguageJapanese" xml:space="preserve">
+    <value>日本語</value>
+  </data>
   <data name="Setting_Title" xml:space="preserve">
     <value>Language setting, DB backup</value>
   </data>
@@ -510,6 +519,9 @@ Release date format is year month and day(e.g. 20191101、191101、1101)</value>
   </data>
   <data name="AboutControl_ReleaseNote" xml:space="preserve">
     <value>Release Note:</value>
+  </data>
+  <data name="About_LoadError" xml:space="preserve">
+    <value>Failed to load release note</value>
   </data>
   <data name="ToolTip_ReleaseNote" xml:space="preserve">
     <value>Release note</value>

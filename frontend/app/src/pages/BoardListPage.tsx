@@ -72,7 +72,14 @@ export default function BoardListPage() {
 
   return (
     <Box data-testid="board-list-page" sx={{ p: 2 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mb: 1 }}>
+        {/* System nav (WPF MainWindow's Setting/About buttons): Settings + About. */}
+        <Button data-testid="nav-settings-button" onClick={() => navigate('/settings')}>
+          {t('ToolTip_GotoSetting')}
+        </Button>
+        <Button data-testid="nav-about-button" onClick={() => navigate('/about')}>
+          {t('ToolTip_ReleaseNote')}
+        </Button>
         <Button
           variant="contained"
           data-testid="new-board-button"

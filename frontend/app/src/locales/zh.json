@@ -1,5 +1,6 @@
 {
   "AboutControl_ReleaseNote": "修改履历:",
+  "About_LoadError": "修改履历的加载失败",
   "Agile_Manifesto1": "△ 个体和互动",
   "Agile_Manifesto2": "△ 工作的软件",
   "Agile_Manifesto3": "△ 客户合作",
@@ -136,6 +137,9 @@
   "Setting_Database": "数据库:",
   "Setting_DropDB": "删除数据库",
   "Setting_Language": "语言:",
+  "Setting_LanguageChinese": "中文",
+  "Setting_LanguageEnglish": "English",
+  "Setting_LanguageJapanese": "日本語",
   "Setting_Title": "语言设定，数据库",
   "ToolTip_AddBoard": "新增看板",
   "ToolTip_AddCard": "新增卡片",

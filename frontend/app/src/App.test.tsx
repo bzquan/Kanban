@@ -1,4 +1,6 @@
+import i18n from 'i18next'
 import { screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { afterEach, it } from 'vitest'
 
 import App from './App'
@@ -34,6 +36,46 @@ it('renders the board page at /boards/:boardId', async () => {
   expect(await screen.findByTestId('board-title')).toHaveTextContent('Board 42')
 })
 
+it('renders the settings page at /settings', async () => {
+  void i18n.changeLanguage('en')
+  renderWithProviders(<App />, { route: '/settings' })
+  expect(await screen.findByTestId('settings-page')).toBeInTheDocument()
+})
+
+it('switching language on the settings page re-renders the AppBar title localized', async () => {
+  void i18n.changeLanguage('en')
+  renderWithProviders(<App />, { route: '/settings' })
+  expect(await screen.findByTestId('settings-page')).toBeInTheDocument()
+  expect(screen.getByRole('heading', { level: 1, name: 'Kanban' })).toBeInTheDocument()
+
+  const user = userEvent.setup()
+  // MUI v9 Select opens from the inner combobox element.
+  await user.click(screen.getByRole('combobox'))
+  await user.click(await screen.findByRole('option', { name: '中文' }))
+
+  // Shell AppBar (Main_Title) and the page (Setting_Language) both follow.
+  expect(await screen.findByRole('heading', { level: 1, name: '看板' })).toBeInTheDocument()
+  expect(await screen.findByText('语言:')).toBeInTheDocument()
+})
+
+it('About page renders at /about with the release-note iframe', async () => {
+  void i18n.changeLanguage('en')
+  installFetch({
+    'GET /release-note/en.html': () =>
+      new Response('<h5>Version 1.0</h5>', {
+        status: 200,
+        headers: { 'content-type': 'text/html' },
+      }),
+  })
+  renderWithProviders(<App />, { route: '/about' })
+  expect(await screen.findByTestId('app-bar')).toBeInTheDocument()
+  await screen.findByTestId('release-note')
+})
+
 afterEach(() => {
   restoreFetch()
+  // These tests switch the shared i18n singleton; put it back so test order
+  // cannot leak a language into other files.
+  void i18n.changeLanguage('en')
+  localStorage.clear()
 })

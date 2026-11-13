@@ -354,6 +354,15 @@
   <data name="Setting_Language" xml:space="preserve">
     <value>言語：</value>
   </data>
+  <data name="Setting_LanguageChinese" xml:space="preserve">
+    <value>中文</value>
+  </data>
+  <data name="Setting_LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Setting_LanguageJapanese" xml:space="preserve">
+    <value>日本語</value>
+  </data>
   <data name="Setting_Title" xml:space="preserve">
     <value>言語設定とデータベース</value>
   </data>
@@ -510,6 +519,9 @@
   </data>
   <data name="AboutControl_ReleaseNote" xml:space="preserve">
     <value>改定履歴:</value>
+  </data>
+  <data name="About_LoadError" xml:space="preserve">
+    <value>改定履歴の読み込みに失敗しました</value>
   </data>
   <data name="ToolTip_ReleaseNote" xml:space="preserve">
     <value>改定履歴</value>

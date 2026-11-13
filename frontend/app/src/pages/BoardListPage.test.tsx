@@ -191,3 +191,36 @@ it('row menu entry is localized under ja (プロセスステップ設定)', asyn
   await user.click(await screen.findByRole('button', { name: 'プロセスステップ設定' }))
   expect(await screen.findByTestId('process-step-editor')).toBeInTheDocument()
 })
+
+// Task 11: nav buttons in the page's top bar reach the Settings/About pages.
+function renderPageWithSystemRoutes() {
+  return renderWithProviders(
+    <Routes>
+      <Route path="/" element={<BoardListPage />} />
+      <Route path="/settings" element={<div data-testid="settings-page" />} />
+      <Route path="/about" element={<div data-testid="about-page" />} />
+    </Routes>,
+  )
+}
+
+it('nav button (ToolTip_GotoSetting) navigates to /settings', async () => {
+  installFetch({ 'GET /api/boards': () => [] })
+  renderPageWithSystemRoutes()
+
+  const user = userEvent.setup()
+  const nav = await screen.findByTestId('nav-settings-button')
+  expect(nav).toHaveTextContent('Setting') // ToolTip_GotoSetting under en
+  await user.click(nav)
+  expect(await screen.findByTestId('settings-page')).toBeInTheDocument()
+})
+
+it('nav button (ToolTip_ReleaseNote) navigates to /about', async () => {
+  installFetch({ 'GET /api/boards': () => [] })
+  renderPageWithSystemRoutes()
+
+  const user = userEvent.setup()
+  const nav = await screen.findByTestId('nav-about-button')
+  expect(nav).toHaveTextContent('Release note') // ToolTip_ReleaseNote under en
+  await user.click(nav)
+  expect(await screen.findByTestId('about-page')).toBeInTheDocument()
+})

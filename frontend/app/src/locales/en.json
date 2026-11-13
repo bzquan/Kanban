@@ -1,5 +1,6 @@
 {
   "AboutControl_ReleaseNote": "Release Note:",
+  "About_LoadError": "Failed to load release note",
   "Agile_Manifesto1": "△ Individuals and interactions",
   "Agile_Manifesto2": "△ Working software",
   "Agile_Manifesto3": "△ Customer collaboration",
@@ -136,6 +137,9 @@
   "Setting_Database": "Database:",
   "Setting_DropDB": "Drop database",
   "Setting_Language": "Language:",
+  "Setting_LanguageChinese": "中文",
+  "Setting_LanguageEnglish": "English",
+  "Setting_LanguageJapanese": "日本語",
   "Setting_Title": "Language setting, DB backup",
   "ToolTip_AddBoard": "Add board",
   "ToolTip_AddCard": "Add card",

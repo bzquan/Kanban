@@ -354,6 +354,15 @@
   <data name="Setting_Language" xml:space="preserve">
     <value>语言:</value>
   </data>
+  <data name="Setting_LanguageChinese" xml:space="preserve">
+    <value>中文</value>
+  </data>
+  <data name="Setting_LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Setting_LanguageJapanese" xml:space="preserve">
+    <value>日本語</value>
+  </data>
   <data name="Setting_Title" xml:space="preserve">
     <value>语言设定，数据库</value>
   </data>
@@ -510,6 +519,9 @@
   </data>
   <data name="AboutControl_ReleaseNote" xml:space="preserve">
     <value>修改履历:</value>
+  </data>
+  <data name="About_LoadError" xml:space="preserve">
+    <value>修改履历的加载失败</value>
   </data>
   <data name="ToolTip_ReleaseNote" xml:space="preserve">
     <value>修改履历</value>

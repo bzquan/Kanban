@@ -5,8 +5,10 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet, Route, Routes } from 'react-router'
 
+import AboutPage from './pages/AboutPage'
 import BoardListPage from './pages/BoardListPage'
 import BoardPage from './pages/BoardPage'
+import SettingsPage from './pages/SettingsPage'
 
 const theme = createTheme()
 
@@ -46,6 +48,8 @@ export default function App() {
           <Route element={<Shell />}>
             <Route path="/" element={<BoardListPage />} />
             <Route path="/boards/:boardId" element={<BoardPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/about" element={<AboutPage />} />
           </Route>
         </Routes>
       </ThemeProvider>

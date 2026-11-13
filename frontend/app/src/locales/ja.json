@@ -1,5 +1,6 @@
 {
   "AboutControl_ReleaseNote": "改定履歴:",
+  "About_LoadError": "改定履歴の読み込みに失敗しました",
   "Agile_Manifesto1": "△ 個人と対話",
   "Agile_Manifesto2": "△ 動くソフトウェア",
   "Agile_Manifesto3": "△ 顧客との協調",
@@ -136,6 +137,9 @@
   "Setting_Database": "データベース:",
   "Setting_DropDB": "データベースの削除",
   "Setting_Language": "言語：",
+  "Setting_LanguageChinese": "中文",
+  "Setting_LanguageEnglish": "English",
+  "Setting_LanguageJapanese": "日本語",
   "Setting_Title": "言語設定とデータベース",
   "ToolTip_AddBoard": "ボードの追加",
   "ToolTip_AddCard": "カードの追加",
