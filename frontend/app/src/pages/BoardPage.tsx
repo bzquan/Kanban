@@ -19,6 +19,7 @@ import { useNavigate, useParams } from 'react-router'
 
 import { ApiError, intVal } from '../api/client'
 import type { CardDto, ProcessStepDto } from '../api/types'
+import { format0 } from '../util/format'
 import { useBoard, useCards, type BoardSide } from './boardQueries'
 
 // User settings live in localStorage (spec §4.6), mirroring the WPF client.
@@ -223,9 +224,16 @@ export default function BoardPage() {
       <Box data-testid="board-page" sx={{ p: 2 }}>
         <Box data-testid="board-error" sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
           <Typography color="error">{t('BoardPage_LoadError')}</Typography>
+          {/* .NET-style {0} substitution goes through the shared format0 util,
+              so the label itself is localized (BoardPage_BoardWithId). */}
           <Typography color="text.secondary">
-            {`${t('BoardPage_BoardLabel')} ${boardId}${status === undefined ? '' : ` (${status})`}`}
+            {format0(t('BoardPage_BoardWithId'), boardId)}
           </Typography>
+          {status !== undefined && (
+            <Typography color="text.secondary" variant="body2">
+              {`(${status})`}
+            </Typography>
+          )}
           <Box>
             <Button data-testid="back-to-list-button" onClick={() => navigate('/')}>
               {t('BoardPage_BackToList')}

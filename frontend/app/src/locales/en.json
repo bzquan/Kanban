@@ -8,6 +8,7 @@
   "BoardList_StepsFormat": "Steps：{0}",
   "BoardPage_BackToList": "Back to board list",
   "BoardPage_BoardLabel": "Board",
+  "BoardPage_BoardWithId": "Board: {0}",
   "BoardPage_Filter": "Filter:",
   "BoardPage_FitToWindow": "Fit to window",
   "BoardPage_LoadError": "Failed to load board",

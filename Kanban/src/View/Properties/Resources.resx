@@ -129,6 +129,9 @@
   <data name="BoardPage_FitToWindow" xml:space="preserve">
     <value>Fit to window</value>
   </data>
+  <data name="BoardPage_BoardWithId" xml:space="preserve">
+    <value>Board: {0}</value>
+  </data>
   <data name="BoardPage_LoadError" xml:space="preserve">
     <value>Failed to load board</value>
   </data>

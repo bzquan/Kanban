@@ -258,6 +258,9 @@ it('malformed boardId renders board-error with a back-to-list link and fetches n
   renderPage('xyz')
 
   expect(await screen.findByTestId('board-error')).toBeInTheDocument()
+  // Label goes through format0 + the BoardPage_BoardWithId resx key, not a
+  // hand-built concatenation: "Board: {0}" under en.
+  expect(screen.getByText('Board: xyz')).toBeInTheDocument()
   expect(screen.queryByTestId('board-canvas')).not.toBeInTheDocument()
   expect(cardCalls()).toHaveLength(0)
 

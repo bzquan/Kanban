@@ -8,6 +8,7 @@
   "BoardList_StepsFormat": "步骤数：{0}",
   "BoardPage_BackToList": "返回看板列表",
   "BoardPage_BoardLabel": "看板",
+  "BoardPage_BoardWithId": "看板：{0}",
   "BoardPage_Filter": "过滤:",
   "BoardPage_FitToWindow": "适应窗口",
   "BoardPage_LoadError": "看板加载失败",

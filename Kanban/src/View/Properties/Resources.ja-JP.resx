@@ -129,6 +129,9 @@
   <data name="BoardPage_FitToWindow" xml:space="preserve">
     <value>ウィンドウに合わせる</value>
   </data>
+  <data name="BoardPage_BoardWithId" xml:space="preserve">
+    <value>ボード：{0}</value>
+  </data>
   <data name="BoardPage_LoadError" xml:space="preserve">
     <value>ボードの読み込みに失敗しました</value>
   </data>

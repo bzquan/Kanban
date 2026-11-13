@@ -129,6 +129,9 @@
   <data name="BoardPage_FitToWindow" xml:space="preserve">
     <value>适应窗口</value>
   </data>
+  <data name="BoardPage_BoardWithId" xml:space="preserve">
+    <value>看板：{0}</value>
+  </data>
   <data name="BoardPage_LoadError" xml:space="preserve">
     <value>看板加载失败</value>
   </data>
