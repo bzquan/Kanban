@@ -12,7 +12,7 @@ export default defineConfig({
   },
   build: {
     // SPA is published into the API's static web root; wired up for real in Task 12.
-    outDir: '../Kanban.Api/wwwroot',
+    outDir: '../../Kanban.Api/wwwroot',
     emptyOutDir: true,
   },
 })
