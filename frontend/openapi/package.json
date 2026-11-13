@@ -4,7 +4,7 @@
   "private": true,
   "description": "Kanban API の OpenAPI→TypeScript 型生成(次計画の SPA はこの契約だけで着手できる)",
   "scripts": {
-    "generate": "openapi-typescript http://localhost:5093/openapi/v1.json -o schema.d.ts"
+    "generate": "openapi-typescript http://localhost:5000/openapi/v1.json -o schema.d.ts"
   },
   "devDependencies": {
     "openapi-typescript": "^7"
