@@ -33,8 +33,9 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 
-import { ApiError, intVal } from '../api/client'
+import { ApiError, cardsApi, intVal } from '../api/client'
 import type { CardDto, ProcessStepDto } from '../api/types'
+import CardEditDialog from '../components/CardEditDialog'
 import CardView from '../components/CardView'
 import { format0 } from '../util/format'
 import { useBoard, useCards, type BoardSide } from './boardQueries'
@@ -86,6 +87,8 @@ interface SubColumnViewProps {
   side: 'wip' | 'done'
   onBoard: BoardSide
   filter: string
+  onAddCard: (step: number, side: 'wip' | 'done') => void
+  onOpenCard: (card: CardDto) => void
 }
 
 // One WPF sub-column: header = the step's wipTitle/doneTitle, cards fetched
@@ -99,7 +102,19 @@ function sortableId(card: CardDto, seqNo: number, side: 'wip' | 'done'): string 
 // One sortable card inside a sub-column's SortableContext. The dnd-kit
 // payload (kind/step/isWip/cardId) is what turns an over-id back into
 // (processStepSeqNo, isWip, index) in useCardDragEnd.
-function SortableCard({ card, id, step, isWip }: { card: CardDto; id: string; step: number; isWip: boolean }) {
+function SortableCard({
+  card,
+  id,
+  step,
+  isWip,
+  onOpenCard,
+}: {
+  card: CardDto
+  id: string
+  step: number
+  isWip: boolean
+  onOpenCard: (card: CardDto) => void
+}) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id,
     data: { kind: 'card', step, isWip, cardId: card.id },
@@ -115,17 +130,20 @@ function SortableCard({ card, id, step, isWip }: { card: CardDto; id: string; st
         touchAction: 'none',
       }}
     >
-      <CardView
-        card={card}
-        onOpen={() => {
-          /* Task 8: open the card-edit dialog from here. */
-        }}
-      />
+      <CardView card={card} onOpen={() => onOpenCard(card)} />
     </Box>
   )
 }
 
-function SubColumnView({ boardId, step, side, onBoard, filter }: SubColumnViewProps) {
+function SubColumnView({
+  boardId,
+  step,
+  side,
+  onBoard,
+  filter,
+  onAddCard,
+  onOpenCard,
+}: SubColumnViewProps) {
   const { t } = useTranslation()
   const seqNo = intVal(step.phaseSeqNo)
   const isWip = side === 'wip'
@@ -150,11 +168,11 @@ function SubColumnView({ boardId, step, side, onBoard, filter }: SubColumnViewPr
         <Typography variant="subtitle2">
           {isWip ? step.wipTitle ?? '' : step.doneTitle ?? ''}
         </Typography>
-        {/* Handler lands in Task 8; the testid is reserved already. */}
         <IconButton
           size="small"
           data-testid={`add-card-${seqNo}-${side}`}
           aria-label={t('ToolTip_AddCard')}
+          onClick={() => onAddCard(seqNo, side)}
         >
           <AddIcon fontSize="small" />
         </IconButton>
@@ -170,6 +188,7 @@ function SubColumnView({ boardId, step, side, onBoard, filter }: SubColumnViewPr
             card={card}
             step={seqNo}
             isWip={isWip}
+            onOpenCard={onOpenCard}
           />
         ))}
       </SortableContext>
@@ -182,11 +201,13 @@ interface ColumnViewProps {
   step: ProcessStepDto
   onBoard: BoardSide
   filter: string
+  onAddCard: (step: number, side: 'wip' | 'done') => void
+  onOpenCard: (card: CardDto) => void
 }
 
 // One WPF column: step.name verbatim header (it already embeds "(Limit:N)")
 // over two sub-columns, exactly like BoardPage.xaml's processStepDataTemplate.
-function ColumnView({ boardId, step, onBoard, filter }: ColumnViewProps) {
+function ColumnView({ boardId, step, onBoard, filter, onAddCard, onOpenCard }: ColumnViewProps) {
   const seqNo = intVal(step.phaseSeqNo)
   return (
     <Box
@@ -201,8 +222,24 @@ function ColumnView({ boardId, step, onBoard, filter }: ColumnViewProps) {
         {step.name ?? ''}
       </Typography>
       <Box sx={{ display: 'flex' }}>
-        <SubColumnView boardId={boardId} step={step} side="wip" onBoard={onBoard} filter={filter} />
-        <SubColumnView boardId={boardId} step={step} side="done" onBoard={onBoard} filter={filter} />
+        <SubColumnView
+          boardId={boardId}
+          step={step}
+          side="wip"
+          onBoard={onBoard}
+          filter={filter}
+          onAddCard={onAddCard}
+          onOpenCard={onOpenCard}
+        />
+        <SubColumnView
+          boardId={boardId}
+          step={step}
+          side="done"
+          onBoard={onBoard}
+          filter={filter}
+          onAddCard={onAddCard}
+          onOpenCard={onOpenCard}
+        />
       </Box>
     </Box>
   )
@@ -237,6 +274,27 @@ export default function BoardPage({ onDragHandlesRef }: BoardPageProps = {}) {
   const [filter, setFilter] = useState('')
   const [zoom, setZoom] = useState(initialZoom)
   const [isZoomed, setIsZoomed] = useState(() => readStored(ZOOMED_KEY) === 'true')
+  // Task 8: the card currently open in the edit dialog (null = closed).
+  const [editing, setEditing] = useState<CardDto | null>(null)
+
+  // Add-card flow: POST the minimal CardCreateRequest, then open the edit
+  // dialog on the *returned* card so the user fills in the full record.
+  const handleAddCard = useCallback(
+    async (step: number, side: 'wip' | 'done'): Promise<void> => {
+      try {
+        const created = await cardsApi.create({
+          boardId,
+          processStepSeqNo: step,
+          isWip: side === 'wip',
+        })
+        void queryClient.invalidateQueries({ queryKey: ['cards'] })
+        setEditing(created)
+      } catch {
+        // Board stays usable; a failed create just opens no dialog.
+      }
+    },
+    [boardId, queryClient],
+  )
 
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLDivElement>(null)
@@ -447,6 +505,8 @@ export default function BoardPage({ onDragHandlesRef }: BoardPageProps = {}) {
               step={step}
               onBoard={onBoard}
               filter={filter}
+              onAddCard={(s, side) => void handleAddCard(s, side)}
+              onOpenCard={setEditing}
             />
           ))}
         </Box>
@@ -459,6 +519,9 @@ export default function BoardPage({ onDragHandlesRef }: BoardPageProps = {}) {
           ) : null}
         </DragOverlay>
       </DndContext>
+      {editing !== null && (
+        <CardEditDialog card={editing} onClose={() => setEditing(null)} />
+      )}
     </Box>
   )
 }

@@ -168,6 +168,18 @@
   <data name="CardEdit_ResponsiblePerson" xml:space="preserve">
     <value>担当者：</value>
   </data>
+  <data name="CardEdit_DeleteError" xml:space="preserve">
+    <value>作業項目の削除に失敗しました</value>
+  </data>
+  <data name="CardEdit_Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="CardEdit_SaveError" xml:space="preserve">
+    <value>作業項目の保存に失敗しました</value>
+  </data>
+  <data name="CardEdit_StoryPointsInvalid" xml:space="preserve">
+    <value>ストーリーポイントが不正です</value>
+  </data>
   <data name="CardEdit_StateChanged" xml:space="preserve">
     <value>状態変更日：</value>
   </data>

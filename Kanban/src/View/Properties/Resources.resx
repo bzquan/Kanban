@@ -168,6 +168,18 @@
   <data name="CardEdit_ResponsiblePerson" xml:space="preserve">
     <value>Responsible：</value>
   </data>
+  <data name="CardEdit_DeleteError" xml:space="preserve">
+    <value>Failed to delete the work item</value>
+  </data>
+  <data name="CardEdit_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="CardEdit_SaveError" xml:space="preserve">
+    <value>Failed to save the work item</value>
+  </data>
+  <data name="CardEdit_StoryPointsInvalid" xml:space="preserve">
+    <value>Invalid story points</value>
+  </data>
   <data name="CardEdit_StateChanged" xml:space="preserve">
     <value>State Changed：</value>
   </data>

@@ -168,6 +168,18 @@
   <data name="CardEdit_ResponsiblePerson" xml:space="preserve">
     <value>负责人：</value>
   </data>
+  <data name="CardEdit_DeleteError" xml:space="preserve">
+    <value>删除工作项失败</value>
+  </data>
+  <data name="CardEdit_Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="CardEdit_SaveError" xml:space="preserve">
+    <value>保存工作项失败</value>
+  </data>
+  <data name="CardEdit_StoryPointsInvalid" xml:space="preserve">
+    <value>故事点无效</value>
+  </data>
   <data name="CardEdit_StateChanged" xml:space="preserve">
     <value>状态变更日：</value>
   </data>

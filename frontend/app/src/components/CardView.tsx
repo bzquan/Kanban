@@ -102,7 +102,21 @@ export default function CardView({ card, onOpen }: CardViewProps) {
   return (
     <Box
       data-testid="card"
+      role={onOpen ? 'button' : undefined}
+      tabIndex={onOpen ? 0 : undefined}
       onClick={onOpen}
+      onKeyDown={
+        onOpen
+          ? (e) => {
+              // Keyboard parity with the button semantics: Enter/Space open
+              // the editor (Task 6 carry-over; the mouse path is onClick).
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                onOpen()
+              }
+            }
+          : undefined
+      }
       sx={{
         p: 0.75,
         mb: 0.5,
@@ -117,6 +131,19 @@ export default function CardView({ card, onOpen }: CardViewProps) {
       <Typography variant="body2" component="div" sx={{ fontWeight: 600 }}>
         {card.title ?? ''}
       </Typography>
+
+      {card.summary ? (
+        // Spec §4.2: the board renders summary HTML directly, sanitization
+        // none — the accepted LAN trust-model trade-off (do not "fix").
+        <details data-testid="card-summary">
+          <summary>{t('CheckBoxSwitch_ShowDetail')}</summary>
+          <Box
+            component="div"
+            sx={{ fontSize: 12 }}
+            dangerouslySetInnerHTML={{ __html: card.summary }}
+          />
+        </details>
+      ) : null}
 
       {label !== null && (
         <Typography variant="caption" component="div" data-testid="card-type-label">
