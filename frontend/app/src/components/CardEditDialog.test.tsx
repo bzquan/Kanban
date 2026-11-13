@@ -321,6 +321,60 @@ it('CardView renders no details region when summary is absent', () => {
   expect(screen.queryByTestId('card-summary')).not.toBeInTheDocument()
 })
 
+// ------------------------------------------------- review fix: summary is reachable
+
+it('summary click expands the details region without firing onOpen (no bubble to card root)', () => {
+  const onOpen = vi.fn()
+  renderWithProviders(
+    <CardView
+      card={{ id: 'c-1', seqNo: 1, title: 'Kick', summary: '<b>bold summary</b>' }}
+      onOpen={onOpen}
+    />,
+  )
+  const details = screen.getByTestId('card-summary')
+  const summary = details.querySelector('summary')
+  expect(summary).not.toBeNull()
+  expect(details).not.toHaveAttribute('open')
+
+  // Native UA toggle (jsdom implements it) must survive…
+  expect(fireEvent.click(summary!)).toBe(true) // not preventDefault()ed
+  expect(details).toHaveAttribute('open')
+  // …and the card root's click-to-edit must NOT see this click.
+  expect(onOpen).not.toHaveBeenCalled()
+})
+
+it('summary keyboard Enter/Space never leaks to the card open handler and stays un-prevented', () => {
+  const onOpen = vi.fn()
+  renderWithProviders(
+    <CardView
+      card={{ id: 'c-1', seqNo: 1, title: 'Kick', summary: '<b>bold summary</b>' }}
+      onOpen={onOpen}
+    />,
+  )
+  const details = screen.getByTestId('card-summary')
+  const summary = details.querySelector('summary')
+  expect(summary).not.toBeNull()
+
+  // jsdom does not synthesize keyboard activation, so the native toggle
+  // itself is pinned by "not canceled" (the root handler used to swallow
+  // Enter/Space with preventDefault, killing it) plus no dialog opening.
+  expect(fireEvent.keyDown(summary!, { key: 'Enter' })).toBe(true)
+  expect(fireEvent.keyDown(summary!, { key: ' ' })).toBe(true)
+  expect(onOpen).not.toHaveBeenCalled()
+})
+
+it('clicking the card body (title) still opens the dialog with the summary present', () => {
+  const onOpen = vi.fn()
+  renderWithProviders(
+    <CardView
+      card={{ id: 'c-1', seqNo: 1, title: 'Kick', summary: '<b>bold summary</b>' }}
+      onOpen={onOpen}
+    />,
+  )
+  fireEvent.click(screen.getByText('Kick'))
+  expect(onOpen).toHaveBeenCalledTimes(1)
+})
+
 // ------------------------------------------------- create failure keeps board usable
 
 it('create failure on add-card leaves the board usable and opens no dialog', async () => {

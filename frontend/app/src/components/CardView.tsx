@@ -136,7 +136,21 @@ export default function CardView({ card, onOpen }: CardViewProps) {
         // Spec §4.2: the board renders summary HTML directly, sanitization
         // none — the accepted LAN trust-model trade-off (do not "fix").
         <details data-testid="card-summary">
-          <summary>{t('CheckBoxSwitch_ShowDetail')}</summary>
+          <summary
+            onClick={(e) => {
+              // The card root is click-to-edit; the summary is a control of
+              // its own (native details toggle), keep the click off the root.
+              e.stopPropagation()
+            }}
+            onKeyDown={(e) => {
+              // Same for the root's Enter/Space open handler — without this
+              // its preventDefault() would kill the native toggle *and*
+              // open the edit dialog over the freshly expanded details.
+              if (e.key === 'Enter' || e.key === ' ') e.stopPropagation()
+            }}
+          >
+            {t('CheckBoxSwitch_ShowDetail')}
+          </summary>
           <Box
             component="div"
             sx={{ fontSize: 12 }}
