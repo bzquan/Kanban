@@ -40,6 +40,7 @@ import CardView from '../components/CardView'
 import { format0 } from '../util/format'
 import { useBoard, useCards, type BoardSide } from './boardQueries'
 import { useCardDragEnd, type DragEndHandler } from './dnd'
+import MetricsPanel from './MetricsPanel'
 
 // User settings live in localStorage (spec §4.6), mirroring the WPF client.
 const ZOOM_KEY = 'kanban.zoom'
@@ -276,6 +277,10 @@ export default function BoardPage({ onDragHandlesRef }: BoardPageProps = {}) {
   const [isZoomed, setIsZoomed] = useState(() => readStored(ZOOMED_KEY) === 'true')
   // Task 8: the card currently open in the edit dialog (null = closed).
   const [editing, setEditing] = useState<CardDto | null>(null)
+  // Task 10: Kanban/Chart segmented toggle. Local-only state — leaving the
+  // chart unmounts MetricsPanel (its queries are disposable), and the view
+  // always starts on the kanban like the WPF board page.
+  const [view, setView] = useState<'kanban' | 'chart'>('kanban')
 
   // Add-card flow: POST the minimal CardCreateRequest, then open the edit
   // dialog on the *returned* card so the user fills in the full record.
@@ -479,8 +484,28 @@ export default function BoardPage({ onDragHandlesRef }: BoardPageProps = {}) {
         >
           {onBoard === 'front' ? t('ToolTip_BoardFront') : t('ToolTip_BoardBack')}
         </Button>
+        {/* Task 10: Kanban/Chart segmented toggle (WPF has no chart view —
+            this is the web client's metrics entry point). */}
+        <Button
+          size="small"
+          data-testid="view-kanban-button"
+          color={view === 'kanban' ? 'primary' : 'inherit'}
+          onClick={() => setView('kanban')}
+        >
+          {t('BoardPage_ViewKanban')}
+        </Button>
+        <Button
+          size="small"
+          data-testid="view-chart-button"
+          color={view === 'chart' ? 'primary' : 'inherit'}
+          onClick={() => setView('chart')}
+        >
+          {t('BoardPage_ViewChart')}
+        </Button>
       </Toolbar>
 
+      {view === 'chart' && <MetricsPanel boardId={boardId} />}
+      {view === 'kanban' && (
       <DndContext
         sensors={sensors}
         onDragStart={handleDragStart}
@@ -519,6 +544,7 @@ export default function BoardPage({ onDragHandlesRef }: BoardPageProps = {}) {
           ) : null}
         </DragOverlay>
       </DndContext>
+      )}
       {editing !== null && (
         <CardEditDialog card={editing} onClose={() => setEditing(null)} />
       )}

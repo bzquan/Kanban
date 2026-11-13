@@ -598,4 +598,28 @@ Release date format is year month and day(e.g. 20191101、191101、1101)</value>
   <data name="ProcessStep_DragHandle" xml:space="preserve">
     <value>Reorder</value>
   </data>
+  <data name="BoardPage_ViewKanban" xml:space="preserve">
+    <value>Kanban</value>
+  </data>
+  <data name="BoardPage_ViewChart" xml:space="preserve">
+    <value>Chart</value>
+  </data>
+  <data name="MetricChartType_CFD" xml:space="preserve">
+    <value>Cumulative Flow Diagram(CFD)</value>
+  </data>
+  <data name="MetricChartType_CycleTimeDistribution" xml:space="preserve">
+    <value>Cycle time distribution</value>
+  </data>
+  <data name="MetricChartType_Throughput" xml:space="preserve">
+    <value>Throughput</value>
+  </data>
+  <data name="MetricChartType_BugsAndBlocked" xml:space="preserve">
+    <value>Bugs and blocked</value>
+  </data>
+  <data name="MetricChartType_TeamVelocity" xml:space="preserve">
+    <value>Team velocity</value>
+  </data>
+  <data name="Metrics_LoadError" xml:space="preserve">
+    <value>Failed to load metrics</value>
+  </data>
 </root>

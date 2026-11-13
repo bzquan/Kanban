@@ -2,7 +2,14 @@ import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import i18n from 'i18next'
 import { Route, Routes } from 'react-router'
-import { afterEach, beforeEach, expect, it } from 'vitest'
+import { afterEach, beforeEach, expect, it, vi } from 'vitest'
+
+// Task 10: BoardPage can host MetricsPanel; jsdom has no canvas, so the
+// render hook is stubbed (MetricsPanel's own tests cover option building).
+vi.mock('../charts/options', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../charts/options')>()
+  return { ...actual, useECharts: () => undefined }
+})
 
 import type { BoardDto, CardDto, ProcessStepDto } from '../api/types'
 import { initI18n } from '../i18n'
@@ -281,6 +288,30 @@ it('empty board (backlog-only, no cards) renders empty columns without error', a
   expect(screen.getByTestId('subcolumn-1-done')).toBeInTheDocument()
   expect(screen.queryAllByTestId('card')).toHaveLength(0)
   expect(screen.queryByTestId('board-error')).not.toBeInTheDocument()
+})
+
+it('Kanban/Chart toolbar toggle swaps the canvas for the metrics panel and back', async () => {
+  installFetch({
+    'GET /api/boards': () => [board],
+    'GET /api/boards/b-1/cards': cardsHandler(FRONT_CARDS),
+    'GET /api/boards/b-1/metrics/cfd': () => ({
+      days: ['2026-11-01'],
+      series: [{ stepName: 'Backlog', cumulativeFlowCounts: [1] }],
+    }),
+  })
+  renderPage()
+  await screen.findByText('Backlog(Limit:∞)')
+  expect(screen.queryByTestId('metrics-panel')).not.toBeInTheDocument()
+
+  const user = userEvent.setup()
+  await user.click(screen.getByTestId('view-chart-button'))
+  expect(await screen.findByTestId('metrics-panel')).toBeInTheDocument()
+  // Unmount-on-toggle: the kanban canvas is gone while the chart shows.
+  expect(screen.queryByTestId('board-canvas')).not.toBeInTheDocument()
+
+  await user.click(screen.getByTestId('view-kanban-button'))
+  expect(screen.getByTestId('board-canvas')).toBeInTheDocument()
+  expect(screen.queryByTestId('metrics-panel')).not.toBeInTheDocument()
 })
 
 it('card fetch failures keep the toolbar and column chrome intact', async () => {

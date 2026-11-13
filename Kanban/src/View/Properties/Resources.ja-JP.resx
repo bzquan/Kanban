@@ -598,4 +598,28 @@
   <data name="ProcessStep_DragHandle" xml:space="preserve">
     <value>並べ替え</value>
   </data>
+  <data name="BoardPage_ViewKanban" xml:space="preserve">
+    <value>看板</value>
+  </data>
+  <data name="BoardPage_ViewChart" xml:space="preserve">
+    <value>グラフ</value>
+  </data>
+  <data name="MetricChartType_CFD" xml:space="preserve">
+    <value>累積フロー図(CFD)</value>
+  </data>
+  <data name="MetricChartType_CycleTimeDistribution" xml:space="preserve">
+    <value>作業分布</value>
+  </data>
+  <data name="MetricChartType_Throughput" xml:space="preserve">
+    <value>スループット</value>
+  </data>
+  <data name="MetricChartType_BugsAndBlocked" xml:space="preserve">
+    <value>バグと不順作業</value>
+  </data>
+  <data name="MetricChartType_TeamVelocity" xml:space="preserve">
+    <value>チームベロシティ</value>
+  </data>
+  <data name="Metrics_LoadError" xml:space="preserve">
+    <value>メトリクスの取得に失敗しました</value>
+  </data>
 </root>

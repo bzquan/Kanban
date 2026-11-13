@@ -598,4 +598,28 @@
   <data name="ProcessStep_DragHandle" xml:space="preserve">
     <value>重新排序</value>
   </data>
+  <data name="BoardPage_ViewKanban" xml:space="preserve">
+    <value>看板</value>
+  </data>
+  <data name="BoardPage_ViewChart" xml:space="preserve">
+    <value>图表</value>
+  </data>
+  <data name="MetricChartType_CFD" xml:space="preserve">
+    <value>累计流量图(CFD)</value>
+  </data>
+  <data name="MetricChartType_CycleTimeDistribution" xml:space="preserve">
+    <value>工作分布图</value>
+  </data>
+  <data name="MetricChartType_Throughput" xml:space="preserve">
+    <value>吞吐量</value>
+  </data>
+  <data name="MetricChartType_BugsAndBlocked" xml:space="preserve">
+    <value>故障和堵塞</value>
+  </data>
+  <data name="MetricChartType_TeamVelocity" xml:space="preserve">
+    <value>团队速度</value>
+  </data>
+  <data name="Metrics_LoadError" xml:space="preserve">
+    <value>无法加载指标</value>
+  </data>
 </root>
