@@ -105,7 +105,7 @@ it('renders app shell with title and board-list route', async () => {
 **Interfaces:**
 - Consumes: schema types `components['schemas'][...]`.
 - Produces (used by every later task, exact names):
-  - `api` — `createClient<paths>({ baseUrl: '/api' })` (paths from `../openapi/schema.d.ts`; add `frontend/openapi` import via relative path `../../openapi/schema`).
+  - `api` — `createClient<paths>({ baseUrl: '' })` (erratum R6: schema paths already begin with `/api/`, so a `'/api'` baseUrl double-prefixes; paths from `../../../openapi/schema` per R1; late-bound `fetch: (r) => globalThis.fetch(r)` so tests can swap fetch after module load).
   - `boardsApi = { list(): Promise<BoardDto[]>, create(uiLanguage: string): Promise<BoardDto>, remove(id: string): Promise<void> }`
   - `cardsApi = { list(boardId: string, q: CardsQuery): Promise<CardDto[]>, create(req: CardCreateRequest): Promise<CardDto>, patch(id: string, p: CardPatch): Promise<CardDto>, move(id: string, req: MoveCardRequest): Promise<void>, remove(id: string): Promise<void> }`
   - `metricsApi = { cfd|cycleTime|throughput|bugsBlocked|velocity(boardId: string): Promise<...Dto> }`
