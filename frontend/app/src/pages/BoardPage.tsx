@@ -18,7 +18,8 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 
 import { ApiError, intVal } from '../api/client'
-import type { CardDto, ProcessStepDto } from '../api/types'
+import type { ProcessStepDto } from '../api/types'
+import CardView from '../components/CardView'
 import { format0 } from '../util/format'
 import { useBoard, useCards, type BoardSide } from './boardQueries'
 
@@ -60,25 +61,6 @@ function initialZoom(): number {
 function stepZoom(z: number, delta: number): number {
   const snapped = Math.round((z + delta) * 10) / 10
   return Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, snapped))
-}
-
-// CardView placeholder — Task 6 replaces this with src/components/CardView.
-function CardView({ card }: { card: CardDto }) {
-  return (
-    <Box
-      data-testid="card"
-      sx={{
-        p: 0.5,
-        mb: 0.5,
-        border: 1,
-        borderColor: 'divider',
-        borderRadius: 1,
-        bgcolor: 'background.paper',
-      }}
-    >
-      {card.title ?? ''}
-    </Box>
-  )
 }
 
 interface SubColumnViewProps {
@@ -123,6 +105,9 @@ function SubColumnView({ boardId, step, side, onBoard, filter }: SubColumnViewPr
         <CardView
           key={card.id ?? `${seqNo}-${side}-${intVal(card.seqNo)}`}
           card={card}
+          onOpen={() => {
+            /* Task 8: open the card-edit dialog from here. */
+          }}
         />
       ))}
     </Box>
