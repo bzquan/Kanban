@@ -1,7 +1,9 @@
 import { screen } from '@testing-library/react'
+import { afterEach, it } from 'vitest'
 
 import App from './App'
 import { LANG_STORAGE_KEY } from './i18n'
+import { installFetch, restoreFetch } from './test/fetchStub'
 import { renderWithProviders } from './test/renderWithProviders'
 
 // Pin the language before the first initI18n() so the title assertion does not
@@ -20,8 +22,18 @@ it('renders board-list placeholder at /', () => {
   expect(screen.getByTestId('board-list-page')).toBeInTheDocument()
 })
 
-it('renders board placeholder at /boards/:boardId', () => {
+it('renders the board page at /boards/:boardId', async () => {
+  // The board page fetches meta via GET /api/boards (there is no
+  // GET /api/boards/{id}); stub the board, and its empty processSteps mean
+  // no cards requests are needed.
+  installFetch({
+    'GET /api/boards': () => [{ id: 'b-42', title: 'Board 42', processSteps: [] }],
+  })
   renderWithProviders(<App />, { route: '/boards/b-42' })
-  expect(screen.getByTestId('board-page')).toBeInTheDocument()
-  expect(screen.getByText(/b-42/)).toBeInTheDocument()
+  expect(await screen.findByTestId('board-page')).toBeInTheDocument()
+  expect(await screen.findByTestId('board-title')).toHaveTextContent('Board 42')
+})
+
+afterEach(() => {
+  restoreFetch()
 })

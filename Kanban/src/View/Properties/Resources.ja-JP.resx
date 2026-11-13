@@ -120,8 +120,17 @@
   <data name="BoardPage_BoardLabel" xml:space="preserve">
     <value>看板</value>
   </data>
+  <data name="BoardPage_BackToList" xml:space="preserve">
+    <value>ボード一覧へ戻る</value>
+  </data>
   <data name="BoardPage_Filter" xml:space="preserve">
     <value>絞り込み:</value>
+  </data>
+  <data name="BoardPage_FitToWindow" xml:space="preserve">
+    <value>ウィンドウに合わせる</value>
+  </data>
+  <data name="BoardPage_LoadError" xml:space="preserve">
+    <value>ボードの読み込みに失敗しました</value>
   </data>
   <data name="Board_DetailFormat" xml:space="preserve">
     <value>詳細：{0}</value>

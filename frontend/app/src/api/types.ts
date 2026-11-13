@@ -10,6 +10,7 @@ export type ThroughputDto = components['schemas']['ThroughputDto']
 export type BugsBlockedDto = components['schemas']['BugsBlockedDto']
 export type VelocityDto = components['schemas']['VelocityDto']
 export type WorkStateDto = components['schemas']['WorkStateDto']
+export type ProcessStepDto = components['schemas']['ProcessStepDto']
 
 export type CardCreateRequest = components['schemas']['CardCreateRequest']
 export type CardPatch = components['schemas']['CardPatch']

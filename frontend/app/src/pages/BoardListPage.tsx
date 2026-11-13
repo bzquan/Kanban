@@ -20,15 +20,10 @@ import { useNavigate } from 'react-router'
 
 import { boardsApi } from '../api/client'
 import type { BoardDto } from '../api/types'
+import { format0 } from '../util/format'
 
 // localStorage key the board page (and later tasks) read to know where we came from.
 const LAST_BOARD_KEY = 'kanban.lastBoardId'
-
-// resx format strings are .NET-style ("Name：{0} "); i18next only interpolates
-// {{var}}, so positional placeholders get substituted here.
-function format0(template: string, value: string): string {
-  return template.replace('{0}', value)
-}
 
 export default function BoardListPage() {
   const { t, i18n } = useTranslation()

@@ -120,8 +120,17 @@
   <data name="BoardPage_BoardLabel" xml:space="preserve">
     <value>Board</value>
   </data>
+  <data name="BoardPage_BackToList" xml:space="preserve">
+    <value>Back to board list</value>
+  </data>
   <data name="BoardPage_Filter" xml:space="preserve">
     <value>Filter:</value>
+  </data>
+  <data name="BoardPage_FitToWindow" xml:space="preserve">
+    <value>Fit to window</value>
+  </data>
+  <data name="BoardPage_LoadError" xml:space="preserve">
+    <value>Failed to load board</value>
   </data>
   <data name="Board_DetailFormat" xml:space="preserve">
     <value>Detail：{0}</value>
