@@ -214,6 +214,30 @@ it('Save sends releaseDate as local midnight only when the date was changed', as
   })
 })
 
+it('clearing the release date PATCHes today (WPF TargetNullValue parity), not null', async () => {
+  installFetch({
+    'PATCH /api/cards/c-9': () => fullCard(),
+  })
+  renderDialog(fullCard())
+
+  const user = userEvent.setup()
+  // jsdom has no date-picker keyboard model; drive the onChange directly.
+  fireEvent.change(screen.getByTestId('field-releaseDate'), { target: { value: '' } })
+  await user.click(screen.getByTestId('card-edit-save'))
+
+  await waitFor(() => expect(callOf('PATCH', '/api/cards/c-9')).toBeDefined())
+  // The API ignores null (verified live 2026-11-13), so a clear must write
+  // TODAY's local calendar date like WPF's DatePicker
+  // TargetNullValue={x:Static System:DateTime.Now} — same naive-local format
+  // as the date-chosen path.
+  const now = new Date()
+  const pad = (n: number) => String(n).padStart(2, '0')
+  const today = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`
+  expect(callOf('PATCH', '/api/cards/c-9')?.body).toEqual({
+    releaseDate: `${today}T00:00:00`,
+  })
+})
+
 // ---------------------------------------------------------------- pinned: delete
 
 it('delete confirms then calls DELETE /api/cards/{id}; cancelling deletes nothing', async () => {

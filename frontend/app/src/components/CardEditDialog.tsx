@@ -46,6 +46,17 @@ export function toLocalDateInput(iso: string | undefined): string {
 }
 
 /**
+ * Today's local calendar date in the date input's YYYY-MM-DD format — the
+ * value the input writes on clear (WPF DatePicker parity:
+ * TargetNullValue={x:Static System:DateTime.Now} makes a cleared date TODAY,
+ * and the API ignores null, so null would silently revert on refetch).
+ */
+function todayLocalDateInput(): string {
+  const d = new Date()
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`
+}
+
+/**
  * storyPoints text → non-negative int32 (the API's Format:int32);
  * '' → 0 (WPF's int default). null = invalid → localized error, Save blocked.
  */
@@ -130,10 +141,14 @@ export default function CardEditDialog({ card, onClose }: CardEditDialogProps) {
     // Naive local midnight: the running API parses it as server-local
     // (verified live 2026-11-13: "2026-12-01T00:00:00" GETs back as
     // "2026-12-01T00:00:00+09:00"), so the wall-clock date round-trips.
-    // Clearing sends null — the API ignores it (dates cannot be unset).
+    // Clearing sends TODAY's local date, not null: the API ignores null
+    // (verified live 2026-11-13, dates cannot be unset), so null would let
+    // the old date reappear after refetch — WPF's DatePicker behaves the
+    // same way via TargetNullValue={x:Static System:DateTime.Now}.
     const originalDate = toLocalDateInput(card.releaseDate)
     if (releaseDate !== originalDate) {
-      patch.releaseDate = releaseDate === '' ? null : `${releaseDate}T00:00:00`
+      const dateToSend = releaseDate === '' ? todayLocalDateInput() : releaseDate
+      patch.releaseDate = `${dateToSend}T00:00:00`
     }
     if (isBlocked !== (card.isBlocked === true)) patch.isBlocked = isBlocked
     if (isMergedIntoMaster !== (card.isMergedIntoMaster === true)) {
