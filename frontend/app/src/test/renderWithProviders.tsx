@@ -1,0 +1,29 @@
+import { render } from '@testing-library/react'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { MemoryRouter } from 'react-router'
+import type { ReactElement } from 'react'
+
+const theme = createTheme()
+
+interface RenderWithProvidersOptions {
+  route?: string
+}
+
+// Test render harness: providers the whole app needs, minus the BrowserRouter
+// (MemoryRouter here lets each test pick its own initial URL).
+export function renderWithProviders(
+  ui: ReactElement,
+  { route = '/' }: RenderWithProvidersOptions = {},
+) {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  })
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <MemoryRouter initialEntries={[route]}>{ui}</MemoryRouter>
+      </ThemeProvider>
+    </QueryClientProvider>,
+  )
+}
