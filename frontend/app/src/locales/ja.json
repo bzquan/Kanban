@@ -4,6 +4,8 @@
   "Agile_Manifesto2": "△ 動くソフトウェア",
   "Agile_Manifesto3": "△ 顧客との協調",
   "Agile_Manifesto4": "△ 変化への対応",
+  "BoardList_Empty": "ボードがまだありません",
+  "BoardList_StepsFormat": "ステップ数：{0}",
   "BoardPage_BoardLabel": "看板",
   "BoardPage_Filter": "絞り込み:",
   "Board_DefaultDescription": "プロジェクト詳細",

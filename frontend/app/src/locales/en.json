@@ -4,6 +4,8 @@
   "Agile_Manifesto2": "△ Working software",
   "Agile_Manifesto3": "△ Customer collaboration",
   "Agile_Manifesto4": "△ Responding to change",
+  "BoardList_Empty": "No boards yet",
+  "BoardList_StepsFormat": "Steps：{0}",
   "BoardPage_BoardLabel": "Board",
   "BoardPage_Filter": "Filter:",
   "Board_DefaultDescription": "Project description",

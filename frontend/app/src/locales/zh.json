@@ -4,6 +4,8 @@
   "Agile_Manifesto2": "△ 工作的软件",
   "Agile_Manifesto3": "△ 客户合作",
   "Agile_Manifesto4": "△ 响应变化",
+  "BoardList_Empty": "暂无看板",
+  "BoardList_StepsFormat": "步骤数：{0}",
   "BoardPage_BoardLabel": "看板",
   "BoardPage_Filter": "过滤:",
   "Board_DefaultDescription": "项目的说明",

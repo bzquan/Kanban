@@ -129,6 +129,12 @@
   <data name="Board_NameFormat" xml:space="preserve">
     <value>名称：{0}</value>
   </data>
+  <data name="BoardList_Empty" xml:space="preserve">
+    <value>ボードがまだありません</value>
+  </data>
+  <data name="BoardList_StepsFormat" xml:space="preserve">
+    <value>ステップ数：{0}</value>
+  </data>
   <data name="CardEdit_Blocked" xml:space="preserve">
     <value>不順</value>
   </data>

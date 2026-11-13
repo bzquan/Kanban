@@ -129,6 +129,12 @@
   <data name="Board_NameFormat" xml:space="preserve">
     <value>Name：{0} </value>
   </data>
+  <data name="BoardList_Empty" xml:space="preserve">
+    <value>No boards yet</value>
+  </data>
+  <data name="BoardList_StepsFormat" xml:space="preserve">
+    <value>Steps：{0}</value>
+  </data>
   <data name="CardEdit_Blocked" xml:space="preserve">
     <value>Blocked</value>
   </data>

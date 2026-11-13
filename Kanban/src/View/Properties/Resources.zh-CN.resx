@@ -129,6 +129,12 @@
   <data name="Board_NameFormat" xml:space="preserve">
     <value>名称：{0}</value>
   </data>
+  <data name="BoardList_Empty" xml:space="preserve">
+    <value>暂无看板</value>
+  </data>
+  <data name="BoardList_StepsFormat" xml:space="preserve">
+    <value>步骤数：{0}</value>
+  </data>
   <data name="CardEdit_Blocked" xml:space="preserve">
     <value>堵塞</value>
   </data>
