@@ -22,9 +22,11 @@ afterEach(() => {
 })
 
 // MUI v9 Select opens its popup from the inner combobox element; clicking the
-// data-testid root only focuses it.
+// data-testid root only focuses it. The accessible name comes from the
+// Select's aria-label (label/htmlFor does not associate with a div[role=combobox]),
+// pinned here via { name } — Setting_Language under en.
 async function openSelect(): Promise<void> {
-  await userEvent.setup().click(await screen.findByRole('combobox'))
+  await userEvent.setup().click(await screen.findByRole('combobox', { name: 'Language:' }))
 }
 
 async function chooseLanguage(label: string): Promise<void> {
@@ -62,8 +64,10 @@ it('selecting 日本語 switches i18n immediately and persists kanban.lang (surv
   // otherwise detectLanguage (the reload path) would fall back to sniffing.
   expect(detectLanguage()).toBe('ja')
 
-  // Localized copy follows the switch inside the page (Setting_Language under ja).
+  // Localized copy follows the switch inside the page (Setting_Language under ja),
+  // including the combobox's accessible name.
   expect(await screen.findByText('言語：')).toBeInTheDocument()
+  expect(screen.getByRole('combobox', { name: '言語：' })).toBeInTheDocument()
 })
 
 it('selecting 中文 persists zh and re-localizes the page', async () => {

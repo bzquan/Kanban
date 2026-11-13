@@ -37,6 +37,9 @@ export default function SettingsPage() {
         <Select
           id="settings-language"
           data-testid="language-select"
+          // label/htmlFor does not name a div[role=combobox] (not labelable);
+          // SelectInput forwards aria-label onto the combobox element itself.
+          aria-label={t('Setting_Language')}
           value={current}
           size="small"
           sx={{ minWidth: 140 }}

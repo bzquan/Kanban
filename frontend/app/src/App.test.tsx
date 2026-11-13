@@ -49,13 +49,15 @@ it('switching language on the settings page re-renders the AppBar title localize
   expect(screen.getByRole('heading', { level: 1, name: 'Kanban' })).toBeInTheDocument()
 
   const user = userEvent.setup()
-  // MUI v9 Select opens from the inner combobox element.
-  await user.click(screen.getByRole('combobox'))
+  // MUI v9 Select opens from the inner combobox element, whose accessible name
+  // is the aria-label (Setting_Language) — pinned under en before the switch.
+  await user.click(screen.getByRole('combobox', { name: 'Language:' }))
   await user.click(await screen.findByRole('option', { name: '中文' }))
 
-  // Shell AppBar (Main_Title) and the page (Setting_Language) both follow.
+  // Shell AppBar (Main_Title), the page label and the combobox name all follow.
   expect(await screen.findByRole('heading', { level: 1, name: '看板' })).toBeInTheDocument()
   expect(await screen.findByText('语言:')).toBeInTheDocument()
+  expect(screen.getByRole('combobox', { name: '语言:' })).toBeInTheDocument()
 })
 
 it('About page renders at /about with the release-note iframe', async () => {
