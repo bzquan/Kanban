@@ -12,7 +12,7 @@ namespace UnitTest
         public void Setup()
         {
             dbClient = new DBClient();
-            dbClient.DBName = "TestDB";
+            dbClient.DBName = TestDb.Name;
             dbClient.MongoDBClient.DropDatabase(dbClient.DBName);
             IDBActivity dbActivities = new DBActivities(dbClient);
             IDBCard dbCards = new DBCards(dbClient, dbActivities);

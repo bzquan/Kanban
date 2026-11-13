@@ -102,6 +102,15 @@ public class CardCommandService
             await card.CreateNewActivitiesAsync(target);
             await m_CardRepository.Update(card, repoCard.WorkState, nameof(Model.Card.WorkState));
             await m_CardRepository.Update(card, repoCard.StateChangedDate, nameof(Model.Card.StateChangedDate));
+
+            if (repoCard.IsOnBackBoard)
+            {
+                // バックボードカードの別列への move = バックボード解除を兼ねる(WPF の front/back トグル off と同じ意味論)。
+                // 旗を切替えないと前面読み取り(IsOnBackBoard=false 条件)から消え、背面では列が食い違う
+                // 「どちらにも見えないカード」になる(WPFは作れない状態。最終レビュー指摘)。
+                card.IsOnBackBoard = false;
+                await m_CardRepository.Update(card, false, nameof(Model.Card.IsOnBackBoard));
+            }
         }
         else
         {

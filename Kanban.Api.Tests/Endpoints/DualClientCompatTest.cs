@@ -99,7 +99,7 @@ public class DualClientCompatTest
 
         // 監査証跡: StateChangedDate 昇順でギャップなし(単調増加)・blockedスナップショット含む
         var acts = await TestDatabase.GetActivities(column[0]._id);
-        Assert.IsTrue(acts.Count >= 6, $"expected create+close+intermediate+arrival+blocked activities, got {acts.Count}");
+        Assert.IsGreaterThanOrEqualTo(6, acts.Count, "expected create+close+intermediate+arrival+blocked activities");
         for (int i = 1; i < acts.Count; i++)
         {
             Assert.IsTrue(acts[i].StateChangedDate > acts[i - 1].StateChangedDate,

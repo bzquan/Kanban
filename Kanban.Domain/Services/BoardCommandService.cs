@@ -85,13 +85,20 @@ public class BoardCommandService
     }
 
     /// <summary>
-    /// プロセスステップの一括編集(追加/削除/リネーム/色/サイクル列フラグ)。
-    /// クライアントは GET 時点の PhaseSeqNo をそのまま身分別子として送る(リネームで PhaseSeqNo は動かさない)。
+    /// 列の再採番(並べ替え)でカード/Activities を一時的に退避する作業列番号。
+    /// 既存 WPF ProcessViewModel.WORK_SEQ_NO と同じ意味論(列数ガードで 100 未満を保証)。
+    /// </summary>
+    private const int WorkSeqNo4Reorder = 100;
+
+    /// <summary>
+    /// プロセスステップの一括編集(追加/削除/リネーム/色/サイクル列フラグ/並べ替え 仕様書§4.3)。
+    /// クライアントは GET 時点の PhaseSeqNo をそのまま身分別子として送り、リスト順 = 新しい表示順で送る。
     ///  ・PhaseSeqNo が消えている → 列削除(ガード:3件未満/カード残存 → 409)
-    ///  ・PhaseSeqNo >= 元個数   → 列追加
-    ///  ・PhaseSeqNo が生存列と一致 → リネーム/色/フラグ適用
-    ///  ・生存列の PhaseSeqNo を入れ替える試み(単調増加でない)は/cards列帰属が壊れるため 400
-    /// 削除は既存 Board.DeleteProcessStep(Activities削除+カード下方移動)を降順に適用し、最後に 0..N-1 へ再採番して保存する。
+    ///  ・PhaseSeqNo >= 元個数   → 列追加(挿入位置=リスト中の位置)
+    ///  ・身分別子の入れ替え(単調増加でない)→ 並べ替え:カード/Activities を既存
+    ///    Board.ChangeCardsAndActivitySeqNo(サイクル/連鎖分解・退避=WorkSeqNo4Reorder)で列追従させる
+    ///    (最終レビュー指摘: 400 拒否は仕様ギャップだった)。
+    /// 削除は既存 Board.DeleteProcessStep(Activities削除+後続列カードの-1シフト)を降順に適用する。
     /// </summary>
     public async Task<ProcessStepUpdateResult> UpdateProcessStepsAsync(ObjectId boardId, List<Repository.ProcessStep> newSteps)
     {
@@ -101,55 +108,121 @@ public class BoardCommandService
         if (newSteps.Count < 3)
             return new ProcessStepUpdateResult { Success = false, Guard = GuardReason.TooFewSteps };
 
-        if (newSteps.Zip(newSteps.Skip(1)).Any(pair => pair.First.PhaseSeqNo >= pair.Second.PhaseSeqNo))
-            throw new ArgumentException("process steps must be strictly increasing in PhaseSeqNo (column reorder is not supported in this version)", nameof(newSteps));
+        if (newSteps.Count >= WorkSeqNo4Reorder)
+            throw new ArgumentException($"at most {WorkSeqNo4Reorder - 1} process steps (reorder parking slot)", nameof(newSteps));
 
         if (newSteps.Count(s => s.IsStartOfCycleTime) > 1 || newSteps.Count(s => s.IsEndOfCycleTime) > 1)
             throw new ArgumentException("at most one start and one end of cycle time are allowed", nameof(newSteps));
 
         var oldSteps = board.DevProcess.ProcessSteps.OrderBy(s => s.PhaseSeqNo).ToList();
         int oldCount = oldSteps.Count;
-        var keptSeqNos = newSteps.Where(s => s.PhaseSeqNo < oldCount).Select(s => s.PhaseSeqNo).ToHashSet();
 
-        var stepsToDelete = oldSteps.Where(s => !keptSeqNos.Contains(s.PhaseSeqNo)).ToList();
+        // 身分別子=元PhaseSeqNo(0..oldCount-1)。生存エントリーの重複は同一列を2箇所に置く試みなので 400。
+        var retained = newSteps.Select((s, pos) => (step: s, pos)).Where(x => x.step.PhaseSeqNo < oldCount).ToList();
+        var oldIds = oldSteps.Select(s => s.PhaseSeqNo).ToHashSet();
+        if (retained.GroupBy(x => x.step.PhaseSeqNo).Any(g => g.Count() > 1))
+            throw new ArgumentException("duplicate PhaseSeqNo in process steps", nameof(newSteps));
+        if (retained.Any(x => !oldIds.Contains(x.step.PhaseSeqNo)))
+            throw new ArgumentException("unknown PhaseSeqNo (column identity not found)", nameof(newSteps));
+
+        var keptIds = retained.Select(x => x.step.PhaseSeqNo).ToHashSet();
+        var stepsToDelete = oldSteps.Where(s => !keptIds.Contains(s.PhaseSeqNo)).ToList();
         if (stepsToDelete.Any(s => m_CardRepository.ExistCards(board, s)))
             return new ProcessStepUpdateResult { Success = false, Guard = GuardReason.StepInUse };
 
-        // --- 削除(カードが残っていない列のみ。DeleteProcessStep が Activities 削除+カード移動+保存を担う) ---
+        // --- 削除(カードが残っていない列のみ。DeleteProcessStep が Activities 削除+後続列カードの-1シフト+保存を担う) ---
         foreach (var step in stepsToDelete.OrderByDescending(s => s.PhaseSeqNo))
         {
             await board.DeleteProcessStep(step);
         }
 
-        // --- 生存列への適用(身分別子=元PhaseSeqNoで一致) ---
-        var newBySeqNo = newSteps.Where(s => s.PhaseSeqNo < oldCount).ToDictionary(s => s.PhaseSeqNo);
-        foreach (var step in board.DevProcess.ProcessSteps)
+        // --- 並べ替え/削除詰め: カードと Activities の列番号だけを既存プリミティブで移動する。
+        //     削除済み列は空(ガード済み)、追加列は空なので、変化マップは「空の着地点」で終端する連鎖/サイクルに分解できる ---
+        var finalPos = retained.ToDictionary(x => x.step.PhaseSeqNo, x => x.pos);
+        var changed = new Dictionary<int, int>();
+        foreach (int identity in keptIds)
         {
-            if (newBySeqNo.TryGetValue(step.PhaseSeqNo, out var desired))
+            int current = identity - stepsToDelete.Count(d => d.PhaseSeqNo < identity); // DeleteProcessStep の-1シフト後位置
+            int target = finalPos[identity];
+            if (current != target) changed[current] = target;
+        }
+        ReorderColumnSeqNos(board, changed);
+
+        // --- リネーム/色/フラグ適用と追加列の作成(身分別子=元PhaseSeqNo で生存列を特定。ProcessStep はまだ元番号を持つ) ---
+        var stepByIdentity = board.DevProcess.ProcessSteps.ToDictionary(s => s.PhaseSeqNo);
+        var stepByPos = new Dictionary<int, Repository.ProcessStep>();
+        foreach (var (desired, pos) in newSteps.Select((s, i) => (s, i)))
+        {
+            if (desired.PhaseSeqNo < oldCount)
             {
-                ApplyEdits(step, desired);
+                var targetStep = stepByIdentity[desired.PhaseSeqNo];
+                ApplyEdits(targetStep, desired);
+                stepByPos[pos] = targetStep;
+            }
+            else
+            {
+                // 追加列の名前は DevProcess.AddProcessStep() の静的既定=EN、続けて ApplyEdits で確定する
+                var added = board.DevProcess.AddProcessStep();
+                ApplyEdits(added, desired);
+                stepByPos[pos] = added;
             }
         }
 
-        // --- 追加(seqNo >= 元個数 のエントリー。追加列の名前は DevProcess.AddProcessStep() の静的既定=EN、
-        //     続けて同一 PUT のこのエントリーで ApplyEdits 確定する) ---
-        foreach (var desired in newSteps.Where(s => s.PhaseSeqNo >= oldCount))
+        // --- 表示順で 0..N-1 へ採番し直して保存(カード列は上の移動で既に一致済み) ---
+        foreach (var (pos, step) in stepByPos)
         {
-            var step = board.DevProcess.AddProcessStep();
-            ApplyEdits(step, desired);
+            step.PhaseSeqNo = pos;
         }
-
-        // --- 0..N-1 へ再採番(削除で空いた穴を詰める。カードは DeleteProcessStep で既に移動済み。
-        //     リスト順 = 生存列の元順 + 追加列順) ---
-        var finalSteps = board.DevProcess.ProcessSteps.ToList();
-        for (int i = 0; i < finalSteps.Count; i++)
-        {
-            finalSteps[i].PhaseSeqNo = i;
-        }
-
+        board.DevProcess.SortProcessSteps();
         board.AdjustProcessCycleTimeSteps();
         UpdateResult update = board.SaveProcessStep();
         return new ProcessStepUpdateResult { Success = true, Update = update };
+    }
+
+    /// <summary>
+    /// 列番号の単射写像(現在位置→目標位置)を既存 ChangeCardsAndActivitySeqNo のみで実現する。
+    /// サイクルは退避(WorkSeqNo4Reorder)を経由して逆向きに流し、連鎖は空の着地点(削除済み列/追加列位置)から逆向きに流す。
+    /// 着地点が必ず空であることは呼び出し側の不変条件(削除列はカードなしガード済み・追加列は常に空)から従う。
+    /// </summary>
+    private static void ReorderColumnSeqNos(Board board, Dictionary<int, int> changed)
+    {
+        var remaining = new Dictionary<int, int>(changed);
+        while (remaining.Count > 0)
+        {
+            int start = remaining.Keys.First();
+            var chain = new List<int> { start };
+            var visited = new HashSet<int> { start };
+            bool isCycle = false;
+            int cur = start;
+            while (remaining.TryGetValue(cur, out int nxt))
+            {
+                if (!visited.Add(nxt)) { isCycle = true; break; }
+                chain.Add(nxt);
+                cur = nxt;
+            }
+
+            if (isCycle)
+            {
+                board.ChangeCardsAndActivitySeqNo(chain[0], WorkSeqNo4Reorder);            // 退避
+                for (int i = chain.Count - 1; i >= 1; i--)
+                {
+                    board.ChangeCardsAndActivitySeqNo(chain[i], remaining[chain[i]]);
+                }
+                board.ChangeCardsAndActivitySeqNo(WorkSeqNo4Reorder, remaining[chain[0]]); // 復旧
+            }
+            else
+            {
+                for (int i = chain.Count - 1; i >= 0; i--)
+                {
+                    board.ChangeCardsAndActivitySeqNo(chain[i], remaining[chain[i]]);
+                }
+            }
+
+            foreach (int key in chain)
+            {
+                remaining.Remove(key);
+            }
+        }
     }
 
     private static void ApplyEdits(Repository.ProcessStep step, Repository.ProcessStep desired)

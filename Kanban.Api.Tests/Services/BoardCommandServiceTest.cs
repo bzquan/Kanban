@@ -147,14 +147,33 @@ public class BoardCommandServiceTest
     }
 
     [TestMethod]
-    public async Task UpdateProcessSteps_ReorderAttempt_ThrowsArgumentException()
+    public async Task UpdateProcessSteps_Reorder_SucceedsAndKeepsIdentityNamesAtNewPositions()
     {
         var svc = TestDatabase.NewBoardCommandService();
         var board = await svc.CreateBoardAsync("en");
 
-        // 生存列の PhaseSeqNo を並べ替える試み(カードの列帰属が壊れるためこの版では不可)→ 400 相当
+        // 仕様書§4.3 の並べ替え: 身分=元PhaseSeqNo を保ったリスト順 [2,1,0,3,4] → 成功(最終レビュー指摘で 400 拒否を差し替え)
+        var result = await svc.UpdateProcessStepsAsync(board._id, StepList(2, 1, 0, 3, 4));
+        Assert.IsTrue(result.Success);
+
+        var after = (await svc.GetBoardsAsync()).Single(b => b._id == board._id);
+        Assert.HasCount(5, after.DevProcess.ProcessSteps);
+        CollectionAssert.AreEqual(
+            new[] { 0, 1, 2, 3, 4 },
+            after.DevProcess.ProcessSteps.OrderBy(s => s.PhaseSeqNo).Select(s => s.PhaseSeqNo).ToArray());
+        Assert.AreEqual("step2", after.DevProcess.ProcessSteps.Single(s => s.PhaseSeqNo == 0).Name);
+        Assert.AreEqual("step0", after.DevProcess.ProcessSteps.Single(s => s.PhaseSeqNo == 2).Name);
+    }
+
+    [TestMethod]
+    public async Task UpdateProcessSteps_DuplicateIdentity_ThrowsArgumentException()
+    {
+        var svc = TestDatabase.NewBoardCommandService();
+        var board = await svc.CreateBoardAsync("en");
+
+        // 同一列(身分別子)を2箇所に置く試み → 不正入力 400 相当
         await ThrowsAsync<ArgumentException>(
-            () => svc.UpdateProcessStepsAsync(board._id, StepList(2, 1, 0, 3, 4)));
+            () => svc.UpdateProcessStepsAsync(board._id, StepList(1, 1, 2, 3, 4)));
     }
 
     [TestMethod]

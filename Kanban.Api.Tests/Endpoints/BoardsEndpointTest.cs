@@ -181,4 +181,116 @@ public class BoardsEndpointTest
         var boards = await GetBoardsAsync();
         Assert.HasCount(5, boards.Single(b => b.Id == created.Id).ProcessSteps);
     }
+
+    // ---- 仕様書§4.3「並べ替え」(最終レビュー指摘: 400 で拒否していたのは仕様ギャップ) ----
+    // クライアントは GET 時点の PhaseSeqNo を身分別子に保ったまま、新しい表示順でリストを送る。
+    // カード/Activities は既存 ChangeCardsAndActivitySeqNo で列追従する。
+
+    private async Task<BoardDto> PutStepsAsync(BoardDto created, int[] orderByIdentity)
+    {
+        var byId = created.ProcessSteps.ToDictionary(s => s.PhaseSeqNo);
+        var newSteps = orderByIdentity
+                          .Select(id => new ProcessStepDto
+                          {
+                              PhaseSeqNo = id,
+                              LabelColor = byId[id].LabelColor,
+                              Name = byId[id].Name,
+                              WIPTitle = byId[id].WIPTitle,
+                              DoneTitle = byId[id].DoneTitle,
+                              IsStartOfCycleTime = byId[id].IsStartOfCycleTime,
+                              IsEndOfCycleTime = byId[id].IsEndOfCycleTime,
+                          })
+                          .ToList();
+        var resp = await _client.PutAsJsonAsync($"/api/boards/{created.Id}/process-steps", newSteps);
+        var body = await resp.Content.ReadAsStringAsync();
+        Assert.AreEqual(HttpStatusCode.OK, resp.StatusCode, $"PUT: {(int)resp.StatusCode} {body}");
+        return (await resp.Content.ReadFromJsonAsync<BoardDto>())!;
+    }
+
+    private async Task<ObjectId> SeedCardInColumnAsync(ObjectId boardId, int step, string title)
+    {
+        var cardId = ObjectId.GenerateNewId();
+        await TestDatabase.NewClient().DB.GetCollection<Card>("Cards").InsertOneAsync(new Card
+        {
+            _id = cardId,
+            BoardID = boardId,
+            Title = title,
+            SeqNo = 0,
+            WorkState = new WorkState { ProcessStepSeqNo = step, IsWIP = true },
+            StateChangedDate = new DateTime(2020, 1, 1),
+            ReleaseDate = new DateTime(2020, 1, 1),
+        });
+        await TestDatabase.NewClient().DB.GetCollection<Activity>("Activities").InsertOneAsync(new Activity
+        {
+            BoardID = boardId,
+            CardID = cardId,
+            WorkState = new WorkState { ProcessStepSeqNo = step, IsWIP = true },
+            StateChangedDate = new DateTime(2020, 1, 1),
+        });
+        return cardId;
+    }
+
+    private async Task<List<string>> GetColumnTitlesAsync(ObjectId boardId, int step)
+    {
+        var resp = await _client.GetAsync($"/api/boards/{boardId}/cards?processStepSeqNo={step}&isWip=true");
+        Assert.AreEqual(HttpStatusCode.OK, resp.StatusCode);
+        return (await resp.Content.ReadFromJsonAsync<List<CardDto>>())!.Select(c => c.Title).ToList();
+    }
+
+    [TestMethod]
+    public async Task Put_ReorderColumns_Swap_CardsFollowTheirColumn()
+    {
+        var created = await CreateBoardAsync();
+        var boardId = ObjectId.Parse(created.Id);
+        await SeedCardInColumnAsync(boardId, step: 1, "card@1");
+        await SeedCardInColumnAsync(boardId, step: 2, "card@2");
+        await SeedCardInColumnAsync(boardId, step: 3, "card@3");
+
+        // 列1↔2 を入れ替え(身分=元PhaseSeqNo を保ったまま表示順 [0,2,1,3,4] で送る)
+        var updated = await PutStepsAsync(created, new[] { 0, 2, 1, 3, 4 });
+
+        CollectionAssert.AreEqual(
+            new[] { 0, 1, 2, 3, 4 },
+            updated.ProcessSteps.OrderBy(s => s.PhaseSeqNo).Select(s => s.PhaseSeqNo).ToArray());
+        Assert.AreEqual(
+            created.ProcessSteps.Single(s => s.PhaseSeqNo == 2).Name,
+            updated.ProcessSteps.Single(s => s.PhaseSeqNo == 1).Name);
+        Assert.AreEqual(
+            created.ProcessSteps.Single(s => s.PhaseSeqNo == 1).Name,
+            updated.ProcessSteps.Single(s => s.PhaseSeqNo == 2).Name);
+
+        CollectionAssert.AreEquivalent(new[] { "card@2" }, await GetColumnTitlesAsync(boardId, 1));
+        CollectionAssert.AreEquivalent(new[] { "card@1" }, await GetColumnTitlesAsync(boardId, 2));
+        CollectionAssert.AreEquivalent(new[] { "card@3" }, await GetColumnTitlesAsync(boardId, 3));
+    }
+
+    [TestMethod]
+    public async Task Put_ReorderColumns_ThreeColumnRotation_CardsAndActivitiesFollow()
+    {
+        var created = await CreateBoardAsync();
+        var boardId = ObjectId.Parse(created.Id);
+        var c1 = await SeedCardInColumnAsync(boardId, step: 1, "card@1");
+        var c2 = await SeedCardInColumnAsync(boardId, step: 2, "card@2");
+        var c3 = await SeedCardInColumnAsync(boardId, step: 3, "card@3");
+
+        // 表示順 [0,3,1,2,4]: 身分1→pos2, 身分2→pos3, 身分3→pos1(3-サイクル)
+        var updated = await PutStepsAsync(created, new[] { 0, 3, 1, 2, 4 });
+
+        CollectionAssert.AreEqual(new[] { 0, 1, 2, 3, 4 },
+            updated.ProcessSteps.OrderBy(s => s.PhaseSeqNo).Select(s => s.PhaseSeqNo).ToArray());
+
+        // カードは列追従
+        CollectionAssert.AreEquivalent(new[] { "card@3" }, await GetColumnTitlesAsync(boardId, 1));
+        CollectionAssert.AreEquivalent(new[] { "card@1" }, await GetColumnTitlesAsync(boardId, 2));
+        CollectionAssert.AreEquivalent(new[] { "card@2" }, await GetColumnTitlesAsync(boardId, 3));
+
+        // 監査証跡の WorkState.ProcessStepSeqNo も列の再採番に追従(既存 ChangeActivitiesSeqNo 意味論)
+        var activities = TestDatabase.NewClient().DB.GetCollection<Activity>("Activities");
+        foreach (var (cardId, expectedStep) in new[] { (c1, 2), (c2, 3), (c3, 1) })
+        {
+            var acts = await activities.Find(a => a.CardID == cardId).ToListAsync();
+            Assert.HasCount(1, acts);
+            Assert.AreEqual(expectedStep, acts[0].WorkState.ProcessStepSeqNo, $"activity of {cardId}");
+        }
+    }
 }

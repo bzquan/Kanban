@@ -4,6 +4,7 @@ using Kanban.Api;
 using Kanban.Api.Contracts;
 using Microsoft.AspNetCore.Mvc.Testing;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Kanban.Api.Tests.Endpoints;
 
@@ -133,5 +134,34 @@ public class CardsWriteEndpointTest
     {
         var resp = await _client.DeleteAsync($"/api/cards/{ObjectId.GenerateNewId()}");
         Assert.AreEqual(HttpStatusCode.NotFound, resp.StatusCode);
+    }
+
+    // 最終レビュー指摘: バックボードカードを別列へ move すると IsOnBackBoard=true のまま→前後どちらにも
+    // 見えない「消えたカード」になった(WPFは front/back 切替トグルのみでこの状態を作れない)。
+    // 修正方針: 別列への move はバックボード解除(WPF のトグル off と同じ意味論)として旗を立て替える。
+    [TestMethod]
+    public async Task Move_BackBoardCard_ResurfacesInTargetColumnAndClearsFlag()
+    {
+        var card = (await (await CreateCardAsync(0, true)).Content.ReadFromJsonAsync<CardDto>())!;
+
+        // バックボード状態にする(既存 WPF のトグルと同じ DB 状態: flag=true + OnBackBoardDate)
+        var cardId = ObjectId.Parse(card.Id);
+        var cards = TestDatabase.NewClient().DB.GetCollection<Kanban.Repository.Card>("Cards");
+        var set = MongoDB.Driver.Builders<Kanban.Repository.Card>.Update.Combine(
+            MongoDB.Driver.Builders<Kanban.Repository.Card>.Update.Set(c => c.IsOnBackBoard, true),
+            MongoDB.Driver.Builders<Kanban.Repository.Card>.Update.Set(c => c.OnBackBoardDate, DateTime.Now));
+        await cards.UpdateOneAsync(c => c._id == cardId, set);
+
+        var moveResp = await _client.PatchAsJsonAsync(
+            $"/api/cards/{card.Id}/move", new { processStepSeqNo = 1, isWip = true, index = 0 });
+        Assert.IsTrue(moveResp.IsSuccessStatusCode, $"move: {(int)moveResp.StatusCode}");
+
+        // 移動先列(前面読み取り)に見えること — 修正前は IsOnBackBoard=true のままで見えなかった
+        var moved = await GetColumnAsync(1, true);
+        Assert.HasCount(1, moved);
+        Assert.AreEqual(card.Id, moved[0].Id);
+
+        var docs = await (await cards.FindAsync(c => c._id == cardId)).ToListAsync();
+        Assert.IsFalse(docs.Single().IsOnBackBoard, "cross-column move must release the back-board flag");
     }
 }

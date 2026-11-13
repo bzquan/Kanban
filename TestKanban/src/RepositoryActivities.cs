@@ -16,7 +16,7 @@ namespace UnitTest
         public void Setup()
         {
             dbClient = new DBClient();
-            dbClient.DBName = "TestDB";
+            dbClient.DBName = TestDb.Name;
             dbClient.MongoDBClient.DropDatabase(dbClient.DBName);
 
             dbActivities = new DBActivities(dbClient);

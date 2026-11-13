@@ -19,9 +19,12 @@ public static class TestDatabase
 
     public static DBClient NewClient() => new DBClient(DBHost, DBName);
 
-    /// <summary>kanban_test を Drop して作り直す(Drop対象は kanban_test のみ)。</summary>
+    /// <summary>kanban_test を Drop して作り直す(Drop対象は kanban_test のみ)。
+    /// ホスト起動が残した ConfigOverrides(プロセス全体共有の静的辞書)もここで空にし、
+    /// ホストを起動しないテストが前のテストの設定漏れに依存しないようにする(最終レビュー指摘)。</summary>
     public static void Reset()
     {
+        Kanban.Util.ConfigOverrides.Values.Clear();
         var mongo = new MongoClient("mongodb://" + DBHost);
         mongo.DropDatabase(DBName);
         var activities = new DBActivities(NewClient());

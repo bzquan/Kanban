@@ -154,6 +154,32 @@ public class CardsReadEndpointTest
             cards.Select(c => c.StateChangedDate).ToList());
     }
 
+    // ---- Task 3 で約束した挙動証跡(台帳 Ruling で先送りになっていたもの): Kanban:LimitNum4QueringLastProcess
+    // の上書きが実際に下流(DBCards の最終列Done取得)で消費されること。既定20と区別できる値 3 を要求する。
+    [TestMethod]
+    public async Task GetCards_LastColumnDone_RespectsLimitOverrideOf3()
+    {
+        var baseDate = new DateTime(2026, 1, 1);
+        await InsertCards(Enumerable.Range(0, 25)
+                                    .Select(i => NewCard($"done {i}", seqNo: i, step: 4, wip: false,
+                                                          stateChangedDate: baseDate.AddMinutes(i)))
+                                    .ToArray());
+
+        using var app = new WebApplicationFactory<Program>().WithWebHostBuilder(b =>
+        {
+            b.UseSetting("Kanban:DB_HOST", TestDatabase.DBHost);
+            b.UseSetting("Kanban:DB_NAME", TestDatabase.DBName);
+            b.UseSetting("Kanban:LimitNum4QueringLastProcess", "3");
+        });
+        var resp = await app.CreateClient()
+                            .GetAsync($"/api/boards/{_boardId}/cards?processStepSeqNo=4&isWip=false&onBoard=front");
+        Assert.AreEqual(HttpStatusCode.OK, resp.StatusCode);
+        var cards = (await resp.Content.ReadFromJsonAsync<List<CardDto>>())!;
+
+        Assert.HasCount(3, cards);
+        Assert.AreEqual("done 24", cards[0].Title); // StateChangedDate 降順は維持
+    }
+
     // ---- 错误系: ボードid不正→400、未在→404(ボード読み取りと共通の振る舞い) ----
     [TestMethod]
     public async Task GetCards_InvalidBoardId_Returns400()
