@@ -86,8 +86,12 @@ export const boardsApi = {
 
   /**
    * Replace the board's process steps (Task 9). Callers send the FULL array
-   * with phaseSeqNo renumbered 0..n-1 — the WPF-compatible invariants
-   * (≥3 steps, no column with cards removed) are enforced server-side.
+   * where the ARRAY ORDER is the new display order and every entry keeps its
+   * ORIGINAL phaseSeqNo as the column identity — missing identities delete
+   * (guarded), identities ≥ the current count add; the server itself
+   * compacts SeqNo to 0..n-1 and enforces the WPF-compatible invariants
+   * (≥3 steps, no column with cards removed). Renumbering client-side would
+   * rotate labels over unmoved cards (see ProcessStepEditor's toSaveBody).
    * Rejects with ApiError: 400 bad payload, 404 board missing, 409 guard.
    */
   async updateSteps(id: string, steps: ProcessStepDto[]): Promise<BoardDto> {

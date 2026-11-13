@@ -17,9 +17,11 @@ import {
 
 import ProcessStepEditor, { type ReorderFn } from './ProcessStepEditor'
 
-// Task 9: process-step editor — PUT body contract (full renumbered array),
-// cycle-time radio invariant (at most one start, one end — or neither),
-// remove guard at the last step, and the 409 conflict flow.
+// Task 9: process-step editor — PUT body contract (full array in display
+// order, original phaseSeqNo as column identity per
+// BoardCommandService.UpdateProcessStepsAsync), cycle-time radio invariant
+// (at most one start, one end — or neither), remove guard at the last step,
+// and the 409 conflict flow.
 
 function step(
   phaseSeqNo: number,
@@ -298,6 +300,37 @@ it('409 from the server renders the localized conflict text and refetches the st
   await user.click(screen.getByTestId('step-save-button'))
   await waitFor(() => expect(putCalls()).toHaveLength(2))
   expect(screen.queryByTestId('process-step-error')).not.toBeInTheDocument()
+})
+
+it('409 refetch reseeds the add-identity allocator: Add after refetch cannot collide with fetched identities', async () => {
+  // Two-column board: saving trips the server's <3 guard (409), and the
+  // refetch lands THREE columns with identities 0..2. The allocator seeded
+  // at mount (2) is stale — Add after the refetch must emit an identity
+  // above every fetched one, or the next PUT carries a duplicate identity
+  // and the server answers 400 "duplicate PhaseSeqNo".
+  let guardTrips = true
+  installFetch({
+    'GET /api/boards': () => [boardWith([step(0, 'S0'), step(1, 'S1'), step(2, 'S2')])],
+    'PUT /api/boards/b-1/process-steps': () =>
+      guardTrips ? new Response(null, { status: 409 }) : boardWith([]),
+  })
+  renderEditor(boardWith([step(0, 'A0'), step(1, 'A1')]))
+  await screen.findByTestId('step-name-0')
+
+  const user = userEvent.setup()
+  await user.click(screen.getByTestId('step-save-button'))
+  // Refetch replaced the local rows with the server's three columns.
+  await waitFor(() => expect(screen.getByTestId('step-name-2')).toHaveValue('S2'))
+
+  guardTrips = false
+  await user.click(screen.getByTestId('step-add-button'))
+  await user.click(screen.getByTestId('step-save-button'))
+  await waitFor(() => expect(putCalls()).toHaveLength(2))
+  const body = putCalls()[1].body as ProcessStepDto[]
+  expect(body).toHaveLength(4)
+  expect(Number(body[3].phaseSeqNo)).toBeGreaterThanOrEqual(3)
+  const identities = body.map((s) => Number(s.phaseSeqNo))
+  expect(new Set(identities).size).toBe(4) // no collision with fetched identities 0..2
 })
 
 // ---------------------------------------------- save pending + invalidation

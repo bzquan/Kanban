@@ -348,7 +348,15 @@ export default function ProcessStepEditor({
         setErrorText(t('ProcessStep_Conflict'))
         try {
           const fresh = (await boardsApi.list()).find((b) => b.id === id)
-          setSteps(bySeqNo(fresh?.processSteps ?? []))
+          const fetched = bySeqNo(fresh?.processSteps ?? [])
+          setSteps(fetched)
+          // Reseed the allocator: the refetched state may carry identities at
+          // or above the counter seeded at mount, and a later Add must never
+          // emit a duplicate identity (server would 400).
+          nextFreshSeq.current = Math.max(
+            nextFreshSeq.current,
+            ...fetched.map((s) => intVal(s.phaseSeqNo) + 1),
+          )
         } catch {
           // Re-read failed too — the conflict notice stands; the dialog
           // stays open and usable.
