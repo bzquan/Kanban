@@ -21,44 +21,77 @@ public class SpaFallbackTest
 
     private WebApplicationFactory<Program> _app = null!;
     private HttpClient _client = null!;
-    private string? _createdPlaceholder; // このフィクスチャが作ったファイルだけを削除する
+    private string? _createdPlaceholder;   // このフィクスチャが作ったファイルだけを削除する
+    private string? _createdWwwrootDir;    // 同上、ディレクトリ(缺失時に作った場合のみ)
 
     [TestInitialize]
     public void Setup()
     {
         TestDatabase.Reset();
+        // ホスト起動「前」に wwwroot を用意する: StaticFileMiddleware は起動時に
+        // PhysicalFileProvider を実体化するため、wwwroot ディレクトリ缺失だと
+        // CreateClient()(ホスト起動)が DirectoryNotFoundException で落ちる(レビュー指摘・実証済)。
+        ProvisionSpaBeforeHost();
         _app = new WebApplicationFactory<Program>().WithWebHostBuilder(b =>
         {
             b.UseSetting("Kanban:DB_HOST", TestDatabase.DBHost);
             b.UseSetting("Kanban:DB_NAME", TestDatabase.DBName);
         });
-        _client = _app.CreateClient(); // ホスト起動(= ContentRootPath 確定)
-        _createdPlaceholder = ProvisionSpaIndex(_app);
+        _client = _app.CreateClient();
     }
 
     [TestCleanup]
     public void Cleanup()
     {
+        // Setup が途中で失敗した場合(_client/_app 未代入)でも NRE にしない
         if (_createdPlaceholder is not null)
         {
             try { File.Delete(_createdPlaceholder); } catch (IOException) { }
             _createdPlaceholder = null;
         }
-        _client.Dispose();
-        _app.Dispose();
+        if (_createdWwwrootDir is not null)
+        {
+            try
+            {
+                if (Directory.Exists(_createdWwwrootDir) && Directory.GetFileSystemEntries(_createdWwwrootDir).Length == 0)
+                    Directory.Delete(_createdWwwrootDir);
+            }
+            catch (IOException) { }
+            _createdWwwrootDir = null;
+        }
+        if (_client is not null) _client.Dispose();
+        if (_app is not null) _app.Dispose();
     }
 
-    /// <summary>ホスト起動済みの factory から ContentRoot/wwwroot/index.html を確認し、
-    /// 缺失時のみプレースホルダを作ってそのパスを返す(実ビルドがあれば触らず null)。</summary>
-    private static string? ProvisionSpaIndex(WebApplicationFactory<Program> factory)
+    /// <summary>ホスト起動前に、ホストと同じになるディレクトリ(= Kanban.Api/wwwroot)へ
+    /// ディレクトリ+プレースホルダをプロビジョンする。存在するものは触らない(exists-don't-clobber)。
+    /// 起動前なので host から ContentRootPath を引けない → テストアセンブリから
+    /// 上へ辿ってリポジトリルートの Kanban.Api を特定する(WebApplicationFactory が決める
+    /// content root と同じ場所になる)。</summary>
+    private void ProvisionSpaBeforeHost()
     {
-        var env = factory.Services.GetRequiredService<IWebHostEnvironment>();
-        var wwwroot = env.WebRootPath ?? Path.Combine(env.ContentRootPath, "wwwroot");
+        var wwwroot = Path.Combine(LocateRepoRoot(), "Kanban.Api", "wwwroot");
+        if (!Directory.Exists(wwwroot))
+        {
+            Directory.CreateDirectory(wwwroot);
+            _createdWwwrootDir = wwwroot;
+        }
         var index = Path.Combine(wwwroot, "index.html");
-        if (File.Exists(index)) return null;
-        Directory.CreateDirectory(wwwroot);
-        File.WriteAllText(index, PlaceholderHtml);
-        return index;
+        if (!File.Exists(index))
+        {
+            File.WriteAllText(index, PlaceholderHtml);
+            _createdPlaceholder = index;
+        }
+    }
+
+    private static string LocateRepoRoot()
+    {
+        for (var dir = new DirectoryInfo(AppContext.BaseDirectory); dir is not null; dir = dir.Parent!)
+        {
+            if (File.Exists(Path.Combine(dir.FullName, "Kanban.Api", "Kanban.Api.csproj")))
+                return dir.FullName;
+        }
+        throw new DirectoryNotFoundException($"Kanban.Api project not found above {AppContext.BaseDirectory}");
     }
 
     private static async Task AssertHtmlAsync(HttpResponseMessage resp)
@@ -130,11 +163,12 @@ public class SpaFallbackTest
         var env = _app.Services.GetRequiredService<IWebHostEnvironment>();
         var wwwroot = env.WebRootPath ?? Path.Combine(env.ContentRootPath, "wwwroot");
         var index = Path.Combine(wwwroot, "index.html");
-        var backup = index + ".r10-backup";
+        // 実行クラッシュ残骸の上書きを避けるため一意サフィックス(Minor 2)
+        var backup = index + $".r10-backup-{Guid.NewGuid():N}";
         var moved = false;
         try
         {
-            if (File.Exists(index)) { File.Move(index, backup, overwrite: true); moved = true; }
+            if (File.Exists(index)) { File.Move(index, backup); moved = true; }
             Assert.IsFalse(File.Exists(index), "test precondition: index.html must be absent here");
 
             using var fresh = new WebApplicationFactory<Program>().WithWebHostBuilder(b =>
