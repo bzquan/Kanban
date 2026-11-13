@@ -314,6 +314,27 @@ it('Kanban/Chart toolbar toggle swaps the canvas for the metrics panel and back'
   expect(screen.queryByTestId('metrics-panel')).not.toBeInTheDocument()
 })
 
+// --------------------------------- final review Finding 1: visible create failure
+
+it('add-card POST failure surfaces the localized error and opens no dialog', async () => {
+  installFetch({
+    'GET /api/boards': () => [board],
+    'GET /api/boards/b-1/cards': () => [],
+    'POST /api/cards': () => new Response('boom', { status: 500 }),
+  })
+  renderPage()
+  await screen.findByText('Development(Limit:5)')
+
+  const user = userEvent.setup()
+  await user.click(screen.getByTestId('add-card-1-wip'))
+
+  // The user must know the card was NOT created server-side: a localized
+  // error line, not silence.
+  const line = await screen.findByTestId('add-card-error')
+  expect(line).toHaveTextContent('Failed to create the work item') // BoardPage_AddCardError under en
+  expect(screen.queryByTestId('card-edit-dialog')).not.toBeInTheDocument()
+})
+
 it('card fetch failures keep the toolbar and column chrome intact', async () => {
   installFetch({
     'GET /api/boards': () => [board],

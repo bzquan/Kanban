@@ -135,6 +135,9 @@
   <data name="BoardPage_LoadError" xml:space="preserve">
     <value>看板加载失败</value>
   </data>
+  <data name="BoardPage_AddCardError" xml:space="preserve">
+    <value>创建工作项失败</value>
+  </data>
   <data name="Board_DetailFormat" xml:space="preserve">
     <value>说明：{0}</value>
   </data>
@@ -146,6 +149,15 @@
   </data>
   <data name="BoardList_StepsFormat" xml:space="preserve">
     <value>步骤数：{0}</value>
+  </data>
+  <data name="BoardList_LoadError" xml:space="preserve">
+    <value>看板列表加载失败</value>
+  </data>
+  <data name="BoardList_CreateError" xml:space="preserve">
+    <value>创建看板失败</value>
+  </data>
+  <data name="BoardList_DeleteError" xml:space="preserve">
+    <value>删除看板失败</value>
   </data>
   <data name="CardEdit_Blocked" xml:space="preserve">
     <value>堵塞</value>

@@ -1,5 +1,5 @@
 import i18n from 'i18next'
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Route, Routes, useParams } from 'react-router'
 import { afterEach, beforeEach, expect, it } from 'vitest'
@@ -223,4 +223,62 @@ it('nav button (ToolTip_ReleaseNote) navigates to /about', async () => {
   expect(nav).toHaveTextContent('Release note') // ToolTip_ReleaseNote under en
   await user.click(nav)
   expect(await screen.findByTestId('about-page')).toBeInTheDocument()
+})
+
+// ------------------------------------------- final review Finding 1: visible failures
+
+it('list GET 500 renders the localized load error with a retry button, not the empty state', async () => {
+  installFetch({ 'GET /api/boards': () => new Response('boom', { status: 500 }) })
+  renderPage()
+
+  // With the API down the user must not conclude their boards are gone:
+  // error + retry (mirroring BoardPage's board-error pattern), never the
+  // "no boards" empty state.
+  const error = await screen.findByTestId('board-list-error')
+  expect(error).toHaveTextContent('Failed to load boards') // BoardList_LoadError under en
+  expect(screen.queryByTestId('board-list-empty')).not.toBeInTheDocument()
+
+  // Retry re-runs the query: a second GET lands at the API.
+  const user = userEvent.setup()
+  await user.click(within(error).getByTestId('board-list-retry-button'))
+  await waitFor(() =>
+    expect(
+      calls.filter((c) => c.method === 'GET' && c.url === '/api/boards'),
+    ).toHaveLength(2),
+  )
+})
+
+it('New-board POST failure surfaces the localized create error and stays on the list', async () => {
+  installFetch({
+    'GET /api/boards': () => [],
+    'POST /api/boards': () => new Response('boom', { status: 500 }),
+  })
+  renderPage()
+
+  const user = userEvent.setup()
+  await user.click(await screen.findByTestId('new-board-button'))
+
+  const line = await screen.findByTestId('board-create-error')
+  expect(line).toHaveTextContent('Failed to create the board') // BoardList_CreateError under en
+  // No silent navigate-away: still on the list.
+  expect(screen.queryByTestId('board-page')).not.toBeInTheDocument()
+})
+
+it('delete failure surfaces the localized error and keeps the confirm dialog open', async () => {
+  installFetch({
+    'GET /api/boards': () => [alpha],
+    'DELETE /api/boards/b-1': () => new Response('boom', { status: 500 }),
+  })
+  renderPage()
+
+  const user = userEvent.setup()
+  await user.click(await screen.findByTestId('board-row-delete-b-1'))
+  await user.click(await screen.findByTestId('confirm-delete-button'))
+
+  const line = await screen.findByTestId('board-delete-error')
+  expect(line).toHaveTextContent('Failed to delete the board') // BoardList_DeleteError under en
+  // The dialog stays up (deleteTarget unchanged) and the row is untouched:
+  // no invalidate happened on the failed delete.
+  expect(screen.getByTestId('confirm-delete-button')).toBeInTheDocument()
+  expect(screen.getByTestId('board-row-b-1')).toBeInTheDocument()
 })

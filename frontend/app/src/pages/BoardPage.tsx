@@ -277,6 +277,9 @@ export default function BoardPage({ onDragHandlesRef }: BoardPageProps = {}) {
   const [isZoomed, setIsZoomed] = useState(() => readStored(ZOOMED_KEY) === 'true')
   // Task 8: the card currently open in the edit dialog (null = closed).
   const [editing, setEditing] = useState<CardDto | null>(null)
+  // Final review Finding 1: a failed card create must tell the user the card
+  // was NOT created server-side; null = nothing to show.
+  const [addCardError, setAddCardError] = useState<string | null>(null)
   // Task 10: Kanban/Chart segmented toggle. Local-only state — leaving the
   // chart unmounts MetricsPanel (its queries are disposable), and the view
   // always starts on the kanban like the WPF board page.
@@ -292,13 +295,16 @@ export default function BoardPage({ onDragHandlesRef }: BoardPageProps = {}) {
           processStepSeqNo: step,
           isWip: side === 'wip',
         })
+        setAddCardError(null)
         void queryClient.invalidateQueries({ queryKey: ['cards'] })
         setEditing(created)
       } catch {
-        // Board stays usable; a failed create just opens no dialog.
+        // Board stays usable, but the failure is surfaced: the user must know
+        // the card was not created server-side (Finding 1).
+        setAddCardError(t('BoardPage_AddCardError'))
       }
     },
-    [boardId, queryClient],
+    [boardId, queryClient, t],
   )
 
   const containerRef = useRef<HTMLDivElement>(null)
@@ -503,6 +509,12 @@ export default function BoardPage({ onDragHandlesRef }: BoardPageProps = {}) {
           {t('BoardPage_ViewChart')}
         </Button>
       </Toolbar>
+
+      {addCardError !== null && (
+        <Typography color="error" data-testid="add-card-error" sx={{ mb: 1 }}>
+          {addCardError}
+        </Typography>
+      )}
 
       {view === 'chart' && <MetricsPanel boardId={boardId} />}
       {view === 'kanban' && (

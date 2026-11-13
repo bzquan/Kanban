@@ -1,4 +1,5 @@
 import DeleteIcon from '@mui/icons-material/Delete'
+import RefreshIcon from '@mui/icons-material/Refresh'
 import TuneIcon from '@mui/icons-material/Tune'
 import {
   Box,
@@ -42,23 +43,35 @@ export default function BoardListPage() {
   // conditional mount is what makes the editor re-prefill per board.
   const [stepsTarget, setStepsTarget] = useState<BoardDto | null>(null)
 
+  // Final review Finding 1: a server failure on the app's front door must be
+  // visible — a failed create/delete never spins silently. Each line is the
+  // already-localized message; null (and clearing on the next attempt) hides it.
+  const [createError, setCreateError] = useState<string | null>(null)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+
   // The server localizes the new board's title/description from uiLanguage.
   const createMutation = useMutation({
     mutationFn: () => boardsApi.create(i18n.language),
     onSuccess: (board) => {
+      setCreateError(null)
       // Invalidate alongside the navigate-away: with a non-zero staleTime the
       // list would otherwise stay stale when we navigate back to it later.
       void queryClient.invalidateQueries({ queryKey: ['boards'] })
       navigate(`/boards/${board.id}`)
     },
+    onError: () => setCreateError(t('BoardList_CreateError')),
   })
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => boardsApi.remove(id),
     onSuccess: () => {
       setDeleteTarget(null)
+      setDeleteError(null)
       void queryClient.invalidateQueries({ queryKey: ['boards'] })
     },
+    // Failure keeps the confirm dialog open (deleteTarget unchanged) with the
+    // error line inside it — the user can retry or close deliberately.
+    onError: () => setDeleteError(t('BoardList_DeleteError')),
   })
 
   const openBoard = (id: string): void => {
@@ -84,13 +97,41 @@ export default function BoardListPage() {
           variant="contained"
           data-testid="new-board-button"
           disabled={createMutation.isPending}
-          onClick={() => createMutation.mutate()}
+          onClick={() => {
+            setCreateError(null)
+            createMutation.mutate()
+          }}
         >
           {t('ToolTip_AddBoard')}
         </Button>
       </Box>
 
-      {boards.length === 0 ? (
+      {createError !== null && (
+        <Typography color="error" data-testid="board-create-error" sx={{ mb: 1 }}>
+          {createError}
+        </Typography>
+      )}
+
+      {boardsQuery.isError ? (
+        /* Server failure on the front door: mirror BoardPage's board-error
+           pattern (localized error + action) so a 5xx never reads as
+           "no boards". Retry re-runs the query in place. */
+        <Box
+          data-testid="board-list-error"
+          sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
+        >
+          <Typography color="error">{t('BoardList_LoadError')}</Typography>
+          <Box>
+            <Button
+              data-testid="board-list-retry-button"
+              startIcon={<RefreshIcon />}
+              onClick={() => void boardsQuery.refetch()}
+            >
+              {t('ToolTip_Refresh')}
+            </Button>
+          </Box>
+        </Box>
+      ) : boards.length === 0 ? (
         <Typography data-testid="board-list-empty" color="text.secondary">
           {t('BoardList_Empty')}
         </Typography>
@@ -117,7 +158,10 @@ export default function BoardListPage() {
                       edge="end"
                       aria-label={t('ToolTip_Delete')}
                       data-testid={`board-row-delete-${id}`}
-                      onClick={() => setDeleteTarget(board)}
+                      onClick={() => {
+                        setDeleteError(null)
+                        setDeleteTarget(board)
+                      }}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -158,6 +202,11 @@ export default function BoardListPage() {
           <Typography variant="body2">
             {format0(t('Message_DeleteComfirmQuesion'), deleteTarget?.title ?? '')}
           </Typography>
+          {deleteError !== null && (
+            <Typography variant="body2" color="error" data-testid="board-delete-error">
+              {deleteError}
+            </Typography>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteTarget(null)}>{t('View_Close')}</Button>
