@@ -135,7 +135,7 @@ it('intVal parses "7", 7 and undefined to 7, 7, 0', …);
 - Create: `scripts/export-resx.mjs`, `src/i18n/index.ts`, `src/locales/{en,ja,zh}.json`, test `src/i18n/i18n.test.ts`
 
 **Interfaces:**
-- Consumes: `Kanban/src/View/Properties/Resources.resx` (+`.ja-JP`, `.zh-CN`; 149 `<data>` entries each).
+- Consumes: `Kanban/src/View/Properties/Resources.resx` (+`.ja-JP`, `.zh-CN`; 145 real `<data>` entries each — raw grep counts 149 because 4 sample entries sit inside the ResX schema header comment).
 - Produces: `initI18n(): Promise<void>` (called in `main.tsx` before render), `setLanguage(lang: 'en'|'ja'|'zh')`, `detectLanguage(): 'en'|'ja'|'zh'`. JSON shape: flat `{ "key": "text" }` under a single `ui` namespace. `kanban.lang` localStorage key stores manual choice.
 
 - [ ] **Step 1: Export script** `scripts/export-resx.mjs`: parse the three `.resx` with regex on `<data name="…">…<value>…</value>` (entities decoded; ignore comments), write `src/locales/{en,ja,zh}.json`. Add npm script `"i18n:export": "node scripts/export-resx.mjs"`.
