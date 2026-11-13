@@ -19,11 +19,30 @@ Kanban.Model.Card.CardRepository = app.Services.GetRequiredService<Kanban.Model.
 Kanban.Model.Activity.ActivityRepository = app.Services.GetRequiredService<Kanban.Model.IActivityRepository>();
 Kanban.Model.DevProcess.Localization = app.Services.GetRequiredService<Kanban.Util.ILocalization>();
 
+// SPA同梱(1プロセスデプロイ): vite build の出力先 wwwroot(Task 1, gitignore=台帳R2)。
+// /assets/* 等の静的ファイルと、一致なしのディープリンクを index.html へ返す。
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapGet("/api/health", () => Results.Ok(new { status = "ok" }));
 app.MapBoardsEndpoints();
 app.MapCardsEndpoints();
 app.MapMetricsEndpoints();
 app.MapOpenApi();
+
+// 単一フォールバック(台帳 R10):
+//  - /api/* の未一致は決して HTML を返さない(404/400 の JSON 意味論を維持)
+//  - wwwroot は gitignore のため存在しないクローン/CI がある → Results.File の FileNotFound→500 を
+//    避けますリクエスト時に File.Exists でガードし 404 を返す
+//  - パスは ContentRootPath 基準(dotnet run の起動CWDに依存しない)
+var spaIndexPath = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "index.html");
+Func<HttpContext, IResult> spaFallback = context =>
+    context.Request.Path.StartsWithSegments("/api")
+        ? Results.NotFound()
+        : File.Exists(spaIndexPath)
+            ? Results.File(spaIndexPath, "text/html")
+            : Results.NotFound();
+app.MapFallback(spaFallback);
 
 app.Run();
 
