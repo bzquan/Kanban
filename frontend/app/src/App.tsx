@@ -18,7 +18,8 @@ function Shell() {
       <AppBar position="static" data-testid="app-bar">
         <Toolbar>
           <Typography variant="h6" component="h1" sx={{ flexGrow: 1 }}>
-            {t('app.title')}
+            {/* Main_Title is the WPF window title key (Kanban / 看板 / 看板) */}
+            {t('Main_Title')}
           </Typography>
         </Toolbar>
       </AppBar>

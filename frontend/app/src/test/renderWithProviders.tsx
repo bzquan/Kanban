@@ -4,6 +4,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MemoryRouter } from 'react-router'
 import type { ReactElement } from 'react'
 
+import { initI18n } from '../i18n'
+
 const theme = createTheme()
 
 interface RenderWithProvidersOptions {
@@ -19,6 +21,9 @@ export function renderWithProviders(
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   })
+  // Idempotent and synchronous here (initImmediate: false in src/i18n), so t()
+  // resolves in the render below — component tests get real translations.
+  void initI18n()
   return render(
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
