@@ -80,7 +80,7 @@ npm i -D vitest jsdom @testing-library/react @testing-library/jest-dom @testing-
 
 If `npm create vite` prompts interactively, accept defaults (React, TypeScript). One MUI install only: `@mui/material @emotion/react @emotion/styled @mui/icons-material`.
 
-- [ ] **Step 2: Config** — `vite.config.ts`: `server.proxy['/api'] = 'http://localhost:5000'`; `build.outDir = '../Kanban.Api/wwwroot'` with `emptyOutDir: true` (harmless until Task 12; keep a comment pointing to Task 12). `vitest.config.ts`: `environment: 'jsdom'`, `globals: true`, setup file importing `@testing-library/jest-dom`.
+- [ ] **Step 2: Config** — `vite.config.ts`: `server.proxy['/api'] = 'http://localhost:5000'`; `build.outDir = '../../Kanban.Api/wwwroot'` (two levels — Vite resolves outDir against the project root `frontend/app/`; erratum R5) with `emptyOutDir: true` (harmless until Task 12; keep a comment pointing to Task 12). `vitest.config.ts`: `environment: 'jsdom'`, `globals: true`, setup file importing `@testing-library/jest-dom`.
 - [ ] **Step 3: Write the failing test** `src/App.test.tsx`:
 
 ```tsx
