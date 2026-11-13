@@ -583,4 +583,19 @@
   <data name="ToolTip_ReplicateCard" xml:space="preserve">
     <value>复制生成新卡片</value>
   </data>
+  <data name="board.editSteps" xml:space="preserve">
+    <value>流程步骤设置</value>
+  </data>
+  <data name="ProcessStep_Conflict" xml:space="preserve">
+    <value>其他用户修改了开发步骤，已重新加载最新的开发步骤。</value>
+  </data>
+  <data name="ProcessStep_CannotRemoveLastStep" xml:space="preserve">
+    <value>无法删除最后一个开发步骤</value>
+  </data>
+  <data name="ProcessStep_SaveError" xml:space="preserve">
+    <value>开发步骤保存失败</value>
+  </data>
+  <data name="ProcessStep_DragHandle" xml:space="preserve">
+    <value>重新排序</value>
+  </data>
 </root>

@@ -1,4 +1,5 @@
 import DeleteIcon from '@mui/icons-material/Delete'
+import TuneIcon from '@mui/icons-material/Tune'
 import {
   Box,
   Button,
@@ -20,6 +21,7 @@ import { useNavigate } from 'react-router'
 
 import { boardsApi } from '../api/client'
 import type { BoardDto } from '../api/types'
+import ProcessStepEditor from '../components/ProcessStepEditor'
 import { format0 } from '../util/format'
 
 // localStorage key the board page (and later tasks) read to know where we came from.
@@ -35,6 +37,10 @@ export default function BoardListPage() {
 
   // Board currently being confirmed for deletion; null closes the dialog.
   const [deleteTarget, setDeleteTarget] = useState<BoardDto | null>(null)
+
+  // Board whose process-step editor is open (Task 9); null unmounts it —
+  // conditional mount is what makes the editor re-prefill per board.
+  const [stepsTarget, setStepsTarget] = useState<BoardDto | null>(null)
 
   // The server localizes the new board's title/description from uiLanguage.
   const createMutation = useMutation({
@@ -91,14 +97,24 @@ export default function BoardListPage() {
                 data-testid={`board-row-${id}`}
                 disablePadding
                 secondaryAction={
-                  <IconButton
-                    edge="end"
-                    aria-label={t('ToolTip_Delete')}
-                    data-testid={`board-row-delete-${id}`}
-                    onClick={() => setDeleteTarget(board)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                  <Box sx={{ display: 'flex' }}>
+                    <IconButton
+                      edge="end"
+                      aria-label={t('board.editSteps')}
+                      data-testid={`board-row-steps-${id}`}
+                      onClick={() => setStepsTarget(board)}
+                    >
+                      <TuneIcon />
+                    </IconButton>
+                    <IconButton
+                      edge="end"
+                      aria-label={t('ToolTip_Delete')}
+                      data-testid={`board-row-delete-${id}`}
+                      onClick={() => setDeleteTarget(board)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
                 }
               >
                 <ListItemButton onClick={() => openBoard(id)}>
@@ -150,6 +166,14 @@ export default function BoardListPage() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {stepsTarget !== null && (
+        <ProcessStepEditor
+          board={stepsTarget}
+          open
+          onClose={() => setStepsTarget(null)}
+        />
+      )}
     </Box>
   )
 }

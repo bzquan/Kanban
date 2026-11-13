@@ -10,6 +10,7 @@ import type {
   CfdDto,
   CycleTimeDto,
   MoveCardRequest,
+  ProcessStepDto,
   ThroughputDto,
   VelocityDto,
 } from './types'
@@ -81,6 +82,20 @@ export const boardsApi = {
       params: { path: { id } },
     })
     ensureOk(response)
+  },
+
+  /**
+   * Replace the board's process steps (Task 9). Callers send the FULL array
+   * with phaseSeqNo renumbered 0..n-1 — the WPF-compatible invariants
+   * (≥3 steps, no column with cards removed) are enforced server-side.
+   * Rejects with ApiError: 400 bad payload, 404 board missing, 409 guard.
+   */
+  async updateSteps(id: string, steps: ProcessStepDto[]): Promise<BoardDto> {
+    const { data, response } = await api.PUT('/api/boards/{id}/process-steps', {
+      params: { path: { id } },
+      body: steps,
+    })
+    return unwrap(data, response)
   },
 }
 

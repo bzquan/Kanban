@@ -64,6 +64,36 @@ it('boardsApi.create sends {uiLanguage} and throws ApiError on 400', async () =>
   ])
 })
 
+it('boardsApi.updateSteps PUTs the full steps array and unwraps the BoardDto', async () => {
+  const steps = [
+    { phaseSeqNo: 0, name: 'A', labelColor: 'Aqua', wipTitle: 'WIP', doneTitle: 'Done', isStartOfCycleTime: true, isEndOfCycleTime: false },
+    { phaseSeqNo: 1, name: 'B', labelColor: 'Teal', wipTitle: 'WIP', doneTitle: 'Done', isStartOfCycleTime: false, isEndOfCycleTime: true },
+  ]
+  const updated = { id: 'b1', seqNo: '1', title: 'Board 1', processSteps: steps }
+  installFetch({ 'PUT /api/boards/b1/process-steps': () => updated })
+
+  const result = await boardsApi.updateSteps('b1', steps)
+
+  expect(result).toEqual(updated)
+  expect(calls).toEqual([
+    { method: 'PUT', url: '/api/boards/b1/process-steps', body: steps },
+  ])
+})
+
+it('boardsApi.updateSteps throws ApiError with status 409 on conflict', async () => {
+  installFetch({
+    'PUT /api/boards/b1/process-steps': () =>
+      new Response(null, { status: 409 }),
+  })
+
+  const error = await boardsApi
+    .updateSteps('b1', [{ phaseSeqNo: 0 }])
+    .catch((e: unknown) => e)
+
+  expect(error).toBeInstanceOf(ApiError)
+  expect((error as ApiError).status).toBe(409)
+})
+
 it('intVal parses "7", 7 and undefined to 7, 7, 0', () => {
   expect(intVal('7')).toBe(7)
   expect(intVal(7)).toBe(7)

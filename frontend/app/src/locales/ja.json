@@ -104,6 +104,10 @@
   "Metrics_TotalDate": "日数:",
   "Metrics_UnknownWeeks": "∞週間",
   "Metrics_Weeks": "週間",
+  "ProcessStep_CannotRemoveLastStep": "最後の作業手順は削除できません",
+  "ProcessStep_Conflict": "他のユーザーが作業手順を変更したため、最新の手順を読み込み直しました。",
+  "ProcessStep_DragHandle": "並べ替え",
+  "ProcessStep_SaveError": "作業手順の保存に失敗しました",
   "Process_BackLogTitle": "Backlog(Limit:∞)",
   "Process_DevelopmentTitle": "開発(Limit:5)",
   "Process_DoneTitle": "完了",
@@ -153,5 +157,6 @@
   "ToolTip_SwitchBoardFrontAndBack": "看板表裏の切り替え",
   "ToolTip_WorkedDays": "実稼働日数",
   "ToolTip_Zoom": "拡大/縮小",
-  "View_Close": "閉じる"
+  "View_Close": "閉じる",
+  "board.editSteps": "プロセスステップ設定"
 }

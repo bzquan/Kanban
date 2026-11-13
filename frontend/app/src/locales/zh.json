@@ -104,6 +104,10 @@
   "Metrics_TotalDate": "日数:",
   "Metrics_UnknownWeeks": "∞周",
   "Metrics_Weeks": "周",
+  "ProcessStep_CannotRemoveLastStep": "无法删除最后一个开发步骤",
+  "ProcessStep_Conflict": "其他用户修改了开发步骤，已重新加载最新的开发步骤。",
+  "ProcessStep_DragHandle": "重新排序",
+  "ProcessStep_SaveError": "开发步骤保存失败",
   "Process_BackLogTitle": "Backlog(Limit:∞)",
   "Process_DevelopmentTitle": "开发(Limit:5)",
   "Process_DoneTitle": "已完成",
@@ -153,5 +157,6 @@
   "ToolTip_SwitchBoardFrontAndBack": "切换正反面看板",
   "ToolTip_WorkedDays": "实际工作天数",
   "ToolTip_Zoom": "放大/缩小",
-  "View_Close": "关闭"
+  "View_Close": "关闭",
+  "board.editSteps": "流程步骤设置"
 }

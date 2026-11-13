@@ -583,4 +583,19 @@
   <data name="ToolTip_ReplicateCard" xml:space="preserve">
     <value>コピーして新規カードを作成</value>
   </data>
+  <data name="board.editSteps" xml:space="preserve">
+    <value>プロセスステップ設定</value>
+  </data>
+  <data name="ProcessStep_Conflict" xml:space="preserve">
+    <value>他のユーザーが作業手順を変更したため、最新の手順を読み込み直しました。</value>
+  </data>
+  <data name="ProcessStep_CannotRemoveLastStep" xml:space="preserve">
+    <value>最後の作業手順は削除できません</value>
+  </data>
+  <data name="ProcessStep_SaveError" xml:space="preserve">
+    <value>作業手順の保存に失敗しました</value>
+  </data>
+  <data name="ProcessStep_DragHandle" xml:space="preserve">
+    <value>並べ替え</value>
+  </data>
 </root>

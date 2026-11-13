@@ -17,7 +17,11 @@ const alpha: BoardDto = {
   title: 'Alpha',
   description: 'First board',
   developers: 'Ann;Bob',
-  processSteps: [{ phaseSeqNo: 1 }, { phaseSeqNo: 2 }, { phaseSeqNo: 3 }],
+  processSteps: [
+    { phaseSeqNo: 0, name: 'Backlog(Limit:∞)', wipTitle: 'In Progress', doneTitle: 'Done' },
+    { phaseSeqNo: 1, name: 'Development(Limit:5)', wipTitle: 'In Progress', doneTitle: 'Done', isStartOfCycleTime: true },
+    { phaseSeqNo: 2, name: 'Test(Limit:3)', wipTitle: 'In Progress', doneTitle: 'Done', isEndOfCycleTime: true },
+  ],
 }
 const beta: BoardDto = {
   id: 'b-2',
@@ -150,4 +154,40 @@ it('shows the localized empty state when the API returns no boards', async () =>
 
   const empty = await screen.findByTestId('board-list-empty')
   expect(empty).toHaveTextContent('No boards yet') // BoardList_Empty under en
+})
+
+it('row menu opens the process-step editor seeded with that board\'s steps', async () => {
+  installFetch({
+    'GET /api/boards': () => [alpha, beta],
+    'PUT /api/boards/b-1/process-steps': () => alpha,
+  })
+  renderPage()
+
+  const user = userEvent.setup()
+  // board.editSteps under en.
+  await user.click(await screen.findByTestId('board-row-steps-b-1'))
+
+  expect(await screen.findByTestId('process-step-editor')).toBeInTheDocument()
+  expect(screen.getByTestId('step-name-0')).toHaveValue('Backlog(Limit:∞)')
+  expect(screen.getByTestId('step-name-1')).toHaveValue('Development(Limit:5)')
+
+  await user.click(screen.getByTestId('step-save-button'))
+  await waitFor(() =>
+    expect(
+      calls.some(
+        (c) => c.method === 'PUT' && c.url === '/api/boards/b-1/process-steps',
+      ),
+    ).toBe(true),
+  )
+})
+
+it('row menu entry is localized under ja (プロセスステップ設定)', async () => {
+  void i18n.changeLanguage('ja')
+  installFetch({ 'GET /api/boards': () => [alpha] })
+  renderPage()
+
+  const user = userEvent.setup()
+  // IconButton exposes its aria-label as the accessible name.
+  await user.click(await screen.findByRole('button', { name: 'プロセスステップ設定' }))
+  expect(await screen.findByTestId('process-step-editor')).toBeInTheDocument()
 })

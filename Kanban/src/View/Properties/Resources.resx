@@ -583,4 +583,19 @@ Release date format is year month and day(e.g. 20191101、191101、1101)</value>
   <data name="ToolTip_ReplicateCard" xml:space="preserve">
     <value>Replicate card</value>
   </data>
+  <data name="board.editSteps" xml:space="preserve">
+    <value>Process steps</value>
+  </data>
+  <data name="ProcessStep_Conflict" xml:space="preserve">
+    <value>The process steps were changed by another user. The latest steps have been loaded.</value>
+  </data>
+  <data name="ProcessStep_CannotRemoveLastStep" xml:space="preserve">
+    <value>The last remaining process step cannot be removed</value>
+  </data>
+  <data name="ProcessStep_SaveError" xml:space="preserve">
+    <value>Failed to save the process steps</value>
+  </data>
+  <data name="ProcessStep_DragHandle" xml:space="preserve">
+    <value>Reorder</value>
+  </data>
 </root>

@@ -104,6 +104,10 @@
   "Metrics_TotalDate": "Days:",
   "Metrics_UnknownWeeks": "∞ weeks",
   "Metrics_Weeks": " weeks",
+  "ProcessStep_CannotRemoveLastStep": "The last remaining process step cannot be removed",
+  "ProcessStep_Conflict": "The process steps were changed by another user. The latest steps have been loaded.",
+  "ProcessStep_DragHandle": "Reorder",
+  "ProcessStep_SaveError": "Failed to save the process steps",
   "Process_BackLogTitle": "Backlog(Limit:∞)",
   "Process_DevelopmentTitle": "Development(Limit:5)",
   "Process_DoneTitle": "Done",
@@ -153,5 +157,6 @@
   "ToolTip_SwitchBoardFrontAndBack": "Switch front and back",
   "ToolTip_WorkedDays": "Worked Days",
   "ToolTip_Zoom": "Zoom In/Zoom Out",
-  "View_Close": "Close"
+  "View_Close": "Close",
+  "board.editSteps": "Process steps"
 }
