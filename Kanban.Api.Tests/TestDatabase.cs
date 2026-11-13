@@ -87,6 +87,48 @@ public static class TestDatabase
             Kanban.Repository.OnBoardFilter.All);
     }
 
+    public static MetricsQueryService NewMetricsQueryService()
+    {
+        EnsureWired();
+        return new MetricsQueryService(s_boardRepository!, s_cardRepository!, s_activityRepository!);
+    }
+
+    /// <summary>
+    /// (1,W)→(1,D)→(3,W)→(3,D) まで進んだリリース済みカードを作る(Task 7 フィクスチャ)。
+    /// 投入は CardCommandService 経由(Activity監査つきの本番と同じ経路)。
+    /// daysAgo=1 既定: 既存 BuildVelocity は窓の終端が当日00:00(正規化済み Date)のため、
+    /// 「今」リリースしたカードは当日の週窓から除外される(既存WPF動作)。前日に戻して
+    /// 「今週中リリース」を表現する(台帳 Ruling)。
+    /// </summary>
+    public static async Task<Kanban.Model.Card> SeedDoneCard(Kanban.Model.Board board, int storyPoints = 5, int daysAgo = 1)
+    {
+        var svc = NewCardCommandService();
+        var card = await svc.CreateCardAsync(board._id, processStepSeqNo: 1, isWip: true);
+        // 既存 CreateNewActivitiesAsync は 1呼出内で WorkingChangeDateTime を +5ms/件 未来へ進めるため、
+        // 数ms連続の move は前呼出の synth timestamps より Now が小さく並びが逆転する(既存Model意味論)。
+        // 連続 move 間に pacing を入れて実時間単調性を確保する(台帳 Ruling)。
+        await svc.MoveCardAsync(card._id, new MoveCardRequest { ProcessStepSeqNo = 1, IsWip = false, Index = 0 });
+        await Task.Delay(40);
+        await svc.MoveCardAsync(card._id, new MoveCardRequest { ProcessStepSeqNo = 3, IsWip = true, Index = 0 });
+        await Task.Delay(40);
+        await svc.MoveCardAsync(card._id, new MoveCardRequest { ProcessStepSeqNo = 3, IsWip = false, Index = 0 });
+        await svc.UpdateFieldsAsync(card._id, new CardPatch { StoryPoints = storyPoints });
+
+        if (daysAgo > 0)
+        {
+            var collection = NewClient().DB.GetCollection<Kanban.Repository.Activity>("Activities");
+            var activities = await (await collection.FindAsync(a => a.CardID == card._id)).ToListAsync();
+            foreach (var activity in activities)
+            {
+                await collection.UpdateOneAsync(
+                    a => a._id == activity._id,
+                    MongoDB.Driver.Builders<Kanban.Repository.Activity>.Update.Set(
+                        nameof(activity.StateChangedDate), activity.StateChangedDate.AddDays(-daysAgo)));
+            }
+        }
+        return card;
+    }
+
     /// <summary>カードの Activities を StateChangedDate 昇順で返す(Task 6/7 の監査証跡アサート用)。</summary>
     public static async Task<List<Kanban.Repository.Activity>> GetActivities(ObjectId cardId)
     {

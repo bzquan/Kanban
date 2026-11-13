@@ -73,7 +73,7 @@ public class CardCommandServiceTest
         // c を列先頭(index=0)へ並べ替え(同一列内 → Activityなし・SeqNoのみ変更・既存WPF同じ)
         await Svc().MoveCardAsync(c._id, new MoveCardRequest { ProcessStepSeqNo = 0, IsWip = true, Index = 0 });
 
-        Assert.AreEqual(cActivitiesBefore, (await TestDatabase.GetActivities(c._id)).Count);
+        Assert.HasCount(cActivitiesBefore, await TestDatabase.GetActivities(c._id));
         var column = await TestDatabase.GetColumnCards(_board, step: 0, wip: true);
         CollectionAssert.AreEqual(new[] { 0, 1, 2 }, column.Select(x => x.SeqNo).ToArray());
         Assert.AreEqual(c._id, column[0]._id);

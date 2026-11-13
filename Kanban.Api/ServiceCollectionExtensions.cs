@@ -52,6 +52,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<Kanban.Services.ILocalizationFactory, Kanban.Services.JsonLocalizationFactory>();
         services.AddSingleton<Kanban.Services.BoardCommandService>();
         services.AddSingleton<Kanban.Services.CardCommandService>();
+        services.AddSingleton<Kanban.Services.MetricsQueryService>();
 
         return services;
     }

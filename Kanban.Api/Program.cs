@@ -22,6 +22,7 @@ Kanban.Model.DevProcess.Localization = app.Services.GetRequiredService<Kanban.Ut
 app.MapGet("/api/health", () => Results.Ok(new { status = "ok" }));
 app.MapBoardsEndpoints();
 app.MapCardsEndpoints();
+app.MapMetricsEndpoints();
 app.MapOpenApi();
 
 app.Run();
