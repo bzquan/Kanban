@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useCallback } from 'react'
 import type { DragEndEvent } from '@dnd-kit/core'
 
 import { cardsApi, intVal } from '../api/client'
@@ -56,13 +57,14 @@ export function moveRequestFor(drag: DragLoc, to: DropLoc): MoveCardRequest {
   void drag // part of the interface; the target is destination-geometry only
   const cards = bySeqNo(to.cards)
   const over = to.overCard
-  const index =
-    over === null
-      ? cards.length
-      : Math.max(
-          0,
-          cards.findIndex((c) => c.id !== undefined && c.id === over.id),
-        )
+  let index = cards.length
+  if (over !== null) {
+    const found = cards.findIndex((c) => c.id !== undefined && c.id === over.id)
+    // Unknown overCard (e.g. a cache update raced the drag): append rather
+    // than silently prepend — dropping at the end is never worse than
+    // asserting a position we cannot see.
+    index = found < 0 ? cards.length : found
+  }
   return { processStepSeqNo: to.step, isWip: to.isWip, index }
 }
 
@@ -167,8 +169,11 @@ export function useCardDragEnd(
   filter: string,
 ): DragEndHandler {
   const queryClient = useQueryClient()
-  const move = useCardMove(boardId, onBoard, filter)
-  return (event: DragEndEvent) => {
+  const { mutate } = useCardMove(boardId, onBoard, filter)
+  // Stable identity (mutate is stable per TanStack v5) so BoardPage can
+  // memoize its DndContext handlers without exhaustive-deps churn.
+  return useCallback(
+    (event: DragEndEvent) => {
     const { active, over } = event
     const activeData = active.data.current as DragItemData | undefined
     const overData = over?.data.current as DragItemData | undefined
@@ -195,14 +200,16 @@ export function useCardDragEnd(
         : null
     if (overData.kind === 'card' && overData.cardId === card.id) return
 
-    move.mutate({
-      cardId: card.id,
-      req: moveRequestFor(
-        { step: source.step, isWip: source.isWip, card },
-        { step: dest.step, isWip: dest.isWip, overCard, cards: dstCards },
-      ),
-      source,
-      dest,
-    })
-  }
+      mutate({
+        cardId: card.id,
+        req: moveRequestFor(
+          { step: source.step, isWip: source.isWip, card },
+          { step: dest.step, isWip: dest.isWip, overCard, cards: dstCards },
+        ),
+        source,
+        dest,
+      })
+    },
+    [queryClient, mutate, boardId, onBoard, filter],
+  )
 }

@@ -29,7 +29,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { useQueryClient } from '@tanstack/react-query'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 
@@ -208,15 +208,22 @@ function ColumnView({ boardId, step, onBoard, filter }: ColumnViewProps) {
   )
 }
 
-interface BoardPageProps {
-  // Test seam (brief Step 6, "export the drop handler" variant): hands the
-  // *real* DndContext onDragEnd handler to the test so the optimistic-move
-  // and rollback paths can be driven without simulating pointer drags in
-  // jsdom. Production never passes it.
-  onDragEndHandleRef?: { current: DragEndHandler | null }
+/** The exact handlers BoardPage hands to DndContext (test seam below). */
+export interface DragHandlers {
+  onDragStart: (event: DragStartEvent) => void
+  onDragEnd: DragEndHandler
+  onDragCancel: () => void
 }
 
-export default function BoardPage({ onDragEndHandleRef }: BoardPageProps = {}) {
+interface BoardPageProps {
+  // Test seam (brief Step 6, "export the drop handler" variant): hands the
+  // *real* DndContext handlers to the test so the optimistic-move, rollback
+  // and cancel paths can be driven exactly as DndContext would, without
+  // simulating pointer drags in jsdom. Production never passes it.
+  onDragHandlesRef?: { current: DragHandlers | null }
+}
+
+export default function BoardPage({ onDragHandlesRef }: BoardPageProps = {}) {
   const { boardId = '' } = useParams<{ boardId: string }>()
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -243,9 +250,32 @@ export default function BoardPage({ onDragEndHandleRef }: BoardPageProps = {}) {
   const onDragEnd = useCardDragEnd(boardId, onBoard, filter)
   const [activeCardId, setActiveCardId] = useState<string | null>(null)
 
+  const handleDragStart = useCallback((event: DragStartEvent): void => {
+    setActiveCardId(String(event.active.id))
+  }, [])
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent): void => {
+      setActiveCardId(null)
+      onDragEnd(event)
+    },
+    [onDragEnd],
+  )
+  // Regression guard: PointerSensor cancels the drag on Escape (or pointer
+  // loss) and fires onDragCancel *without* onDragEnd — without this the
+  // DragOverlay clone stays stuck on screen until the next drag starts.
+  const handleDragCancel = useCallback((): void => {
+    setActiveCardId(null)
+  }, [])
+
   useEffect(() => {
-    if (onDragEndHandleRef) onDragEndHandleRef.current = onDragEnd
-  }, [onDragEndHandleRef, onDragEnd])
+    if (onDragHandlesRef) {
+      onDragHandlesRef.current = {
+        onDragStart: handleDragStart,
+        onDragEnd: handleDragEnd,
+        onDragCancel: handleDragCancel,
+      }
+    }
+  }, [onDragHandlesRef, onDragEnd, handleDragStart, handleDragEnd, handleDragCancel])
 
   // DragOverlay renders the live clone (dnd-kit default drop indicator: the
   // sortable list displaces items around the insertion point).
@@ -395,11 +425,9 @@ export default function BoardPage({ onDragEndHandleRef }: BoardPageProps = {}) {
 
       <DndContext
         sensors={sensors}
-        onDragStart={(e: DragStartEvent) => setActiveCardId(String(e.active.id))}
-        onDragEnd={(e: DragEndEvent) => {
-          setActiveCardId(null)
-          onDragEnd(e)
-        }}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDragCancel={handleDragCancel}
       >
       <Box
         ref={containerRef}

@@ -14,8 +14,8 @@ import {
 } from '../test/fetchStub'
 import { renderWithProviders } from '../test/renderWithProviders'
 
-import BoardPage from './BoardPage'
-import { moveRequestFor, type DragEndHandler } from './dnd'
+import BoardPage, { type DragHandlers } from './BoardPage'
+import { moveRequestFor } from './dnd'
 
 // Task 7: moveRequestFor pure geometry (five cases per the brief's table)
 // and the optimistic-move rollback path (Review Focus #1, #3).
@@ -78,6 +78,17 @@ it('moveRequestFor: destination order is seqNo-based regardless of array order',
     { step: 2, isWip: true, overCard: d, cards: [e, d] },
   )
   expect(req).toEqual({ processStepSeqNo: 2, isWip: true, index: 0 })
+})
+
+it('moveRequestFor: unknown overCard falls back to append, never a silent prepend', () => {
+  // Review fix: a stale-cache overCard (not found in the destination list)
+  // must append — prepending at 0 would assert a position we cannot see.
+  const ghost = card('ghost', 9)
+  const req = moveRequestFor(
+    { step: 1, isWip: true, card: a },
+    { step: 2, isWip: true, overCard: ghost, cards: [d, e] },
+  )
+  expect(req).toEqual({ processStepSeqNo: 2, isWip: true, index: 2 })
 })
 
 // ---- BoardPage integration: optimistic move, rollback on ApiError --------
@@ -156,10 +167,10 @@ function titlesIn(testId: string): string[] {
     .map((el) => el.textContent)
 }
 
-function renderPage(handleRef: { current: DragEndHandler | null }) {
+function renderPage(handleRef: { current: DragHandlers | null }) {
   return renderWithProviders(
     <Routes>
-      <Route path="/boards/:boardId" element={<BoardPage onDragEndHandleRef={handleRef} />} />
+      <Route path="/boards/:boardId" element={<BoardPage onDragHandlesRef={handleRef} />} />
     </Routes>,
     { route: '/boards/b-1' },
   )
@@ -189,13 +200,15 @@ it('failed move: optimistic change reverts and the cards queries re-fetch (Revie
         failPatch = () => resolve(new Response(null, { status: 500 }))
       }),
   })
-  const handleRef = { current: null as DragEndHandler | null }
+  const handleRef = { current: null as DragHandlers | null }
   renderPage(handleRef)
   await screen.findByText('Card one')
   expect(titlesIn('subcolumn-1-done')).toEqual(['Backlog done'])
 
   // Cross-column: c-1 (step1/wip) onto c-3 (step1/done) → insert at 0.
-  handleRef.current?.(dragEnd('c-1', CARD_DATA(1, true, 'c-1'), 'c-3', CARD_DATA(1, false, 'c-3')))
+  handleRef.current?.onDragEnd(
+    dragEnd('c-1', CARD_DATA(1, true, 'c-1'), 'c-3', CARD_DATA(1, false, 'c-3')),
+  )
 
   // Optimistic: card lands on c-3's slot (before it, per the index=0
   // request) while the PATCH is still in flight.
@@ -229,12 +242,14 @@ it('successful move into an empty sub-column persists through the refetch (Revie
       return new Response(null, { status: 204 })
     },
   })
-  const handleRef = { current: null as DragEndHandler | null }
+  const handleRef = { current: null as DragHandlers | null }
   renderPage(handleRef)
   await screen.findByText('Dev wip card')
 
   // Drop c-4 onto the empty Dev Done container → append → index 0.
-  handleRef.current?.(dragEnd('c-4', CARD_DATA(2, true, 'c-4'), 'subcolumn-2-done', CONTAINER_DATA(2, false)))
+  handleRef.current?.onDragEnd(
+    dragEnd('c-4', CARD_DATA(2, true, 'c-4'), 'subcolumn-2-done', CONTAINER_DATA(2, false)),
+  )
   await waitFor(() => expect(moveCalls()).toHaveLength(1))
   expect(moveCalls()[0].body).toEqual({ processStepSeqNo: 2, isWip: false, index: 0 })
 
@@ -244,3 +259,10 @@ it('successful move into an empty sub-column persists through the refetch (Revie
   await waitFor(() => expect(titlesIn('subcolumn-2-done')).toEqual(['Dev wip card']))
   expect(within(screen.getByTestId('subcolumn-2-wip')).queryAllByTestId('card')).toHaveLength(0)
 })
+
+// Drag-cancel (Escape) is NOT covered by a seam test on purpose: dnd-kit's
+// DragOverlay renders children only from DndContext's internal sensor-
+// activated state, which the exported-handler seam bypasses — asserting the
+// clone via seam calls would prove nothing. The 3-line onDragCancel fix is
+// pinned by the code comment in BoardPage and by the Task 12 browser
+// acceptance (Escape mid-drag must leave no floating clone).
