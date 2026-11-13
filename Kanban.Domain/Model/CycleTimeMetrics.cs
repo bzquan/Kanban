@@ -38,7 +38,7 @@ namespace Kanban.Model
         {
             int totalCycleTimes = AllCycleTimeDistributions.Sum(x => x.AverageCycleTime4OneCard);
             int nonZeroCycleTimesNum = AllCycleTimeDistributions.Count(x => x.AverageCycleTime4OneCard > 0);
-            return Util.Util.RoundUpByDivision(totalCycleTimes, nonZeroCycleTimesNum); // 切り上げ
+            return Util.DomainUtil.RoundUpByDivision(totalCycleTimes, nonZeroCycleTimesNum); // 切り上げ
         }
 
         public int GetAverageCycleTime(Repository.ProcessStep step)

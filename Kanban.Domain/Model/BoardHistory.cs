@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 
 using static Kanban.Util.DateTimeUtil;
-using static Kanban.Util.Util;
+using static Kanban.Util.DomainUtil;
 
 namespace Kanban.Model
 {

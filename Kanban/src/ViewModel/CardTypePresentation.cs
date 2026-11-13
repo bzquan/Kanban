@@ -85,7 +85,7 @@ namespace Kanban.ViewModel
         }
 
         public static Color CardBackgroundColor(CardType cardType) => CardTypeViews[cardType].BackgroundColor;
-        public static string CardTypeIconUri(CardType cardType) => PackImageURI(CardTypeViews[cardType].CardTypeIconUri);
+        public static string CardTypeIconUri(CardType cardType) => DomainUtil.PackImageURI(CardTypeViews[cardType].CardTypeIconUri);
         public static string CardTypeToolTip(CardType cardType) => CardTypeViews[cardType].CardTypeToolTip;
     }
 }

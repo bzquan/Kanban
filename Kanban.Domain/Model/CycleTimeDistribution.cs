@@ -46,7 +46,7 @@ namespace Kanban.Model
                 }
             }
 
-            int averageCycleTime = Util.Util.RoundUpByDivision(totalDays, doneCards.Count);　// 切り上げ
+            int averageCycleTime = Util.DomainUtil.RoundUpByDivision(totalDays, doneCards.Count);　// 切り上げ
             return averageCycleTime;
         }
 

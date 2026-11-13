@@ -80,7 +80,7 @@
                     break;
             }
 
-            return Util.Util.PackImageURI(imageName);
+            return Util.DomainUtil.PackImageURI(imageName);
         }
     }
 }

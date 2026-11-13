@@ -123,9 +123,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="3.8.1" />
     <PackageReference Include="SharpCompress" Version="0.48.0" />
     <PackageReference Include="Unity" Version="5.11.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kanban.Domain\Kanban.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,13 +7,11 @@ namespace Kanban.Repository
     public class DBClient : IDBClient
     {
         MongoClient m_MongoClient;
-        IAppSettings m_AppSettings;
 
-        public DBClient(IAppSettings setting)
+        public DBClient(string userDatabase)
         {
-            m_AppSettings = setting;
             DBHost = ConfigReader.GetValue("DB_HOST", "localhost:27017");
-            DBName = GetCurrentDBName(setting.Database);
+            DBName = GetCurrentDBName(userDatabase);
             UpgradeCollections();
         }
 
@@ -57,7 +55,6 @@ namespace Kanban.Repository
             string dbNameByConfig = ConfigReader.GetValue("DB_NAME", "kanban");
             if (IsNewDB(dbNameByConfig))
             {
-                m_AppSettings.Database = dbNameByConfig;
                 return dbNameByConfig;
             }
             else

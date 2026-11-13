@@ -326,7 +326,7 @@ public class Card : NotifyPropertyChangedBase
         get
         {
             string image_name = IsOnBackBoard ? "back_board.png" : "front_board.png";
-            return Util.Util.PackImageURI(image_name);
+            return Util.DomainUtil.PackImageURI(image_name);
         }
     }
 

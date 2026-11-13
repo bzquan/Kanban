@@ -116,7 +116,7 @@ class DI4Repository : DIBase
     internal void RegisterDependencies()
     {
         DIContainer
-            .RegisterType<Repository.IDBClient, Repository.DBClient>(new ContainerControlledLifetimeManager())
+            .RegisterFactory<Repository.IDBClient>(c => new Repository.DBClient(c.Resolve<Util.IAppSettings>().Database))
             .RegisterType<Repository.IDBActivity, Repository.DBActivities>(new ContainerControlledLifetimeManager())
             .RegisterType<Repository.IDBCard, Repository.DBCards>(new ContainerControlledLifetimeManager())
             .RegisterType<Repository.IDBBoard, Repository.DBBoards>(new ContainerControlledLifetimeManager());

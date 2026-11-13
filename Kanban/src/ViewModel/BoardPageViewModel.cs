@@ -107,7 +107,7 @@ namespace Kanban.ViewModel
             get
             {
                 string imageName = ShowFrontBoard ? "front_board.png" : "back_board.png";
-                return Util.Util.PackImageURI(imageName);
+                return Util.DomainUtil.PackImageURI(imageName);
             }
         }
 
