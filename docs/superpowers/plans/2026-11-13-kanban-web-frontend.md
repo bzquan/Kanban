@@ -159,7 +159,7 @@ it('missing key falls back to en value; unknown language falls back to en', …)
 
 **Interfaces:**
 - Consumes: `boardsApi`, `renderWithProviders`, `t('…')` keys.
-- Produces: route `/` fully working: board rows (title, description, developers, #steps), row click → `/boards/{id}` + `localStorage['kanban.lastBoardId']`; "New board" button → `boardsApi.create(t('board.new.defaultTitle'))` then navigates to it; "Delete" per row with MUI confirm dialog → `boardsApi.remove(id)` + invalidate `['boards']`.
+- Produces: route `/` fully working: board rows (title, description, developers, #steps), row click → `/boards/{id}` + `localStorage['kanban.lastBoardId']`; "New board" button → `boardsApi.create(i18n.language)` (erratum R8: contract is `create(uiLanguage)`; backend `CreateBoardAsync(uiLanguage)` localizes the default process-step titles server-side) then navigates to it; "Delete" per row with MUI confirm dialog → `boardsApi.remove(id)` + invalidate `['boards']`.
 
 - [ ] **Step 1: Write failing tests** (fetch-stubbed): lists titles from stubbed `GET /api/boards`; create click POSTs `{uiLanguage:'ja'}` when language is ja and navigates to `/boards/{newId}`; delete click confirms then records `DELETE /api/boards/{id}` and refetches the list; empty state shows localized "no boards" text.
 - [ ] **Step 2: Run → fail. Step 3: Implement** (TanStack Query `useQuery({queryKey:['boards'],queryFn:boardsApi.list})`, MUI List/ListItem, Dialog confirm, `useNavigate`). [ ] **Step 4: Run → pass. Step 5: Commit** `"feat: ボード一覧ページ(作成/削除/遷移)"`.
