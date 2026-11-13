@@ -12,16 +12,33 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material'
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  useDroppable,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from '@dnd-kit/core'
+import { CSS } from '@dnd-kit/utilities'
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
 import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 
 import { ApiError, intVal } from '../api/client'
-import type { ProcessStepDto } from '../api/types'
+import type { CardDto, ProcessStepDto } from '../api/types'
 import CardView from '../components/CardView'
 import { format0 } from '../util/format'
 import { useBoard, useCards, type BoardSide } from './boardQueries'
+import { useCardDragEnd, type DragEndHandler } from './dnd'
 
 // User settings live in localStorage (spec §4.6), mirroring the WPF client.
 const ZOOM_KEY = 'kanban.zoom'
@@ -74,6 +91,40 @@ interface SubColumnViewProps {
 // One WPF sub-column: header = the step's wipTitle/doneTitle, cards fetched
 // per (step, isWip, onBoard, filter). Fetch failures leave this sub-column
 // empty; the toolbar and remaining chrome keep working.
+// Shared between SortableContext items and useSortable so ids always match.
+function sortableId(card: CardDto, seqNo: number, side: 'wip' | 'done'): string {
+  return card.id ?? `${seqNo}-${side}-${intVal(card.seqNo)}`
+}
+
+// One sortable card inside a sub-column's SortableContext. The dnd-kit
+// payload (kind/step/isWip/cardId) is what turns an over-id back into
+// (processStepSeqNo, isWip, index) in useCardDragEnd.
+function SortableCard({ card, id, step, isWip }: { card: CardDto; id: string; step: number; isWip: boolean }) {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id,
+    data: { kind: 'card', step, isWip, cardId: card.id },
+  })
+  return (
+    <Box
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      sx={{
+        transform: CSS.Translate.toString(transform),
+        transition,
+        touchAction: 'none',
+      }}
+    >
+      <CardView
+        card={card}
+        onOpen={() => {
+          /* Task 8: open the card-edit dialog from here. */
+        }}
+      />
+    </Box>
+  )
+}
+
 function SubColumnView({ boardId, step, side, onBoard, filter }: SubColumnViewProps) {
   const { t } = useTranslation()
   const seqNo = intVal(step.phaseSeqNo)
@@ -83,8 +134,15 @@ function SubColumnView({ boardId, step, side, onBoard, filter }: SubColumnViewPr
   const cards = [...(cardsQuery.data ?? [])].sort(
     (a, b) => intVal(a.seqNo) - intVal(b.seqNo),
   )
+  // The whole sub-column is a drop target, so an *empty* sub-column still
+  // accepts drops (Review Focus #3 → over null → append → index 0).
+  const { setNodeRef: setDropRef } = useDroppable({
+    id: `subcolumn-${seqNo}-${side}`,
+    data: { kind: 'container', step: seqNo, isWip },
+  })
   return (
     <Box
+      ref={setDropRef}
       data-testid={`subcolumn-${seqNo}-${side}`}
       sx={{ flex: 1, minWidth: 200, p: 0.5 }}
     >
@@ -101,15 +159,20 @@ function SubColumnView({ boardId, step, side, onBoard, filter }: SubColumnViewPr
           <AddIcon fontSize="small" />
         </IconButton>
       </Box>
-      {cards.map((card) => (
-        <CardView
-          key={card.id ?? `${seqNo}-${side}-${intVal(card.seqNo)}`}
-          card={card}
-          onOpen={() => {
-            /* Task 8: open the card-edit dialog from here. */
-          }}
-        />
-      ))}
+      <SortableContext
+        items={cards.map((card) => sortableId(card, seqNo, side))}
+        strategy={verticalListSortingStrategy}
+      >
+        {cards.map((card) => (
+          <SortableCard
+            key={sortableId(card, seqNo, side)}
+            id={sortableId(card, seqNo, side)}
+            card={card}
+            step={seqNo}
+            isWip={isWip}
+          />
+        ))}
+      </SortableContext>
     </Box>
   )
 }
@@ -145,7 +208,15 @@ function ColumnView({ boardId, step, onBoard, filter }: ColumnViewProps) {
   )
 }
 
-export default function BoardPage() {
+interface BoardPageProps {
+  // Test seam (brief Step 6, "export the drop handler" variant): hands the
+  // *real* DndContext onDragEnd handler to the test so the optimistic-move
+  // and rollback paths can be driven without simulating pointer drags in
+  // jsdom. Production never passes it.
+  onDragEndHandleRef?: { current: DragEndHandler | null }
+}
+
+export default function BoardPage({ onDragEndHandleRef }: BoardPageProps = {}) {
   const { boardId = '' } = useParams<{ boardId: string }>()
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -162,6 +233,29 @@ export default function BoardPage() {
 
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLDivElement>(null)
+
+  // Drag & drop (Task 7): 5px activation keeps card clicks (Task 8 dialog)
+  // from starting drags; auto-scroll uses dnd-kit's built-in AutoScroller
+  // over the overflow:auto board container.
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+  )
+  const onDragEnd = useCardDragEnd(boardId, onBoard, filter)
+  const [activeCardId, setActiveCardId] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (onDragEndHandleRef) onDragEndHandleRef.current = onDragEnd
+  }, [onDragEndHandleRef, onDragEnd])
+
+  // DragOverlay renders the live clone (dnd-kit default drop indicator: the
+  // sortable list displaces items around the insertion point).
+  const activeCard =
+    activeCardId === null
+      ? null
+      : (queryClient
+          .getQueriesData<CardDto[]>({ queryKey: ['cards'] })
+          .flatMap(([, data]) => data ?? [])
+          .find((c) => c.id === activeCardId) ?? null)
 
   useEffect(() => {
     persist(LAST_BOARD_KEY, boardId)
@@ -299,6 +393,14 @@ export default function BoardPage() {
         </Button>
       </Toolbar>
 
+      <DndContext
+        sensors={sensors}
+        onDragStart={(e: DragStartEvent) => setActiveCardId(String(e.active.id))}
+        onDragEnd={(e: DragEndEvent) => {
+          setActiveCardId(null)
+          onDragEnd(e)
+        }}
+      >
       <Box
         ref={containerRef}
         data-testid="board-canvas-container"
@@ -321,6 +423,14 @@ export default function BoardPage() {
           ))}
         </Box>
       </Box>
+        <DragOverlay>
+          {activeCard ? (
+            <Box sx={{ width: 220 }}>
+              <CardView card={activeCard} />
+            </Box>
+          ) : null}
+        </DragOverlay>
+      </DndContext>
     </Box>
   )
 }
