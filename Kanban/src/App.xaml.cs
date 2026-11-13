@@ -64,6 +64,8 @@ public partial class App : Application
             var dbUpgrader = DependencyInjector.Resolve<Repository.DBUpgrader>();
             await dbUpgrader.UpgradeDB();
 
+            await DependencyInjector.Resolve<Repository.IDBActivity>().EnsureIndexesAsync();
+
             var mainWindow = DependencyInjector.Resolve<MainWindow>();
             Application.Current.MainWindow = mainWindow;
             Application.Current.MainWindow.Show();

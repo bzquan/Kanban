@@ -20,6 +20,13 @@ namespace Kanban.Repository
         {
         }
 
+        // API/テスト用: ConfigReaderを通さない明示接続(ホスト・DB名をそのまま使う)
+        public DBClient(string dbHost, string dbName)
+        {
+            DBHost = dbHost;
+            DBName = dbName;
+        }
+
         public MongoClient MongoDBClient
         {
             get

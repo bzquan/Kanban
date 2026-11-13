@@ -73,7 +73,11 @@ namespace UnitTest
         #endregion
     }
 
+    // 危険: DumpDB/RestoreDB は --db なしで mongodump/mongorestore を実行するため、
+    // 共有サーバーの全DBに触れる(localhost:27017はリモートへフォワード済み)。
+    // バックアップ系はWeb移植で廃止決定(設計書§4.2)のため明示スキップ。
     [TestClass]
+    [Ignore("requires mongodump on PATH and C:\\Work path")]
     public class RunDBDumpRestoreTest
     {
         string DB_PATH = @"C:\Work\Kanban\Kanban\db.backup\test";

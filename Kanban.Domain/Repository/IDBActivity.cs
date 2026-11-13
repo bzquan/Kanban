@@ -21,5 +21,6 @@ namespace Kanban.Repository
         UpdateResult UpdateActivities(Board board, int fromSeqNo, int toSeqNo, bool forward);
         UpdateResult ChangeActivitiesSeqNo(Board board, int fromSeqNo, int toSeqNo);
         void DropActivities();
+        Task EnsureIndexesAsync();
     }
 }

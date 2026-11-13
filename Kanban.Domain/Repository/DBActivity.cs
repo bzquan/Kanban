@@ -11,7 +11,6 @@ namespace Kanban.Repository
         public DBActivities(IDBClient dbClient)
         {
             m_DBClient = dbClient;
-            CreateIndexes();
         }
 
         public async Task Insert(Activity activity)
@@ -116,7 +115,7 @@ namespace Kanban.Repository
             return ActivitiesCollection.UpdateMany(filter_activity, update);
         }
 
-        public async void CreateIndexes()
+        public async Task EnsureIndexesAsync()
         {
             var keys = Builders<Activity>
                         .IndexKeys
