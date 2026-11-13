@@ -48,6 +48,10 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<Kanban.Model.ICardRepository, CardRepository>();
         services.AddSingleton<Kanban.Model.IActivityRepository, ActivityRepository>();
 
+        // Services(Task 4〜)
+        services.AddSingleton<Kanban.Services.ILocalizationFactory, Kanban.Services.JsonLocalizationFactory>();
+        services.AddSingleton<Kanban.Services.BoardCommandService>();
+
         return services;
     }
 }

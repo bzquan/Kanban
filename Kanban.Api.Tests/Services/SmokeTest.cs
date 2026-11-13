@@ -6,6 +6,9 @@ namespace Kanban.Api.Tests.Services;
 [TestClass]
 public class SmokeTest
 {
+    [TestInitialize]
+    public void Setup() => TestDatabase.Reset();
+
     [TestMethod]
     public async Task ConnectAndDropKanbanTest()
     {

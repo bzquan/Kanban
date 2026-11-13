@@ -1,0 +1,14 @@
+{
+  "BoardDefaultTitle": "新規プロジェクト",
+  "BoardDefaultDescription": "プロジェクト詳細",
+  "CardDefaultTitle": "新規項目",
+  "ProcessBackLogTitle": "Backlog(Limit:∞)",
+  "ProcessRequirementTitle": "仕様(Limit:3)",
+  "ProcessDevelopmentTitle": "開発(Limit:5)",
+  "ProcessTestTitle": "試験(Limit:3)",
+  "ProcessReleaseTitle": "リリース(Limit:∞)",
+  "ProcessPreparingTitle": "準備中",
+  "ProcessWIPTitle": "作業中",
+  "ProcessDoneTitle": "完了",
+  "ProcessNewStepTitle": "新規作業(Limit:1)"
+}

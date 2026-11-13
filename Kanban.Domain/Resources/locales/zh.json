@@ -1,0 +1,14 @@
+{
+  "BoardDefaultTitle": "新项目",
+  "BoardDefaultDescription": "项目的说明",
+  "CardDefaultTitle": "新工作条目",
+  "ProcessBackLogTitle": "Backlog(Limit:∞)",
+  "ProcessRequirementTitle": "需求(Limit:3)",
+  "ProcessDevelopmentTitle": "开发(Limit:5)",
+  "ProcessTestTitle": "测试(Limit:3)",
+  "ProcessReleaseTitle": "发布(Limit:∞)",
+  "ProcessPreparingTitle": "正在准备",
+  "ProcessWIPTitle": "正在进行",
+  "ProcessDoneTitle": "已完成",
+  "ProcessNewStepTitle": "新工作(Limit:1)"
+}

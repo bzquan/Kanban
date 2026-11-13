@@ -1,0 +1,14 @@
+{
+  "BoardDefaultTitle": "New project",
+  "BoardDefaultDescription": "Project description",
+  "CardDefaultTitle": "New work item",
+  "ProcessBackLogTitle": "Backlog(Limit:∞)",
+  "ProcessRequirementTitle": "Requirement(Limit:3)",
+  "ProcessDevelopmentTitle": "Development(Limit:5)",
+  "ProcessTestTitle": "Test(Limit:3)",
+  "ProcessReleaseTitle": "Release(Limit:∞)",
+  "ProcessPreparingTitle": "Preparing",
+  "ProcessWIPTitle": "In Progress",
+  "ProcessDoneTitle": "Done",
+  "ProcessNewStepTitle": "NewWork(Limit:1)"
+}

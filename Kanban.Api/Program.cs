@@ -1,4 +1,5 @@
 using Kanban.Api;
+using Kanban.Api.Endpoints;
 using Kanban.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,7 @@ Kanban.Model.Activity.ActivityRepository = app.Services.GetRequiredService<Kanba
 Kanban.Model.DevProcess.Localization = app.Services.GetRequiredService<Kanban.Util.ILocalization>();
 
 app.MapGet("/api/health", () => Results.Ok(new { status = "ok" }));
+app.MapBoardsEndpoints();
 app.MapOpenApi();
 
 app.Run();
