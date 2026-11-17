@@ -6,6 +6,7 @@ import { afterEach, beforeEach, expect, it } from 'vitest'
 
 import { initI18n } from '../i18n'
 import { calls, installFetch, restoreFetch } from '../test/fetchStub'
+import { cssRulesFor } from '../test/cssRules'
 import { renderWithProviders } from '../test/renderWithProviders'
 
 import AboutPage from './AboutPage'
@@ -68,6 +69,28 @@ it('falls back to the en html for zh', async () => {
   await waitFor(() =>
     expect(screen.getByTestId('release-note')).toHaveAttribute('srcdoc', EN_HTML),
   )
+})
+
+it('release note fills the viewport height instead of the fixed 480px', async () => {
+  void i18n.changeLanguage('en')
+  installFetch({ 'GET /release-note/en.html': () => html(EN_HTML) })
+  renderWithProviders(<AboutPage />)
+  const frame = await screen.findByTestId('release-note')
+
+  // The app shell's <main> is a viewport-locked flex column, so the page grows
+  // and the iframe takes the remaining height — no fixed 480px stub (~2/3 of
+  // the screen, reported 11-17). cssRulesFor: jsdom drops emotion's vendor-
+  // duplicated declarations from getComputedStyle, so assert the stylesheet.
+  const pageCss = cssRulesFor(screen.getByTestId('about-page'))
+  expect(pageCss).toMatch(/display:flex/)
+  expect(pageCss).toMatch(/flex-direction:column/)
+  expect(pageCss).toMatch(/flex-grow:1/)
+  expect(pageCss).toMatch(/min-height:0/)
+
+  const frameCss = cssRulesFor(frame)
+  expect(frameCss).toMatch(/flex-grow:1/)
+  expect(frameCss).toMatch(/min-height:0/)
+  expect(frameCss).not.toMatch(/height:480px/)
 })
 
 it('top back-to-list button returns to the board list', async () => {

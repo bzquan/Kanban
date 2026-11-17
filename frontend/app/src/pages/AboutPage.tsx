@@ -29,10 +29,16 @@ export default function AboutPage() {
   })
 
   return (
-    <Box data-testid="about-page" sx={{ p: 2 }}>
+    // Grows into the shell's viewport-locked <main> (same pattern as the board
+    // page) so the release-note iframe takes the remaining browser height —
+    // the fixed 480px left it ~2/3 of the screen (reported 11-17).
+    <Box
+      data-testid="about-page"
+      sx={{ p: 2, display: 'flex', flexDirection: 'column', flexGrow: 1, flexBasis: 0, minHeight: 0 }}
+    >
       {/* Icon-only back button matching the board toolbar head (agreed 11-17);
           BoardPage_BackToList is the shared resx trio key. */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0 }}>
         <IconButton
           size="small"
           data-testid="back-to-list-button"
@@ -62,7 +68,7 @@ export default function AboutPage() {
         srcDoc={noteQuery.data ?? ''}
         // Static trusted markup; sandbox it anyway (no scripts, no same-origin).
         sandbox=""
-        sx={{ width: '1', height: 480, border: 'none', mt: 1 }}
+        sx={{ width: '1', flexGrow: 1, minHeight: 0, border: 'none', mt: 1 }}
       />
     </Box>
   )
