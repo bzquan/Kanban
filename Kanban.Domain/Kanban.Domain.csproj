@@ -5,9 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="3.8.1" />
+    <PackageReference Include="MongoDB.Driver" Version="3.14.0" />
     <!-- ConfigReader.cs の AppSettingsReader に必須(WPFではWindows Desktopフレームワーク同梱だった) -->
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="11.0.0" />
   </ItemGroup>
 
   <ItemGroup>
