@@ -125,6 +125,32 @@ public class SpaFallbackTest
         await AssertHtmlAsync(resp);
     }
 
+    // 再デプロイ時のホワイトアウト防止: index.html はブローザ側で cached させてはならない
+    // ( hashed asset の入った index を cache されると、再ビルド後の旧 index → 旧JS 404 → 白画面 )
+    [TestMethod]
+    public async Task Get_Root_IndexHtmlIsNeverCached()
+    {
+        var resp = await _client.GetAsync("/");
+        await AssertHtmlAsync(resp);
+        AssertNoStore(resp);
+    }
+
+    [TestMethod]
+    public async Task Get_DeepLink_IndexHtmlIsNeverCached()
+    {
+        var resp = await _client.GetAsync("/boards/xyz");
+        await AssertHtmlAsync(resp);
+        AssertNoStore(resp);
+    }
+
+    private static void AssertNoStore(HttpResponseMessage resp)
+    {
+        Assert.IsTrue(resp.Headers.TryGetValues("Cache-Control", out var values),
+            "index.html responses must carry Cache-Control (prevents stale-index whiteout after redeploy)");
+        StringAssert.Contains(string.Join(",", values!), "no-store",
+            $"index.html must be no-store, was '{string.Join(",", values!)}'");
+    }
+
     // /api/* ミス: index.html フォールバックしてはならない(404 は 404 のまま、HTML混入なし)
     [TestMethod]
     public async Task Get_UnknownApiRoute_Returns404NotHtml()
