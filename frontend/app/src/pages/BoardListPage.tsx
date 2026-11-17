@@ -1,3 +1,4 @@
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import DeleteIcon from '@mui/icons-material/Delete'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import TuneIcon from '@mui/icons-material/Tune'
@@ -27,6 +28,11 @@ import { format0 } from '../util/format'
 
 // localStorage key the board page (and later tasks) read to know where we came from.
 const LAST_BOARD_KEY = 'kanban.lastBoardId'
+
+// Plan C (mockup-approved 11-17): rows must read as list items — per-row left
+// strip from this cycling palette, thin divider, odd-row tint, row hover and
+// a chevron in the action area.
+const ROW_STRIP_COLORS = ['#1976d2', '#2e7d32', '#ef6c00'] as const
 
 export default function BoardListPage() {
   const { t, i18n } = useTranslation()
@@ -137,15 +143,27 @@ export default function BoardListPage() {
         </Typography>
       ) : (
         <List>
-          {boards.map((board) => {
+          {boards.map((board, index) => {
             const id = board.id ?? ''
             return (
               <ListItem
                 key={id}
                 data-testid={`board-row-${id}`}
                 disablePadding
+                sx={{
+                  // Plan C list-item identity (see ROW_STRIP_COLORS): strip per
+                  // row, thin divider, odd-row tint, whole-row hover. Hover is
+                  // declared after the nth-of-type rule so it wins at equal
+                  // specificity (same order as the approved mockup).
+                  borderLeft: `5px solid ${ROW_STRIP_COLORS[index % ROW_STRIP_COLORS.length]}`,
+                  borderBottom: '1px solid #eeeeee',
+                  '&:nth-of-type(odd)': { backgroundColor: '#f8f9fb' },
+                  '&:hover': { backgroundColor: '#e3f2fd' },
+                  '&:hover .row-chevron': { color: '#1976d2' },
+                  '& .MuiListItemText-primary': { fontWeight: 700 },
+                }}
                 secondaryAction={
-                  <Box sx={{ display: 'flex' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <IconButton
                       edge="end"
                       aria-label={t('board.editSteps')}
@@ -165,10 +183,22 @@ export default function BoardListPage() {
                     >
                       <DeleteIcon />
                     </IconButton>
+                    {/* Decorative click affordance (row itself is the button),
+                        styled by the row's :hover .row-chevron rule. */}
+                    <ChevronRightIcon
+                      className="row-chevron"
+                      data-testid={`board-row-chevron-${id}`}
+                      sx={{ color: '#bbbbbb' }}
+                    />
                   </Box>
                 }
               >
-                <ListItemButton onClick={() => openBoard(id)}>
+                {/* Row-level hover owns the highlight; kill the button's own
+                    hover so it doesn't blend over the row tint/hover color. */}
+                <ListItemButton
+                  onClick={() => openBoard(id)}
+                  sx={{ '&:hover': { backgroundColor: 'transparent' } }}
+                >
                   <ListItemText
                     primary={format0(t('Board_NameFormat'), board.title ?? '')}
                     secondary={

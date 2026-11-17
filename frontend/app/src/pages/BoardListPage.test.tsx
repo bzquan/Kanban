@@ -7,6 +7,7 @@ import { afterEach, beforeEach, expect, it } from 'vitest'
 import type { BoardDto } from '../api/types'
 import { initI18n } from '../i18n'
 import { calls, installFetch, restoreFetch } from '../test/fetchStub'
+import { cssRulesFor } from '../test/cssRules'
 import { renderWithProviders } from '../test/renderWithProviders'
 
 import BoardListPage from './BoardListPage'
@@ -262,6 +263,46 @@ it('New-board POST failure surfaces the localized create error and stays on the 
   expect(line).toHaveTextContent('Failed to create the board') // BoardList_CreateError under en
   // No silent navigate-away: still on the list.
   expect(screen.queryByTestId('board-page')).not.toBeInTheDocument()
+})
+
+// Plan C (mockup-approved 11-17): rows must read as list items — left color
+// strip + divider + bold title separate and identify each row, and the
+// alternating tint / hover / chevron say "this row is one clickable item".
+// cssRulesFor asserts the emotion stylesheet text (jsdom drops emotion's
+// vendor-duplicated declarations from getComputedStyle).
+
+it('rows show a per-row color strip, divider and bold title', async () => {
+  installFetch({ 'GET /api/boards': () => [alpha, beta] })
+  renderPage()
+  await screen.findByTestId('board-row-b-1')
+
+  // Left strip cycles the approved palette (board order → blue, green, orange).
+  expect(cssRulesFor(screen.getByTestId('board-row-b-1'))).toMatch(
+    /border-left:5px solid #1976d2/,
+  )
+  expect(cssRulesFor(screen.getByTestId('board-row-b-2'))).toMatch(
+    /border-left:5px solid #2e7d32/,
+  )
+  // Rows are separated, titles carry the visual weight.
+  expect(cssRulesFor(screen.getByTestId('board-row-b-1'))).toMatch(
+    /border-bottom:1px solid #eeeeee/,
+  )
+  expect(cssRulesFor(screen.getByTestId('board-row-b-1'))).toMatch(/font-weight:700/)
+})
+
+it('rows show alternating tint, row hover and a chevron click affordance', async () => {
+  installFetch({ 'GET /api/boards': () => [alpha, beta] })
+  renderPage()
+  await screen.findByTestId('board-row-b-1')
+
+  const rowCss = cssRulesFor(screen.getByTestId('board-row-b-1'))
+  // Odd rows get a thin tint, hovering the row turns it light blue, and the
+  // chevron brightens with the row — the "clickable item" contract (plan C).
+  expect(rowCss).toMatch(/:nth-of-type\(odd\)\{background-color:#f8f9fb/)
+  expect(rowCss).toMatch(/:hover\{background-color:#e3f2fd/)
+  expect(rowCss).toMatch(/:hover \.row-chevron\{color:#1976d2/)
+  // The chevron lives in the row's action area, after steps/delete.
+  expect(screen.getByTestId('board-row-chevron-b-1')).toBeInTheDocument()
 })
 
 it('delete failure surfaces the localized error and keeps the confirm dialog open', async () => {
