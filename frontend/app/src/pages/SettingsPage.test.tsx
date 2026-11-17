@@ -1,6 +1,7 @@
 import i18n from 'i18next'
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { Route, Routes } from 'react-router'
 import { afterEach, beforeEach, expect, it } from 'vitest'
 
 import { detectLanguage, initI18n, LANG_STORAGE_KEY } from '../i18n'
@@ -68,6 +69,24 @@ it('selecting 日本語 switches i18n immediately and persists kanban.lang (surv
   // including the combobox's accessible name.
   expect(await screen.findByText('言語：')).toBeInTheDocument()
   expect(screen.getByRole('combobox', { name: '言語：' })).toBeInTheDocument()
+})
+
+it('top back-to-list button returns to the board list', async () => {
+  renderWithProviders(
+    <Routes>
+      <Route path="/" element={<div data-testid="list-stub" />} />
+      <Route path="/settings" element={<SettingsPage />} />
+    </Routes>,
+    { route: '/settings' },
+  )
+  await screen.findByTestId('settings-page')
+
+  // Same icon-only compact button as the board toolbar (agreed 11-17), using
+  // the existing BoardPage_BackToList label.
+  const button = await screen.findByRole('button', { name: 'Back to board list' })
+  const user = userEvent.setup()
+  await user.click(button)
+  expect(await screen.findByTestId('list-stub')).toBeInTheDocument()
 })
 
 it('selecting 中文 persists zh and re-localizes the page', async () => {

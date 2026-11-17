@@ -1,6 +1,8 @@
-import { Box, CircularProgress, Typography } from '@mui/material'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import { Box, CircularProgress, IconButton, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 
 // public/release-note/{en,ja}.html are verbatim copies of
 // Kanban/ReleaseNote/ReleaseNote(_jp).html; Vite serves public/ at root.
@@ -16,6 +18,7 @@ async function loadReleaseNote(file: 'en' | 'ja'): Promise<string> {
 // iframe (srcDoc, never src) isolates the WPF-era markup/styles from MUI.
 export default function AboutPage() {
   const { t, i18n } = useTranslation()
+  const navigate = useNavigate()
   const file = (i18n.language ?? 'en').toLowerCase().startsWith('ja') ? 'ja' : 'en'
 
   const noteQuery = useQuery({
@@ -27,10 +30,22 @@ export default function AboutPage() {
 
   return (
     <Box data-testid="about-page" sx={{ p: 2 }}>
-      {/* AboutControl_ReleaseNote ("Release Note:") */}
-      <Typography variant="h6" component="h2">
-        {t('AboutControl_ReleaseNote')}
-      </Typography>
+      {/* Icon-only back button matching the board toolbar head (agreed 11-17);
+          BoardPage_BackToList is the shared resx trio key. */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <IconButton
+          size="small"
+          data-testid="back-to-list-button"
+          aria-label={t('BoardPage_BackToList')}
+          onClick={() => navigate('/')}
+        >
+          <ArrowBackIcon fontSize="small" />
+        </IconButton>
+        {/* AboutControl_ReleaseNote ("Release Note:") */}
+        <Typography variant="h6" component="h2">
+          {t('AboutControl_ReleaseNote')}
+        </Typography>
+      </Box>
 
       {noteQuery.isPending && <CircularProgress size={20} data-testid="release-note-loading" />}
       {noteQuery.isError && (

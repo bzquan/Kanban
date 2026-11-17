@@ -1,5 +1,7 @@
 import i18n from 'i18next'
 import { screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Route, Routes } from 'react-router'
 import { afterEach, beforeEach, expect, it } from 'vitest'
 
 import { initI18n } from '../i18n'
@@ -66,6 +68,26 @@ it('falls back to the en html for zh', async () => {
   await waitFor(() =>
     expect(screen.getByTestId('release-note')).toHaveAttribute('srcdoc', EN_HTML),
   )
+})
+
+it('top back-to-list button returns to the board list', async () => {
+  void i18n.changeLanguage('en')
+  installFetch({ 'GET /release-note/en.html': () => html(EN_HTML) })
+  renderWithProviders(
+    <Routes>
+      <Route path="/" element={<div data-testid="list-stub" />} />
+      <Route path="/about" element={<AboutPage />} />
+    </Routes>,
+    { route: '/about' },
+  )
+  await screen.findByTestId('release-note')
+
+  // Same icon-only compact button as the board toolbar (agreed 11-17), using
+  // the existing BoardPage_BackToList label.
+  const button = await screen.findByRole('button', { name: 'Back to board list' })
+  const user = userEvent.setup()
+  await user.click(button)
+  expect(await screen.findByTestId('list-stub')).toBeInTheDocument()
 })
 
 it('shows a localized load error when the fetch fails', async () => {

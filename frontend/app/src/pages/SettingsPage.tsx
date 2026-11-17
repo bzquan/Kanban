@@ -1,5 +1,7 @@
-import { Box, MenuItem, Select, Typography } from '@mui/material'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import { Box, IconButton, MenuItem, Select, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 
 import { setLanguage, type AppLanguage } from '../i18n'
 
@@ -16,6 +18,7 @@ const LANGUAGES: readonly { value: AppLanguage; labelKey: string }[] = [
 // deleted — this page is the language switch only.
 export default function SettingsPage() {
   const { t, i18n } = useTranslation()
+  const navigate = useNavigate()
 
   const current: AppLanguage =
     LANGUAGES.find((l) => (i18n.language ?? 'en').toLowerCase().startsWith(l.value))?.value ??
@@ -23,11 +26,23 @@ export default function SettingsPage() {
 
   return (
     <Box data-testid="settings-page" sx={{ p: 2, maxWidth: 480 }}>
-      {/* WebSettings_Title (web-only): Setting_Title is the WPF window title and
-          still names the DB features spec §4.6 deleted from this page. */}
-      <Typography variant="h6" component="h2">
-        {t('WebSettings_Title')}
-      </Typography>
+      {/* Icon-only back button matching the board toolbar head (agreed 11-17);
+          BoardPage_BackToList is the shared resx trio key. */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <IconButton
+          size="small"
+          data-testid="back-to-list-button"
+          aria-label={t('BoardPage_BackToList')}
+          onClick={() => navigate('/')}
+        >
+          <ArrowBackIcon fontSize="small" />
+        </IconButton>
+        {/* WebSettings_Title (web-only): Setting_Title is the WPF window title and
+            still names the DB features spec §4.6 deleted from this page. */}
+        <Typography variant="h6" component="h2">
+          {t('WebSettings_Title')}
+        </Typography>
+      </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mt: 2 }}>
         <Typography component="label" htmlFor="settings-language">
