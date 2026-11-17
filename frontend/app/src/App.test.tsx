@@ -5,6 +5,7 @@ import { afterEach, it } from 'vitest'
 
 import App from './App'
 import { LANG_STORAGE_KEY } from './i18n'
+import { cssRulesFor } from './test/cssRules'
 import { installFetch, restoreFetch } from './test/fetchStub'
 import { renderWithProviders } from './test/renderWithProviders'
 
@@ -17,6 +18,29 @@ it('renders app shell with title and board-list route', async () => {
   expect(await screen.findByTestId('app-bar')).toBeInTheDocument()
   // i18n initialized via renderWithProviders: AppBar shows the translated title.
   expect(await screen.findByRole('heading', { level: 1, name: 'Kanban' })).toBeInTheDocument()
+})
+
+it('locks the shell to the viewport so page content scrolls inside main', () => {
+  renderWithProviders(<App />, { route: '/' })
+  // 100vh flex column: AppBar row fixed, main owns the remaining height and
+  // its own vertical scroll → the board's horizontal bar sits at the bottom
+  // of the screen without scrolling the page (agreed 11-17).
+  // cssRulesFor: jsdom's getComputedStyle drops declarations behind emotion's
+  // -webkit- duplicates, so the stylesheet text is the reliable contract.
+  const shell = screen.getByTestId('app-shell')
+  const shellCss = cssRulesFor(shell)
+  expect(shellCss).toMatch(/display:flex/)
+  expect(shellCss).toMatch(/flex-direction:column/)
+  expect(shellCss).toMatch(/height:100vh/)
+  // display:flex/column is what makes board-page's flex-grow/flex-basis work —
+  // with main left a block, the canvas container collapsed to height 0 and the
+  // board rendered blank (whiteout repro 2026-11-17).
+  const mainCss = cssRulesFor(screen.getByTestId('app-main'))
+  expect(mainCss).toMatch(/display:flex/)
+  expect(mainCss).toMatch(/flex-direction:column/)
+  expect(mainCss).toMatch(/flex-grow:1/)
+  expect(mainCss).toMatch(/min-height:0/)
+  expect(mainCss).toMatch(/overflow-y:auto/)
 })
 
 it('renders board-list placeholder at /', () => {

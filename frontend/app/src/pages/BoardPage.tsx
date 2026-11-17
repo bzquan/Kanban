@@ -1,4 +1,5 @@
 import AddIcon from '@mui/icons-material/Add'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import FitScreenIcon from '@mui/icons-material/FitScreen'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import ZoomInIcon from '@mui/icons-material/ZoomIn'
@@ -90,6 +91,7 @@ interface SubColumnViewProps {
   filter: string
   onAddCard: (step: number, side: 'wip' | 'done') => void
   onOpenCard: (card: CardDto) => void
+  hoverDisabled: boolean
 }
 
 // One WPF sub-column: header = the step's wipTitle/doneTitle, cards fetched
@@ -109,12 +111,14 @@ function SortableCard({
   step,
   isWip,
   onOpenCard,
+  hoverDisabled,
 }: {
   card: CardDto
   id: string
   step: number
   isWip: boolean
   onOpenCard: (card: CardDto) => void
+  hoverDisabled: boolean
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id,
@@ -131,7 +135,7 @@ function SortableCard({
         touchAction: 'none',
       }}
     >
-      <CardView card={card} onOpen={() => onOpenCard(card)} />
+      <CardView card={card} onOpen={() => onOpenCard(card)} disableHoverInfo={hoverDisabled} />
     </Box>
   )
 }
@@ -144,6 +148,7 @@ function SubColumnView({
   filter,
   onAddCard,
   onOpenCard,
+  hoverDisabled,
 }: SubColumnViewProps) {
   const { t } = useTranslation()
   const seqNo = intVal(step.phaseSeqNo)
@@ -190,6 +195,7 @@ function SubColumnView({
             step={seqNo}
             isWip={isWip}
             onOpenCard={onOpenCard}
+            hoverDisabled={hoverDisabled}
           />
         ))}
       </SortableContext>
@@ -204,11 +210,12 @@ interface ColumnViewProps {
   filter: string
   onAddCard: (step: number, side: 'wip' | 'done') => void
   onOpenCard: (card: CardDto) => void
+  hoverDisabled: boolean
 }
 
 // One WPF column: step.name verbatim header (it already embeds "(Limit:N)")
 // over two sub-columns, exactly like BoardPage.xaml's processStepDataTemplate.
-function ColumnView({ boardId, step, onBoard, filter, onAddCard, onOpenCard }: ColumnViewProps) {
+function ColumnView({ boardId, step, onBoard, filter, onAddCard, onOpenCard, hoverDisabled }: ColumnViewProps) {
   const seqNo = intVal(step.phaseSeqNo)
   return (
     <Box
@@ -231,6 +238,7 @@ function ColumnView({ boardId, step, onBoard, filter, onAddCard, onOpenCard }: C
           filter={filter}
           onAddCard={onAddCard}
           onOpenCard={onOpenCard}
+          hoverDisabled={hoverDisabled}
         />
         <SubColumnView
           boardId={boardId}
@@ -240,6 +248,7 @@ function ColumnView({ boardId, step, onBoard, filter, onAddCard, onOpenCard }: C
           filter={filter}
           onAddCard={onAddCard}
           onOpenCard={onOpenCard}
+          hoverDisabled={hoverDisabled}
         />
       </Box>
     </Box>
@@ -382,7 +391,11 @@ export default function BoardPage({ onDragHandlesRef }: BoardPageProps = {}) {
   }
 
   // Fit-to-window (WPF IsZoomed): scale so the canvas width fills the
-  // viewport instead of scrolling.
+  // viewport instead of scrolling. Fit is NOT the manual-zoom path: the
+  // 0.1-step/0.5-floor would leave a wide board overflowing (and overflowX
+  // hides the bar, so the overflow is unreachable), and a stale scrollLeft
+  // hid the left side after scrolling right first (bug 11-17).
+  const FIT_ZOOM_MIN = 0.1
   const toggleFitToWindow = (): void => {
     const next = !isZoomed
     setIsZoomed(next)
@@ -390,7 +403,12 @@ export default function BoardPage({ onDragHandlesRef }: BoardPageProps = {}) {
     if (next && containerRef.current && canvasRef.current) {
       const container = containerRef.current.clientWidth
       const content = canvasRef.current.scrollWidth
-      if (container > 0 && content > 0) applyZoom(stepZoom(container / content, 0))
+      if (container > 0 && content > 0) {
+        // Round down so the scaled canvas never overflows the container.
+        const ratio = Math.floor((container / content) * 100) / 100
+        applyZoom(Math.min(ZOOM_MAX, Math.max(FIT_ZOOM_MIN, ratio)))
+      }
+      containerRef.current.scrollLeft = 0
     }
   }
 
@@ -431,11 +449,23 @@ export default function BoardPage({ onDragHandlesRef }: BoardPageProps = {}) {
   }
 
   return (
-    <Box data-testid="board-page" sx={{ p: 2 }}>
+    // flex-basis 0 + grow: the page height comes from the shell, never from
+    // tall canvas content — so the canvas container (below) owns the scroll.
+    <Box data-testid="board-page" sx={{ p: 2, display: 'flex', flexDirection: 'column', flexGrow: 1, flexBasis: 0, minHeight: 0 }}>
       <Toolbar
         component="div"
-        sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1, px: 0, minHeight: 0, mb: 1 }}
+        sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1, px: 0, minHeight: 0, mb: 1, flexShrink: 0 }}
       >
+        {/* Icon-only compact back button (agreed 11-17); aria-label carries
+            the localized BoardPage_BackToList name. */}
+        <IconButton
+          size="small"
+          data-testid="back-to-list-button"
+          aria-label={t('BoardPage_BackToList')}
+          onClick={() => navigate('/')}
+        >
+          <ArrowBackIcon fontSize="small" />
+        </IconButton>
         <Typography variant="h6" data-testid="board-title" sx={{ mr: 1 }}>
           {boardQuery.data?.title ?? ''}
         </Typography>
@@ -511,12 +541,16 @@ export default function BoardPage({ onDragHandlesRef }: BoardPageProps = {}) {
       </Toolbar>
 
       {addCardError !== null && (
-        <Typography color="error" data-testid="add-card-error" sx={{ mb: 1 }}>
+        <Typography color="error" data-testid="add-card-error" sx={{ mb: 1, flexShrink: 0 }}>
           {addCardError}
         </Typography>
       )}
 
-      {view === 'chart' && <MetricsPanel boardId={boardId} />}
+      {view === 'chart' && (
+        <Box sx={{ flexShrink: 0 }}>
+          <MetricsPanel boardId={boardId} />
+        </Box>
+      )}
       {view === 'kanban' && (
       <DndContext
         sensors={sensors}
@@ -527,7 +561,18 @@ export default function BoardPage({ onDragHandlesRef }: BoardPageProps = {}) {
       <Box
         ref={containerRef}
         data-testid="board-canvas-container"
-        sx={{ overflowX: isZoomed ? 'hidden' : 'auto' }}
+        // Takes the viewport height below the toolbar (minHeight 0 lets the
+        // flex item shrink so the canvas scrolls inside it); vertical scrolling
+        // happens here, keeping the horizontal bar at the bottom of the screen.
+        // 'scroll' keeps the bar always grabbable; fit-to-window scales the
+        // canvas instead (agreed 11-17).
+        sx={{
+          flexGrow: 1,
+          flexBasis: 0,
+          minHeight: 0,
+          overflowY: 'auto',
+          overflowX: isZoomed ? 'hidden' : 'scroll',
+        }}
       >
         <Box
           ref={canvasRef}
@@ -544,6 +589,7 @@ export default function BoardPage({ onDragHandlesRef }: BoardPageProps = {}) {
               filter={filter}
               onAddCard={(s, side) => void handleAddCard(s, side)}
               onOpenCard={setEditing}
+              hoverDisabled={activeCardId !== null}
             />
           ))}
         </Box>
@@ -551,7 +597,8 @@ export default function BoardPage({ onDragHandlesRef }: BoardPageProps = {}) {
         <DragOverlay>
           {activeCard ? (
             <Box sx={{ width: 220 }}>
-              <CardView card={activeCard} />
+              {/* The drag ghost never needs the contents balloon. */}
+              <CardView card={activeCard} disableHoverInfo />
             </Box>
           ) : null}
         </DragOverlay>

@@ -13,6 +13,7 @@ vi.mock('../charts/options', async (importOriginal) => {
 
 import type { BoardDto, CardDto, ProcessStepDto } from '../api/types'
 import { initI18n } from '../i18n'
+import { cssRulesFor } from '../test/cssRules'
 import {
   calls,
   installFetch,
@@ -21,6 +22,7 @@ import {
 } from '../test/fetchStub'
 import { renderWithProviders } from '../test/renderWithProviders'
 
+import type { DragHandlers } from './BoardPage'
 import BoardPage from './BoardPage'
 
 // Task 5 fixtures: one board with 2 process steps (WPF-style names that
@@ -347,4 +349,146 @@ it('card fetch failures keep the toolbar and column chrome intact', async () => 
   expect(screen.getByTestId('filter-input')).toBeInTheDocument()
   expect(screen.getByTestId('refresh-button')).toBeInTheDocument()
   expect(screen.queryByTestId('board-error')).not.toBeInTheDocument()
+})
+
+it('toolbar back-to-list button returns to the board list', async () => {
+  installFetch({
+    'GET /api/boards': () => [board],
+    'GET /api/boards/b-1/cards': cardsHandler({}),
+  })
+  renderPage()
+  await screen.findByTestId('board-canvas-container')
+
+  // Icon-only compact button at the toolbar head; the accessible name comes
+  // from the existing BoardPage_BackToList key (agreed 11-17).
+  const button = await screen.findByRole('button', { name: 'Back to board list' })
+  const user = userEvent.setup()
+  await user.click(button)
+  expect(await screen.findByTestId('list-stub')).toBeInTheDocument()
+})
+
+it('fit-to-window scales by the exact fit ratio, not the 0.5 manual-zoom floor', async () => {
+  installFetch({
+    'GET /api/boards': () => [board],
+    'GET /api/boards/b-1/cards': cardsHandler({}),
+  })
+  renderPage()
+  const container = await screen.findByTestId('board-canvas-container')
+  const canvas = await screen.findByTestId('board-canvas')
+  // jsdom has no layout: fake a board 3× wider than the viewport (ratio 1/3
+  // < ZOOM_MIN — the manual 0.5 floor must not cap the fit scale).
+  Object.defineProperty(container, 'clientWidth', { value: 1000, configurable: true })
+  Object.defineProperty(canvas, 'scrollWidth', { value: 3000, configurable: true })
+
+  const user = userEvent.setup()
+  await user.click(screen.getByTestId('zoom-fit-button'))
+
+  const scale = Number(/scale\(([\d.]+)\)/.exec(canvas.style.transform)?.[1])
+  // The whole board must fit (agreed 11-17) — 0.5 would leave 500px hidden.
+  expect(scale).toBeCloseTo(1 / 3, 2)
+})
+
+it('fit-to-window scrolls the canvas back to the left edge', async () => {
+  installFetch({
+    'GET /api/boards': () => [board],
+    'GET /api/boards/b-1/cards': cardsHandler({}),
+  })
+  renderPage()
+  const container = await screen.findByTestId('board-canvas-container')
+  const canvas = await screen.findByTestId('board-canvas')
+  Object.defineProperty(container, 'clientWidth', { value: 1000, configurable: true })
+  Object.defineProperty(canvas, 'scrollWidth', { value: 3000, configurable: true })
+  // jsdom keeps scrollLeft at 0: fake the user having scrolled right first.
+  Object.defineProperty(container, 'scrollLeft', { value: 900, writable: true, configurable: true })
+
+  const user = userEvent.setup()
+  await user.click(screen.getByTestId('zoom-fit-button'))
+
+  // Fit without resetting scroll leaves the left columns off-screen (bug 11-17).
+  expect(container.scrollLeft).toBe(0)
+})
+
+it('board area fills the viewport so the horizontal scrollbar stays on screen', async () => {
+  installFetch({
+    'GET /api/boards': () => [board],
+    'GET /api/boards/b-1/cards': cardsHandler({}),
+  })
+  renderPage()
+  await screen.findByTestId('board-canvas-container')
+
+  // The page itself must not grow past the viewport: the board page takes the
+  // remaining shell height (flex-basis 0 → content cannot grow it), and the
+  // canvas container scrolls vertically inside it — keeping the canvas's
+  // horizontal bar pinned to the bottom of the screen.
+  // cssRulesFor: jsdom's getComputedStyle drops declarations behind emotion's
+  // -webkit- duplicates, so the stylesheet text is the reliable contract.
+  const pageCss = cssRulesFor(screen.getByTestId('board-page'))
+  expect(pageCss).toMatch(/display:flex/)
+  expect(pageCss).toMatch(/flex-direction:column/)
+  expect(pageCss).toMatch(/flex-grow:1/)
+  expect(pageCss).toMatch(/min-height:0/)
+  const containerCss = cssRulesFor(screen.getByTestId('board-canvas-container'))
+  expect(containerCss).toMatch(/flex-grow:1/)
+  expect(containerCss).toMatch(/min-height:0/)
+  expect(containerCss).toMatch(/overflow-y:auto/)
+})
+
+it('board canvas keeps the horizontal scrollbar always visible (auto would hide it)', async () => {
+  installFetch({
+    'GET /api/boards': () => [board],
+    'GET /api/boards/b-1/cards': cardsHandler({}),
+  })
+  renderPage()
+  await screen.findByTestId('board-canvas-container')
+
+  // 'scroll' not 'auto': the bar stays put even when the content fits, so it
+  // can be grabbed without the wheel (agreed 11-17).
+  expect(screen.getByTestId('board-canvas-container')).toHaveStyle({ overflowX: 'scroll' })
+})
+
+it('fit-to-window mode drops the horizontal scrollbar (scale makes it unneeded)', async () => {
+  installFetch({
+    'GET /api/boards': () => [board],
+    'GET /api/boards/b-1/cards': cardsHandler({}),
+  })
+  renderPage()
+  await screen.findByTestId('board-canvas-container')
+
+  const user = userEvent.setup()
+  await user.click(screen.getByTestId('zoom-fit-button'))
+  expect(screen.getByTestId('board-canvas-container')).toHaveStyle({ overflowX: 'hidden' })
+})
+
+it('card hover shows the contents tooltip and a started drag suppresses it', async () => {
+  installFetch({
+    'GET /api/boards': () => [board],
+    'GET /api/boards/b-1/cards': cardsHandler({
+      '1:true:front': [{ id: 'c-1', seqNo: 1, title: 'Info card', summary: '<b>detail</b>' }],
+    }),
+  })
+  const handleRef: { current: DragHandlers | null } = { current: null }
+  renderWithProviders(
+    <Routes>
+      <Route path="/boards/:boardId" element={<BoardPage onDragHandlesRef={handleRef} />} />
+    </Routes>,
+    { route: '/boards/b-1' },
+  )
+  const user = userEvent.setup()
+  const cardEl = await screen.findByTestId('card')
+
+  // Baseline: hovering the card opens the contents balloon.
+  await user.hover(cardEl)
+  expect(await screen.findByRole('tooltip', {}, { timeout: 3000 })).toHaveTextContent('Description：')
+  await user.unhover(cardEl)
+  await waitFor(() => expect(screen.queryByRole('tooltip')).not.toBeInTheDocument())
+
+  // Drag in progress (handlers driven exactly as DndContext would): the same
+  // hover stays silent — the wait exceeds the enter delay, so absence is
+  // proven, not timing luck.
+  handleRef.current?.onDragStart({
+    active: { id: 'c-1' },
+  } as unknown as Parameters<DragHandlers['onDragStart']>[0])
+  await user.hover(cardEl)
+  await new Promise((r) => setTimeout(r, 900))
+  expect(screen.queryByTestId('hover-summary')).not.toBeInTheDocument()
 })
