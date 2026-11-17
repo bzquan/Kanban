@@ -29,8 +29,8 @@ A simple Kanban board application written in C# targeting .NET 10. The repositor
 
 Build and run using dotnet CLI from repository root:
 
-   dotnet build Kanban/Kanban.csproj
-   dotnet run --project Kanban/Kanban.csproj
+   dotnet build Kanban/Kanban.csproj<br>
+   dotnet run --project Kanban/Kanban.csproj<br>
 
 Or open the solution in Visual Studio and run the Kanban project (set as startup project).
 
@@ -43,11 +43,11 @@ served by the API together with `/api` — one `dotnet` process hosts everything
 
 From the repository root:
 
-   cd frontend/app
-   npm install
-   npm run build
-   cd ../..
-   dotnet run --project Kanban.Api --urls http://192.168.21.233:80
+   cd frontend/app<br>
+   npm install<br>
+   npm run build<br>
+   cd ../..<br>
+   dotnet run --project Kanban.Api -c Release --urls http://192.168.21.233:80<br>
 
 Then open **http://192.168.21.233:80** (this machine's LAN IP — use your own
 machine's IP here; `localhost` is not bound, so LAN clients and this machine
@@ -64,9 +64,9 @@ Run the API on its default port and Vite bound to the LAN IP — Vite proxies
 `/api` to `http://localhost:5000` (same machine), so SPA edits hot-reload
 without rebuilding `wwwroot`:
 
-   dotnet run --project Kanban.Api
-   cd frontend/app
-   npm run dev -- --host 192.168.21.233   # open http://192.168.21.233:5173
+   dotnet run --project Kanban.Api<br>
+   cd frontend/app<br>
+   npm run dev -- --host 192.168.21.233   # open http://192.168.21.233:5173<br>
 
 ### Tests
 
