@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react'
+import { act, fireEvent, screen } from '@testing-library/react'
 import i18n from 'i18next'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 
@@ -31,7 +31,39 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+  vi.useRealTimers()
   void i18n.changeLanguage('en')
+})
+
+// WPF parity (BoardPage.xaml card ToolTip ← Card.CardContentsInfo): hovering
+// the card surfaces the three text fields the card face does not show.
+function hoverCard(ms: number): void {
+  fireEvent.mouseOver(screen.getByTestId('card'))
+  act(() => {
+    vi.advanceTimersByTime(ms)
+  })
+}
+
+it('hovering the card opens a tooltip rendering summary, testCases and designOverview as HTML', () => {
+  vi.useFakeTimers()
+  renderCard(
+    cardFixture({
+      summary: '<b>crash</b> on login',
+      testCases: '<ul><li>TC1</li></ul>',
+      designOverview: '<p>Use <i>guard</i></p>',
+    }),
+  )
+
+  hoverCard(2000)
+
+  const tooltip = screen.getByRole('tooltip')
+  expect(tooltip).toHaveTextContent('Description：')
+  expect(tooltip).toHaveTextContent('Test cases：')
+  expect(tooltip).toHaveTextContent('Design overview :')
+  // Sanitization: none — same accepted trust model as the card-face details.
+  expect(tooltip.querySelector('[data-testid="hover-summary"]')?.innerHTML).toContain('<b>crash</b>')
+  expect(tooltip.querySelector('[data-testid="hover-test-cases"]')?.innerHTML).toContain('<li>TC1</li>')
+  expect(tooltip.querySelector('[data-testid="hover-design-overview"]')?.innerHTML).toContain('<i>guard</i>')
 })
 
 it('BugFix card gets the WPF red background (#FF0000) with white text', () => {
@@ -72,6 +104,60 @@ it('storyPoints badge hidden for 0 (number or string), shown when > 0', () => {
   const eight = renderCard(cardFixture({ storyPoints: '8' }))
   expect(screen.getByTestId('story-points-badge')).toHaveTextContent('8')
   eight.unmount()
+})
+
+it('hover tooltip omits sections for fields left empty', () => {
+  vi.useFakeTimers()
+  renderCard(cardFixture({ testCases: '<ul><li>TC1</li></ul>' }))
+
+  hoverCard(2000)
+
+  const tooltip = screen.getByRole('tooltip')
+  expect(tooltip).toHaveTextContent('Test cases：')
+  expect(tooltip).not.toHaveTextContent('Description：')
+  expect(tooltip).not.toHaveTextContent('Design overview :')
+})
+
+it('no tooltip appears on hover when all three hover fields are empty', () => {
+  vi.useFakeTimers()
+  renderCard(cardFixture())
+
+  hoverCard(2000)
+
+  expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+})
+
+it('disableHoverInfo suppresses the hover tooltip (drag in progress)', () => {
+  vi.useFakeTimers()
+  renderWithProviders(
+    <CardView card={cardFixture({ summary: '<b>crash</b> on login' })} onOpen={() => {}} disableHoverInfo />,
+  )
+
+  hoverCard(2000)
+
+  expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+})
+
+it('hovering the worked-days progress bar shows only its own tooltip', () => {
+  vi.useFakeTimers()
+  renderCard(
+    cardFixture({
+      summary: '<b>crash</b> on login',
+      isScheduledToRelease: true,
+      createDate: '2026-01-05T00:00:00',
+      stateChangedDate: '2026-01-09T00:00:00',
+      releaseDate: '2026-01-16T00:00:00',
+    }),
+  )
+
+  fireEvent.mouseOver(screen.getByTestId('progress-bar'))
+  act(() => {
+    vi.advanceTimersByTime(2000)
+  })
+
+  // The bar's own Worked Days label, not the card contents balloon.
+  expect(screen.getByRole('tooltip')).toHaveTextContent('Worked Days')
+  expect(screen.queryByTestId('hover-summary')).not.toBeInTheDocument()
 })
 
 it('type label localizes under ja (CardType.cs Description, verbatim)', async () => {

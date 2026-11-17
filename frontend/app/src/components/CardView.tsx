@@ -9,6 +9,9 @@ import { format0 } from '../util/format'
 export interface CardViewProps {
   card: CardDto
   onOpen?: () => void
+  // Board-level "a drag is in progress" flag (DndContext): hovers must not
+  // fire balloons while the pointer sweeps cards mid-drag.
+  disableHoverInfo?: boolean
 }
 
 function startOfLocalDay(iso: string | undefined): Date | null {
@@ -86,7 +89,36 @@ const MERGED_MAJOR_BG = '#00FFFF'
 const STORY_POINTS_BG = '#FF0000'
 const STORY_POINTS_FG = '#FFFFFF'
 
-export default function CardView({ card, onOpen }: CardViewProps) {
+// WPF card ToolTip parity (BoardPage.xaml:47-48 ← Card.CardContentsInfo):
+// hover surfaces the three text fields the card face hides. The ~0.5s delay
+// mirrors WPF's hover threshold so sweeping the mouse across the board does
+// not fire tooltips.
+const HOVER_ENTER_DELAY_MS = 500
+
+function HoverInfo({ card }: { card: CardDto }) {
+  const { t } = useTranslation()
+  // WPF CardContentsInfo order: description → test cases → design overview,
+  // each section only when non-empty.
+  const sections = [
+    { key: 'summary', testId: 'hover-summary', label: t('CardEdit_Description'), html: card.summary ?? '' },
+    { key: 'testCases', testId: 'hover-test-cases', label: t('CardEdit_TestCases'), html: card.testCases ?? '' },
+    { key: 'designOverview', testId: 'hover-design-overview', label: t('CardEdit_DesignOverview'), html: card.designOverview ?? '' },
+  ].filter((s) => s.html !== '')
+  return (
+    <Box sx={{ p: 1, maxWidth: 480, maxHeight: 340, overflowY: 'auto' }}>
+      {sections.map((s) => (
+        <Box key={s.key} sx={{ mb: 1 }}>
+          <Typography variant="caption" component="div" sx={{ fontWeight: 700 }}>
+            {s.label}
+          </Typography>
+          <Box data-testid={s.testId} dangerouslySetInnerHTML={{ __html: s.html }} />
+        </Box>
+      ))}
+    </Box>
+  )
+}
+
+export default function CardView({ card, onOpen, disableHoverInfo }: CardViewProps) {
   const { t, i18n } = useTranslation()
   const background = cardTypeBackground(card.cardType)
   const textColor = textColorFor(background)
@@ -98,8 +130,16 @@ export default function CardView({ card, onOpen }: CardViewProps) {
     card.releaseDate,
   )
   const hasChips = card.isBlocked === true || card.isMergedIntoMaster === true || card.isMergedIntoMajorBranch === true
+  // WPF showed the ToolTip even for a bare title; the web card face already
+  // carries the title, so an all-empty HoverInfo would be an empty balloon.
+  const hasHoverInfo = Boolean(card.summary || card.testCases || card.designOverview)
 
   return (
+    <Tooltip
+      title={hasHoverInfo ? <HoverInfo card={card} /> : ''}
+      enterDelay={HOVER_ENTER_DELAY_MS}
+      disableHoverListener={disableHoverInfo}
+    >
     <Box
       data-testid="card"
       role={onOpen ? 'button' : undefined}
@@ -224,6 +264,10 @@ export default function CardView({ card, onOpen }: CardViewProps) {
         <Tooltip title={t('ToolTip_StoryPoints')}>
           <Box
             data-testid="story-points-badge"
+            // The badge carries its own tooltip; keeping the hover events from
+            // bubbling stops the card-level contents tooltip opening as well.
+            onMouseOver={(e) => e.stopPropagation()}
+            onMouseLeave={(e) => e.stopPropagation()}
             sx={{
               display: 'inline-block',
               minWidth: 24,
@@ -243,7 +287,14 @@ export default function CardView({ card, onOpen }: CardViewProps) {
 
       {card.isScheduledToRelease === true && (
         <Tooltip title={t('ToolTip_WorkedDays')}>
-          <Box data-testid="progress-bar" sx={{ mt: 0.5 }}>
+          <Box
+            data-testid="progress-bar"
+            // Same as the story-points badge: own tooltip only, no card
+            // contents balloon from the bubbled hover.
+            onMouseOver={(e) => e.stopPropagation()}
+            onMouseLeave={(e) => e.stopPropagation()}
+            sx={{ mt: 0.5 }}
+          >
             <LinearProgress
               variant="determinate"
               value={Math.round(progress * 100)}
@@ -253,5 +304,6 @@ export default function CardView({ card, onOpen }: CardViewProps) {
         </Tooltip>
       )}
     </Box>
+    </Tooltip>
   )
 }
