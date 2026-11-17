@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "npm run release-note:export && vite",
+    "build": "npm run release-note:export && tsc -b && vite build",
     "lint": "oxlint",
     "i18n:export": "node scripts/export-resx.mjs",
+    "release-note:export": "node scripts/export-release-note.mjs",
     "preview": "vite preview",
     "test": "vitest"
   },

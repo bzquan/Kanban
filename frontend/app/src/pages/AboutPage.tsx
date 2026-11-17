@@ -4,8 +4,9 @@ import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
-// public/release-note/{en,ja}.html are verbatim copies of
-// Kanban/ReleaseNote/ReleaseNote(_jp).html; Vite serves public/ at root.
+// public/release-note/{en,ja}.html are GENERATED from Kanban/ReleaseNote/
+// (single source of truth — the WPF files) by scripts/export-release-note.mjs,
+// which runs automatically from npm run dev / build. Never edit them by hand.
 async function loadReleaseNote(file: 'en' | 'ja'): Promise<string> {
   // globalThis.fetch is resolved at call time so tests can stub it
   // (src/test/fetchStub keys on "GET /release-note/<file>.html").
